@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Industrial Autoclave Interface
+    </title>
+
+    <link href="{{ url_for('static', filename='index.css') }}" type="text/css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="container">
+      <div id="subcontainer">
+        <div id="top-btns">
+          <div id="autoclave-repair-btn" class="button">REPAIR</div>
+          <div id="cmd-btn" class="button">COMMAND</div>
+        </div>
+        <div id="warnings">
+          <p>STANDBY</p>
+        </div>
+        <br/>
+        <div id="autoclave-diagram">
+          <div id="autoclave-status">
+            <div>
+              <p id="temp_gauge">TEMP</p>
+              <p id="psi_gauge">PSI</p>
+            </div>
+          </div>
+        </div>
+        <div id="time">
+          <p>TIME: <a id="clock"></a></p>
+          <p>EXTERNAL TEMP: <a id="etemp">STANDBY</a></p>
+        </div>
+      </div>
+      <div id="subcontainer2"> 
+        <div id="repair-back">
+          <div id="repair-back-btn" class="button">RETURN</div>
+        </div> 
+        <div id="issues">
+          <p>STANDBY</p>
+        </div> 
+        <div id="resolve-btns">
+          <div id="resolve-all-btn" class="button">REROUTE SYSTEMS</div>
+          <div id="resolve-one-btn" class="button">ISSUE SELECT</div>
+        </div>
+        <div id="issue-resolve-msg">
+        </div>
+        <div id="confirm-btns">
+          <div id="confirm-issue-choice-btn" class="button">CONFIRM ISSUE</div>
+          <div id="next-issue-btn" class="button">NEXT ISSUE</div>
+          <div id="end-resolution-btn" class="button">END</div>
+        </div>   
+        <div id="last-maintained">
+          <p id="lm-status">STANDBY</p>
+        </div> 
+      </div>
+      <div id="subcontainer3">
+        <div id="reroute-back">
+          <div id="reroute-back-btn" class="button">RETURN TO REPAIR PANEL</div>
+        </div>
+        <div id="router">
+          <p class="flex">BOARD CONNECTION CHECK [BC_CHECK1] <a id="reroute-bc" class="button">REROUTE</a></p>
+          <p class="flex">BATTERY INTERVAL [BAT_INT1] <a id="reroute-bint" class="button">REROUTE</a></p>
+          <p class="flex">VENDOR ID [<a id="vend_id"></a>] <a id="reroute-vendid" class="button">REROUTE</a></p>
+        </div>
+      </div>
+      <div id="subcontainer4">
+        <div id="command-back">
+          <div id="command-back-btn" class="button">RETURN</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='index.js' )}}"></script>
+  </body>
+</html>

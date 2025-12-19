@@ -1,0 +1,123 @@
+/* Fonts */
+@font-face {
+  font-family: "Hornet";
+  src: url("hornet.ttf");
+}
+
+/* Natural Tags */
+body, html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Hornet";
+  background-color: black;
+  color: rgb(136, 238, 136);
+  user-select: none;
+}
+
+/* IDs */
+#container {
+  position: absolute;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+#subcontainer, #subcontainer2, #subcontainer3, #subcontainer4 {
+  width: 65%;
+  height: 65%;
+  position: absolute;
+}
+
+#subcontainer2, #subcontainer3, #subcontainer4 {
+  display: none;
+}
+
+#warnings, #issues, #issue-resolve-msg, #last-maintained, #router {
+  width: 100%;
+  text-align: center;
+  margin: auto;
+}
+
+#time {
+  width: 100%;
+  text-align: center;
+  margin: auto;
+}
+
+#autoclave-diagram {
+  margin: auto;
+  position: relative;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  width: 500px;
+  height: 150px;
+  border: 1px solid rgb(136, 238, 136);
+}
+
+#autoclave-status {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  width: 100px;
+  height: 50px;
+  border: 1px solid rgb(136, 238, 136);
+}
+
+#temp_gauge, #psi_gauge {
+  text-align: center;
+}
+
+#autoclave-repair-btn, #cmd-btn, #repair-back-btn, #resolve-all-btn, #resolve-one-btn, #confirm-issue-choice-btn, #next-issue-btn, #end-resolution-btn, #reroute-back-btn, #command-back-btn {
+  width: 20%;
+}
+
+#top-btns, #repair-back, #resolve-btns, #confirm-btns, #reroute-back, #command-back {
+  margin: auto;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+}
+
+#confirm-btns {
+  display: none;
+}
+
+/* Classes */
+.warning {
+  border: 1px solid red;
+  color: red;
+}
+
+.w_100 {
+  width: 100%;
+}
+
+.button {
+  border: 1px solid rgb(136, 238, 136);
+}
+
+.button:hover {
+  background-color: rgb(80, 152, 80);
+}
+
+.relative {
+  position: relative;
+}
+
+.half-width {
+  width: 50%;
+}
+
+.flex {
+  display: flex;
+  gap: 20px;
+}
