@@ -36,6 +36,8 @@ async function resolveIssue (issueCode) {
       
       batteryMSTATUS_int = 20000;
       batteryETEMP_int = 20000;
+
+      reroute_bint_text.innerText = "BATTERY INTERVAL [BAT_INT2]";
       break;
     case "PRGM_ERR":
       issue_resolve_msg.innerHTML = "<p>SYSTEM REBOOT REQUIRED</p>";
@@ -452,6 +454,23 @@ if (localStorage.getItem("board_conn_route") == null || localStorage.getItem("bo
 
 else {
   reroute_board_conn_text.innerText = "BOARD CONNECTION CHECK [BC_CHECK2]";
+}
+
+const reroute_bint = document.getElementById("reroute-bint");
+const reroute_bint_text = document.getElementById("reroute-bint-text");
+reroute_bint.onclick = function () {
+  switch (batteryETEMP_int) {
+    case 5000:
+      batteryETEMP_int = 20000;
+      batteryMSTATUS_int = 20000;
+      reroute_bint_text.innerText = "BATTERY INTERVAL [BAT_INT2]";
+      break;
+    default:
+      batteryETEMP_int = 5000;
+      batteryMSTATUS_int = 5000;
+      reroute_bint_text.innerText = "BATTERY INTERVAL [BAT_INT1]";
+      break;
+  }
 }
 
 const reroute_vendor_id = document.getElementById("reroute-vendid");
