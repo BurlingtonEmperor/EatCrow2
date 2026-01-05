@@ -91,6 +91,20 @@ body {
   display: none;
 }
 
+#manual-reroute {
+  display: none;
+}
+
+#manual-reroute-input {
+  background-color: black;
+  border: none;
+  font-size: 16px;
+  font-family: monospace;
+  color: rgb(184, 225, 221);
+  border: 1px solid rgb(136, 238, 136);
+  outline: none;
+}
+
 /* Classes */
 .warning {
   border: 1px solid red;

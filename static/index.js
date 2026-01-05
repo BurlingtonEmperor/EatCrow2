@@ -242,7 +242,7 @@ const last_maintained_status = document.getElementById("lm-status");
 function checkMSTATUS () {
   switch (true) {
     case (localStorage.getItem("last_maintained") == null):
-    case (localStorage.getItem("last_maintained") == 'null'):
+    case (localStorage.getItem("last_maintained") == undefined):
     case (localStorage.getItem("last_maintained") == ''):
       last_maintained_status.innerText = "NEW SYSTEM CHECK ADVISED";
       break;
@@ -383,6 +383,45 @@ commandBackBtn.onclick = function () {
 }
 
 // rerouting
+const manualReroute = document.getElementById("manual-reroute");
+const whichReroute = document.getElementById("which-reroute");
+const manualRerouteInput = document.getElementById("manual-reroute-input");
+const manualRerouteButton = document.getElementById("manual-reroute-button");
+const manualRerouteCancel = document.getElementById("manual-reroute-cancel");
+let reroute_which = "";
+
+function resetManualReroute (which_route_name) {
+  manualRerouteInput.value = "";
+  whichReroute.innerText = String(which_route_name);
+}
+
+manualRerouteButton.onclick = function () {
+  if (manualRerouteInput.value == "" || manualRerouteInput.value == undefined || manualRerouteInput.value == null) {
+    return false;
+  }
+
+  switch (reroute_which) {
+    case "vendor-id":
+      vend_id.innerText = manualRerouteInput.value;
+      localStorage.setItem("vendor_id", manualRerouteInput.value);
+
+      reroute_vendor_id.style.display = "block";
+      break;
+  }
+  manualRerouteInput.value = "";
+  manualReroute.style.display = "none";
+}
+
+manualRerouteCancel.onclick = function () {
+  manualReroute.style.display = "none";
+
+  switch (reroute_which) {
+    case "vendor-id":
+      reroute_vendor_id.style.display = "block";
+      break;
+  }
+}
+
 const reroute_board_conn_button = document.getElementById("reroute-bc");
 const reroute_board_conn_text = document.getElementById("reroute-bc-text");
 reroute_board_conn_button.onclick = function () {
@@ -413,4 +452,13 @@ if (localStorage.getItem("board_conn_route") == null || localStorage.getItem("bo
 
 else {
   reroute_board_conn_text.innerText = "BOARD CONNECTION CHECK [BC_CHECK2]";
+}
+
+const reroute_vendor_id = document.getElementById("reroute-vendid");
+reroute_vendor_id.onclick = function () {
+  resetManualReroute("VENDOR ID");
+
+  reroute_vendor_id.style.display = "none";
+  manualReroute.style.display = "flex";
+  reroute_which = "vendor-id";
 }
