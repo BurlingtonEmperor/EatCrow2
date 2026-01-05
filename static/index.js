@@ -150,28 +150,55 @@ async function generateWarnings () {
   });
 
   const boardCheckPromise = new Promise((resolve) => {
-    fetch ("/find_board", {
-      method : "GET"
-    })
-    .then(response => response.text())
-    .then(data => {
-      if (data == "not_found" || data.includes("The system cannot find the file specified")) {
-        warningArray.push("BOARD");
-      }
+    if (localStorage.getItem("board_conn_route") == "0" || localStorage.getItem("board_conn_route") == undefined || localStorage.getItem("board_conn_route") == null || localStorage.getItem("board_conn_route") == "") {
+      console.log("board check 1");
+      fetch ("/find_board", {
+        method : "GET"
+      })
+      .then(response => response.text())
+      .then(data => {
+        if (data == "not_found" || data.includes("The system cannot find the file specified")) {
+          warningArray.push("BOARD");
+        }
 
-      else if (data == "port_not_found") {
-        warningArray.push("PORT");
-      }
+        else if (data == "port_not_found") {
+          warningArray.push("PORT");
+        }
 
-      if (data.includes("Access is denied")) {
-        warningArray.push("ACCESS");
-      }
-      resolve();
-    })
-    .catch(error => {
-      warningArray.push("PRGM_ERR");
-      resolve();
-    });
+        if (data.includes("Access is denied")) {
+          warningArray.push("ACCESS");
+        }
+        resolve();
+      })
+      .catch(error => {
+        warningArray.push("PRGM_ERR");
+        resolve();
+      });
+    }
+
+    else {
+      console.log("board check 2");
+      fetch ("/afind_board", {
+        method : "POST",
+        headers : {
+          "Content-Type" : "application/json"
+        },
+        body : JSON.stringify({
+          vendor_id : vendorID
+        })
+      })
+      .then(response => response.text())
+      .then(data => {
+        if (data == "None") {
+          warningArray.push("BOARD");
+        }
+        resolve();
+      })
+      .catch(error => {
+        warningArray.push("PRGM_ERR");
+        resolve();
+      });
+    }
   })
 
   asyncChecks.push(batteryCheckPromise, boardCheckPromise);
@@ -353,4 +380,37 @@ cmdBtn.onclick = function () {
 commandBackBtn.onclick = function () {
   subcontainer_4.style.display = "none";
   subcontainer_1.style.display = "block";
+}
+
+// rerouting
+const reroute_board_conn_button = document.getElementById("reroute-bc");
+const reroute_board_conn_text = document.getElementById("reroute-bc-text");
+reroute_board_conn_button.onclick = function () {
+  switch (true) {
+    case (localStorage.getItem("board_conn_route") == null):
+    case (localStorage.getItem("board_conn_route") == undefined):
+    case (localStorage.getItem("board_conn_route") == ""):
+      localStorage.setItem("board_conn_route", "0");
+      break;
+  }
+
+  const board_conn_route_parse = parseInt(localStorage.getItem("board_conn_route"));
+  switch (board_conn_route_parse) {
+    case 0:
+      localStorage.setItem("board_conn_route", "1");
+      reroute_board_conn_text.innerText = "BOARD CONNECTION CHECK [BC_CHECK2]";
+      break;
+    case 1:
+      localStorage.setItem("board_conn_route", "0");
+      reroute_board_conn_text.innerText = "BOARD CONNECTION CHECK [BC_CHECK1]";
+      break;
+  }
+}
+
+if (localStorage.getItem("board_conn_route") == null || localStorage.getItem("board_conn_route") == "0") {
+  reroute_board_conn_text.innerText = "BOARD CONNECTION CHECK [BC_CHECK1]";
+}
+
+else {
+  reroute_board_conn_text.innerText = "BOARD CONNECTION CHECK [BC_CHECK2]";
 }
