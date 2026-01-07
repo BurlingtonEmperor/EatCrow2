@@ -135,3 +135,16 @@ body {
   display: flex;
   gap: 20px;
 }
+
+.twenty {
+  width: 20%;
+}
+
+.btn-class {
+  margin: auto;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+}

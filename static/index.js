@@ -49,13 +49,13 @@ async function resolveIssue (issueCode) {
       last_maintained = localStorage.getItem("last_maintained");
       break;
     case "BOARD":
-      issue_resolve_msg.innerHTML = "<p>CONNECT BOARD TO DEVICE</p>";
+      issue_resolve_msg.innerHTML = "<p>CONNECT BOARD TO DEVICE OR REROUTE BOARD CONNECTION</p>";
       break;
     case "PORT":
-      issue_resolve_msg.innerHTML = "<p>PERMISSIONS ISSUE. SWITCH DEVICE</p>";
+      issue_resolve_msg.innerHTML = "<p>PERMISSIONS ISSUE. SWITCH DEVICE OR REROUTE BOARD CONNECTION</p>";
       break;
     case "ACCESS":
-      issue_resolve_msg.innerHTML = "<p>REROUTING BOARD CONNECTION MACRO</p>";
+      issue_resolve_msg.innerHTML = "<p>REROUTE BOARD CONNECTION</p>";
       break;
   }
 }
@@ -296,6 +296,7 @@ const subcontainer_1 = document.getElementById("subcontainer");
 const subcontainer_2 = document.getElementById("subcontainer2");
 const subcontainer_3 = document.getElementById("subcontainer3");
 const subcontainer_4 = document.getElementById("subcontainer4");
+const subcontainer_5 = document.getElementById("subcontainer5");
 
 // buttons
 const autoclaveRepairBtn = document.getElementById("autoclave-repair-btn");
