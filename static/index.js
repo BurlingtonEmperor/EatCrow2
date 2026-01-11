@@ -5,6 +5,7 @@ const issueDiv = document.getElementById("issues");
 let last_maintained = localStorage.getItem("last_maintained");
 const issue_resolve_msg = document.getElementById("issue-resolve-msg");
 
+// start precheck
 const vendorID = localStorage.getItem("vendor_id");
 function checkForVendorID () {
   if (vendorID === null || vendorID === "" || vendorID === undefined) {
@@ -13,6 +14,16 @@ function checkForVendorID () {
 }
 const vend_id = document.getElementById("vend_id");
 vend_id.innerText = localStorage.getItem("vendor_id");
+
+const baudRate = localStorage.getItem("baud_rate");
+function checkForBaudRate () {
+  if (baudRate == null || baudRate == "" || baudRate == undefined) {
+    localStorage.setItem("baud_rate", "9600");
+  }
+}
+const baud_rate = document.getElementById("baud_rate");
+baud_rate.innerText = localStorage.getItem("baud_rate");
+// end precheck
 
 async function resolveIssue (issueCode) {
   switch (issueCode) {
@@ -238,7 +249,12 @@ const timeInterval = setInterval(function () {
   getTimeFunctions();
 }, 1000);
 
+// start precheck 2
+
 checkForVendorID();
+checkForBaudRate();
+
+// end precheck2
 
 const last_maintained_status = document.getElementById("lm-status");
 function checkMSTATUS () {
@@ -410,6 +426,8 @@ manualRerouteButton.onclick = function () {
 
       reroute_vendor_id.style.display = "block";
       break;
+    case "baud-rate":
+      break;
   }
   manualRerouteInput.value = "";
   manualReroute.style.display = "none";
@@ -481,4 +499,13 @@ reroute_vendor_id.onclick = function () {
   reroute_vendor_id.style.display = "none";
   manualReroute.style.display = "flex";
   reroute_which = "vendor-id";
+}
+
+const reroute_baud_rate = document.getElementById("reroute-baud");
+reroute_baud_rate.onclick = function () {
+  resetManualReroute("BAUD RATE");
+
+  reroute_baud_rate.style.display = "none";
+  manualReroute.style.display = "flex";
+  reroute_which = "baud-rate";
 }
