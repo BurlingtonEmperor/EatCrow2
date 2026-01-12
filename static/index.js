@@ -427,6 +427,10 @@ manualRerouteButton.onclick = function () {
       reroute_vendor_id.style.display = "block";
       break;
     case "baud-rate":
+      baud_rate.innerText = manualRerouteInput.value;
+      localStorage.setItem("baud_rate", manualRerouteInput.value);
+
+      reroute_baud_rate.style.display = "block";
       break;
   }
   manualRerouteInput.value = "";
@@ -439,6 +443,9 @@ manualRerouteCancel.onclick = function () {
   switch (reroute_which) {
     case "vendor-id":
       reroute_vendor_id.style.display = "block";
+      break;
+    case "baud-rate":
+      reroute_baud_rate.style.display = "block";
       break;
   }
 }
