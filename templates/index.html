@@ -58,7 +58,7 @@
           <div id="reroute-back-btn" class="button">RETURN TO REPAIR PANEL</div>
         </div>
         <div id="router">
-          <p class="flex" id="manual-reroute">REROUTING <a id="which-reroute"></a> TO <input type="text" id="manual-reroute-input"/> <a id="manual-reroute-button" class="button">REROUTE</a> <a id="manual-reroute-cancel" class="button">CANCEL</a></p>
+          <p class="flex" id="manual-reroute">REROUTING <a id="which-reroute"></a> TO <input type="text" id="manual-reroute-input" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"/> <a id="manual-reroute-button" class="button">REROUTE</a> <a id="manual-reroute-cancel" class="button">CANCEL</a></p>
           <p class="flex"><a id="reroute-bc-text">BOARD CONNECTION CHECK [BC_CHECK1]</a> <a id="reroute-bc" class="button">REROUTE</a></p>
           <p class="flex"><a id="reroute-bint-text">BATTERY INTERVAL [BAT_INT1]</a> <a id="reroute-bint" class="button">REROUTE</a></p>
           <p class="flex">VENDOR ID [<a id="vend_id"></a>] <a id="reroute-vendid" class="button">REROUTE</a></p>
@@ -76,7 +76,15 @@
           <div id="scripting-console-btn" class="twenty button">SCRIPTING CONSOLE</div>
         </div>
       </div>
-      <div id="subcontainer5"></div>
+      <div id="subcontainer5">
+        <div class="btn-class">
+          <div id="manual-command-console-back-btn" class="twenty button">RETURN</div>
+        </div>
+        <br/>
+        <div id="manual-command-console">
+        </div>
+        <p>COMMAND OR FUNCTION: <input type="text" id="manual-command-console-input" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"/> <a id="manual-command-console-input-submit" class="button">FINISH</a></p>
+      </div>
     </div>
 
     <script src="{{ url_for('static', filename='index.js' )}}"></script>

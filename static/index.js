@@ -185,12 +185,13 @@ async function generateWarnings () {
       })
       .catch(error => {
         warningArray.push("PRGM_ERR");
+        console.error(error);
         resolve();
       });
     }
 
     else {
-      console.log("board check 2");
+      // console.log("board check 2");
       fetch ("/afind_board", {
         method : "POST",
         headers : {
@@ -209,6 +210,7 @@ async function generateWarnings () {
       })
       .catch(error => {
         warningArray.push("PRGM_ERR");
+        console.error(error);
         resolve();
       });
     }
@@ -399,6 +401,64 @@ cmdBtn.onclick = function () {
 commandBackBtn.onclick = function () {
   subcontainer_4.style.display = "none";
   subcontainer_1.style.display = "block";
+}
+
+// manual command console
+
+const manualCommandConsole = document.getElementById("manual-command-console");
+
+const manualCommandConsoleBtn = document.getElementById("manual-command-console-btn");
+const manualCommandConsoleBackBtn = document.getElementById("manual-command-console-back-btn");
+
+const manualCommandConsoleInput = document.getElementById("manual-command-console-input");
+const manualCommandConsoleInputFinish = document.getElementById("manual-command-console-input-submit");
+
+manualCommandConsoleBtn.onclick = function () {
+  subcontainer_5.style.display = "block";
+  subcontainer_4.style.display = "none";
+}
+
+manualCommandConsoleBackBtn.onclick = function () {
+  subcontainer_5.style.display = "none";
+  subcontainer_4.style.display = "block";
+}
+
+function clear_console () {
+  manualCommandConsole.innerHTML = "";
+}
+
+function scrollToBottom_manualCommandConsole () {
+  manualCommandConsole.scrollTop = manualCommandConsole.scrollHeight;
+}
+
+console.log = (...args) => {
+  manualCommandConsole.innerHTML += "<p>" + String(args) + "</p>";
+  scrollToBottom_manualCommandConsole();
+}
+
+console.error = (...args) => {
+  manualCommandConsole.innerHTML += "<p class='error'>" + String(args) + "</p>";
+  scrollToBottom_manualCommandConsole();
+}
+
+console.warn = (...args) => {
+  manualCommandConsole.innerHTML += "<p class='warning-console'>" + String(args) + "</p>";
+  scrollToBottom_manualCommandConsole();
+}
+
+manualCommandConsoleInputFinish.onclick = function () {
+  if (manualCommandConsoleInput.value !== "" || manualCommandConsoleInput.value !== null) {
+    console.log("'" + manualCommandConsoleInput.value + "'");
+    try {
+      eval(manualCommandConsoleInput.value);
+    }
+    
+    catch (error) {
+      console.error(error);
+    }
+    manualCommandConsoleInput.value = "";
+    scrollToBottom_manualCommandConsole();
+  }
 }
 
 // rerouting

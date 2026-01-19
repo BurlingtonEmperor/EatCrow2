@@ -28,13 +28,13 @@ body {
   height: 100%;
 }
 
-#subcontainer, #subcontainer2, #subcontainer3, #subcontainer4 {
+#subcontainer, #subcontainer2, #subcontainer3, #subcontainer4, #subcontainer5 {
   width: 65%;
   height: 65%;
   position: absolute;
 }
 
-#subcontainer2, #subcontainer3, #subcontainer4 {
+#subcontainer2, #subcontainer3, #subcontainer4, #subcontainer5 {
   display: none;
 }
 
@@ -95,7 +95,7 @@ body {
   display: none;
 }
 
-#manual-reroute-input {
+#manual-reroute-input, #manual-command-console-input {
   background-color: black;
   border: none;
   font-size: 16px;
@@ -103,6 +103,14 @@ body {
   color: rgb(184, 225, 221);
   border: 1px solid rgb(136, 238, 136);
   outline: none;
+}
+
+#manual-command-console {
+  width: 100%;
+  height: 70%;
+  border: 1px solid rgb(136, 238, 136);
+  overflow-y: auto;
+  font-family: monospace;
 }
 
 /* Classes */
@@ -147,4 +155,12 @@ body {
   display: flex;
   position: relative;
   justify-content: center;
+}
+
+.error {
+  color: red;
+}
+
+.warning-console {
+  color: yellow;
 }
