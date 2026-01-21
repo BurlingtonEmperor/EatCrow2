@@ -15,8 +15,10 @@ import serial;
 
 from meteostat import Point, Daily;
 from datetime import datetime;
+from geo_city_locator import get_nearest_city
 
 import pandas as pd;
+import asyncio
 
 URL = "http://127.0.0.1:5000";
 app = Flask(__name__);
@@ -77,6 +79,15 @@ def get_temp():
     return str(get_avg_temp);
   else:
     return "loc_error";
+
+def get_city():
+  get_lat_long = get_coord_from_ip()
+  nearest_city = get_nearest_city(get_lat_long[0], get_lat_long[1])
+
+  return nearest_city
+
+# async def get_weather() -> None:
+#   async with python_weather.Client(unit=python_weather.IMPERIAL) as client
 
 @app.route('/')
 def index():

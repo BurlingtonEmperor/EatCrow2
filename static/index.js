@@ -1,6 +1,9 @@
 let warningArray = [];
+let urgent_warningArray = [];
+
 const warningDiv = document.getElementById("warnings");
 const issueDiv = document.getElementById("issues");
+const urgentWarningDiv = document.getElementById("urgent-warnings");
 
 let last_maintained = localStorage.getItem("last_maintained");
 const issue_resolve_msg = document.getElementById("issue-resolve-msg");
@@ -72,7 +75,8 @@ async function resolveIssue (issueCode) {
 }
 
 async function generateWarnings () {
-  warningArray = []; 
+  warningArray = [];
+  urgent_warningArray = []; 
   /*
   Warning List:
   <Temperature and Pressure>
@@ -83,7 +87,7 @@ async function generateWarnings () {
 
   <Device and Interface>
   INTERNET - No internet connection
-  WEATHER - Incoming storms which may affect power supply
+  WEATHER - Incoming storms which may affect power supply (NOT ADDED YET)
   GB-FUNC - Unknown battery status
   POWER - No power supply stream for device
   BATTERY - Low device power
@@ -155,6 +159,10 @@ async function generateWarnings () {
         
         if (battery.level < 0.50) {
           warningArray.push("BATTERY");
+
+          if (battery.level < 0.25) {
+            urgent_warningArray.push("CONNECT TO POWER NOW!");
+          }
         }
 
         resolve();
@@ -186,6 +194,7 @@ async function generateWarnings () {
       .catch(error => {
         warningArray.push("PRGM_ERR");
         console.error(error);
+        urgent_warningArray.push("REBOOT SYSTEM");
         resolve();
       });
     }
@@ -211,6 +220,7 @@ async function generateWarnings () {
       .catch(error => {
         warningArray.push("PRGM_ERR");
         console.error(error);
+        urgent_warningArray.push("REBOOT SYSTEM");
         resolve();
       });
     }
@@ -231,6 +241,12 @@ async function generateWarnings () {
     }
     warningDiv.innerHTML = "<p>WARNINGS:" + warningString + "</p>";
     issueDiv.innerHTML = "<p>ISSUES: " + warningString + "</p>";
+
+    let urgent_warningString = "";
+    for (let i = 0; i < urgent_warningArray.length; i++) {
+      urgent_warningString += " <p class='warning'>" + urgent_warningArray[i] + "</p>";
+    }
+    urgentWarningDiv.innerHTML = urgent_warningString;
   }
 }
 

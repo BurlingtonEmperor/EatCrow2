@@ -113,6 +113,12 @@ body {
   font-family: monospace;
 }
 
+#urgent-warnings {
+  top: 0px;
+  left: 0px;
+  color: red;
+}
+
 /* Classes */
 .warning {
   border: 1px solid red;
