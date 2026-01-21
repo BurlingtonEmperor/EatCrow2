@@ -477,6 +477,21 @@ manualCommandConsoleInputFinish.onclick = function () {
   }
 }
 
+// scripting console
+const scriptingConsoleButton = document.getElementById("scripting-console-btn");
+scriptingConsoleButton.onclick = function () {
+  fetch ("/open_eatcrow", {
+    method : "GET"
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log("scripting console: " + data);
+  })
+  .catch(error => {
+    console.error(error);
+  });
+}
+
 // rerouting
 const manualReroute = document.getElementById("manual-reroute");
 const whichReroute = document.getElementById("which-reroute");

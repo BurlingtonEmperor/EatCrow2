@@ -146,6 +146,13 @@ def get_tempat():
 def get_coord():
   return str(get_coord_from_ip());
 
+@app.route('/open_eatcrow')
+def open_eatcrow():
+  os.system("setlocal")
+  os.sytem("cd /d %~dp0")
+  os.system("python eatcrow.py")
+  return "opened"
+
 def open_browser():
   checkWhichPlatform();
   webbrowser.open_new(URL);
