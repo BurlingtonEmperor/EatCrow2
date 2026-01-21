@@ -243,8 +243,12 @@ async function generateWarnings () {
     issueDiv.innerHTML = "<p>ISSUES: " + warningString + "</p>";
 
     let urgent_warningString = "";
+    warning_space = "";
     for (let i = 0; i < urgent_warningArray.length; i++) {
-      urgent_warningString += " <p class='warning'>" + urgent_warningArray[i] + "</p>";
+      if (i > 0) {
+        warning_space = " ";
+      }
+      urgent_warningString += (warning_space + "<p class='warning'>" + urgent_warningArray[i] + "</p>");
     }
     urgentWarningDiv.innerHTML = urgent_warningString;
   }
@@ -349,6 +353,8 @@ const rerouteBackBtn = document.getElementById("reroute-back-btn");
 const cmdBtn = document.getElementById("cmd-btn");
 const commandBackBtn = document.getElementById("command-back-btn");
 
+const refreshInterfaceBtn = document.getElementById("refresh-interface-btn");
+
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
   subcontainer_2.style.display = "block";
@@ -417,6 +423,10 @@ cmdBtn.onclick = function () {
 commandBackBtn.onclick = function () {
   subcontainer_4.style.display = "none";
   subcontainer_1.style.display = "block";
+}
+
+refreshInterfaceBtn.onclick = function () {
+  location = "";
 }
 
 // manual command console

@@ -114,9 +114,15 @@ body {
 }
 
 #urgent-warnings {
-  top: 0px;
-  left: 0px;
+  top: 5px;
+  left: 5px;
   color: red;
+  position: fixed;
+}
+
+#emergency-stop {
+  top: 5px;
+  right: 5px;
   position: fixed;
 }
 

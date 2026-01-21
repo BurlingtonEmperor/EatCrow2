@@ -30,6 +30,10 @@
           <p>TIME: <a id="clock"></a></p>
           <p>EXTERNAL TEMP: <a id="etemp">STANDBY</a></p>
         </div>
+        <div class="btn-class">
+          <div id="start-autoclave-btn" class="twenty button">START AUTOCLAVE</div>
+          <div id="stop-autoclave-btn" class="twenty button">STOP AUTOCLAVE</div>
+        </div>
       </div>
       <div id="subcontainer2"> 
         <div id="repair-back">
@@ -75,6 +79,18 @@
           <div id="quit-btn" class="twenty button">QUIT ALL SYSTEMS</div>
           <div id="scripting-console-btn" class="twenty button">SCRIPTING CONSOLE</div>
         </div>
+        <br/>
+        <div class="btn-class">
+          <div id="raise-temp-btn" class="twenty button">RAISE TEMPERATURE</div>
+          <div id="decrease-temp-btn" class="twenty button">DECREASE TEMPERATURE</div>
+          <div id="refresh-interface-btn" class="twenty button">REFRESH INTERFACE</div>
+        </div>
+        <br/>
+        <div class="btn-class">
+          <div id="raise-psi-btn" class="twenty button">RAISE PRESSURE</div>
+          <div id="decrease-psi-btn" class="twenty button">DECREASE PRESSURE</div>
+          <div id="log-autoclave-btn" class="twenty button">LOG AUTOCLAVE</div>
+        </div>
       </div>
       <div id="subcontainer5">
         <div class="btn-class">
@@ -86,6 +102,9 @@
         <p>COMMAND OR FUNCTION: <input type="text" id="manual-command-console-input" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"/> <a id="manual-command-console-input-submit" class="button">FINISH</a></p>
       </div>
       <div id="urgent-warnings"></div>
+      <div id="emergency-stop">
+        <div id="emergency-stop-btn" class="button">EMERGENCY STOP</div>
+      </div>
     </div>
 
     <script src="{{ url_for('static', filename='index.js' )}}"></script>

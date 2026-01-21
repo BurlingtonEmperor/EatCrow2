@@ -9,6 +9,7 @@ import time;
 import os;
 import tempfile;
 import requests;
+import sys
 
 import serial.tools.list_ports;
 import serial;
@@ -16,6 +17,7 @@ import serial;
 from meteostat import Point, Daily;
 from datetime import datetime;
 from geo_city_locator import get_nearest_city
+from subprocess import Popen
 
 import pandas as pd;
 import asyncio
@@ -148,9 +150,8 @@ def get_coord():
 
 @app.route('/open_eatcrow')
 def open_eatcrow():
-  os.system("setlocal")
-  os.sytem("cd /d %~dp0")
-  os.system("python eatcrow.py")
+  p = Popen("EATCROW.bat")
+  stdout, stderr = p.communicate()
   return "opened"
 
 def open_browser():
@@ -161,4 +162,3 @@ if __name__ == '__main__':
   Timer(1, open_browser).start();
     
   app.run(port=5000, debug=True, use_reloader=False);
-  
