@@ -17,10 +17,17 @@ import serial;
 from meteostat import Point, Daily;
 from datetime import datetime;
 from geo_city_locator import get_nearest_city
-from subprocess import Popen
+# from subprocess import Popen
 
 import pandas as pd;
 import asyncio
+
+current_autoclave_temp = 0
+current_autoclave_pressure = 0
+autoclave_time = 0
+current_vendor_id = ""
+current_baud_rate = 9600
+arduino_board = ""
 
 URL = "http://127.0.0.1:5000";
 app = Flask(__name__);
@@ -87,6 +94,21 @@ def get_city():
   nearest_city = get_nearest_city(get_lat_long[0], get_lat_long[1])
 
   return nearest_city
+
+def connect_to_board_for_command():
+  global arduino_board
+  current_board_port = ""
+  
+  try:
+    current_board_port = alternate_board_find(current_vendor_id)
+    if (current_board_port == None):
+      return "no_board" 
+  except:
+    return "board_error"
+  try:
+    arduino_board = serial.Serial(port=current_board_port, baudrate=current_board_port, timeout=1)
+  except:
+    return "board_error"
 
 # async def get_weather() -> None:
 #   async with python_weather.Client(unit=python_weather.IMPERIAL) as client

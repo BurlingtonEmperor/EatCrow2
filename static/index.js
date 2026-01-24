@@ -161,7 +161,7 @@ async function generateWarnings () {
           warningArray.push("BATTERY");
 
           if (battery.level < 0.25) {
-            urgent_warningArray.push("CONNECT TO POWER NOW!");
+            urgent_warningArray.push("CONNECT TO POWER NOW");
           }
         }
 
@@ -180,14 +180,17 @@ async function generateWarnings () {
       .then(data => {
         if (data == "not_found" || data.includes("The system cannot find the file specified")) {
           warningArray.push("BOARD");
+          urgent_warningArray.push("CONNECT DEVICE TO BOARD");
         }
 
         else if (data == "port_not_found") {
           warningArray.push("PORT");
+          urgent_warningArray.push("FIND CORRECT PORT");
         }
 
         if (data.includes("Access is denied")) {
           warningArray.push("ACCESS");
+          urgent_warningArray.push("ACCESS TO BOARD DENIED");
         }
         resolve();
       })
@@ -214,6 +217,7 @@ async function generateWarnings () {
       .then(data => {
         if (data == "None") {
           warningArray.push("BOARD");
+          urgent_warningArray.push("CONNECT DEVICE TO BOARD");
         }
         resolve();
       })
@@ -313,7 +317,8 @@ function checkETEMP () {
         external_temp_status.innerText = "ENDPOINT ERROR";
         break;
       default:
-        external_temp_status.innerText = String(data) + " * C";
+        farenheitTemp = (parseInt(data) * 1.8) + 32;
+        external_temp_status.innerText = String(data) + " * C" + " || " + farenheitTemp + " * F";
         break;
     }
   })

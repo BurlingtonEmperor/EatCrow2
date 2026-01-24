@@ -126,6 +126,17 @@ body {
   position: fixed;
 }
 
+#chart-rate {
+  right: 5px;
+  bottom: 5px;
+  position: fixed;
+}
+
+#emergency-stop-btn {
+  color: orange;
+  outline: 1px solid orange;
+}
+
 /* Classes */
 .warning {
   border: 1px solid red;
