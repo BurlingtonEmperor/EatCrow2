@@ -17,7 +17,7 @@ import serial;
 from meteostat import Point, Daily;
 from datetime import datetime;
 from geo_city_locator import get_nearest_city
-# from subprocess import Popen
+from subprocess import Popen
 
 import pandas as pd;
 import asyncio
@@ -175,6 +175,15 @@ def open_eatcrow():
   p = Popen("EATCROW.bat")
   stdout, stderr = p.communicate()
   return "opened"
+
+@app.route('/send_signal_to_board', methods=['POST'])
+def send_signal_to_board():
+  signal_to_send = request.get_json()
+  final_signal_to_send = signal_to_send.get("signal_num")
+
+  arduino_board.write(final_signal_to_send.encode('utf-8'))
+  time.sleep(0.1)
+  return "sent"
 
 def open_browser():
   checkWhichPlatform();

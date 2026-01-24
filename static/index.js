@@ -8,6 +8,8 @@ const urgentWarningDiv = document.getElementById("urgent-warnings");
 let last_maintained = localStorage.getItem("last_maintained");
 const issue_resolve_msg = document.getElementById("issue-resolve-msg");
 
+
+
 // start precheck
 const vendorID = localStorage.getItem("vendor_id");
 function checkForVendorID () {
