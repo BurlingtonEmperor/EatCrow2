@@ -31,6 +31,18 @@ void loop() {
       case '3':
         Serial.println("psi_decrease");
         break;
+      case '4':
+        Serial.println("heater_on");
+        break;
+      case '5':
+        Serial.println("heater_off");
+        break;
+      case '6':
+        Serial.println("psi_tank_on");
+        break;
+      case '7':
+        Serial.println("psi_tank_off");
+        break;
     }
   }
 }

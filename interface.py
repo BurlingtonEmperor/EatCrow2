@@ -27,7 +27,6 @@ current_autoclave_pressure = 0
 autoclave_time = 0
 current_vendor_id = ""
 current_baud_rate = 9600
-arduino_board = ""
 
 URL = "http://127.0.0.1:5000";
 app = Flask(__name__);
@@ -181,9 +180,31 @@ def send_signal_to_board():
   signal_to_send = request.get_json()
   final_signal_to_send = signal_to_send.get("signal_num")
 
-  arduino_board.write(final_signal_to_send.encode('utf-8'))
+  current_board_port = signal_to_send.get("board_porter")
+  current_baud_rate = signal_to_send.get("baud_rater")
+
+  arduino_board_alpha = serial.Serial(port=current_board_port, baudrate=current_baud_rate, timeout=1)
+
+  arduino_board_alpha.write(final_signal_to_send.encode('utf-8'))
   time.sleep(0.1)
   return "sent"
+
+@app.route('/read_signal_from_board', methods=['POST'])
+def read_signal_from_board():
+  signal_to_send = request.get_json()
+  current_board_port = signal_to_send.get("board_porter")
+  current_baud_rate = signal_to_send.get("baud_rater")
+
+  arduino_board_alpha = serial.Serial(port=current_board_port, baudrate=current_baud_rate, timeout=1)
+  if (arduino_board_alpha.in_waiting):
+    try:
+      data = arduino.readline('utf-8').strip()
+      if (data):
+        return data
+    except:
+      return "unicode_error"
+  else:
+    return "nothing"
 
 def open_browser():
   checkWhichPlatform();

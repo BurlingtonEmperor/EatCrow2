@@ -8,8 +8,6 @@ const urgentWarningDiv = document.getElementById("urgent-warnings");
 let last_maintained = localStorage.getItem("last_maintained");
 const issue_resolve_msg = document.getElementById("issue-resolve-msg");
 
-
-
 // start precheck
 const vendorID = localStorage.getItem("vendor_id");
 function checkForVendorID () {
@@ -28,6 +26,15 @@ function checkForBaudRate () {
 }
 const baud_rate = document.getElementById("baud_rate");
 baud_rate.innerText = localStorage.getItem("baud_rate");
+
+const board_port = document.getElementById("board_port");
+const boardPort = localStorage.getItem("board_port");
+function checkForBoardPort () {
+  if (boardPort == null || boardPort == "" || boardPort == undefined) {
+    localStorage.setItem("board_port", "COM3");
+  }
+}
+board_port.innerText = localStorage.getItem("board_port");
 // end precheck
 
 async function resolveIssue (issueCode) {
@@ -190,9 +197,13 @@ async function generateWarnings () {
           urgent_warningArray.push("FIND CORRECT PORT");
         }
 
-        if (data.includes("Access is denied")) {
+        else if (data.includes("Access is denied")) {
           warningArray.push("ACCESS");
           urgent_warningArray.push("ACCESS TO BOARD DENIED");
+        }
+
+        else {
+          read_from_board();
         }
         resolve();
       })
@@ -220,6 +231,14 @@ async function generateWarnings () {
         if (data == "None") {
           warningArray.push("BOARD");
           urgent_warningArray.push("CONNECT DEVICE TO BOARD");
+        }
+
+        else {
+          read_from_board();
+          if (localStorage.getItem("board_port") !== String(data)) {
+            localStorage.setItem("board_port", String(data));
+            board_port.innerText = String(data);
+          }
         }
         resolve();
       })
@@ -281,6 +300,7 @@ const timeInterval = setInterval(function () {
 
 checkForVendorID();
 checkForBaudRate();
+checkForBoardPort();
 
 // end precheck2
 
@@ -540,6 +560,12 @@ manualRerouteButton.onclick = function () {
 
       reroute_baud_rate.style.display = "block";
       break;
+    case "board-port":
+      board_port.innerText = manualRerouteInput.value;
+      localStorage.setItem("board_port", manualRerouteInput.value);
+
+      reroute_board_port.style.display = "block";
+      break;
   }
   manualRerouteInput.value = "";
   manualReroute.style.display = "none";
@@ -554,6 +580,9 @@ manualRerouteCancel.onclick = function () {
       break;
     case "baud-rate":
       reroute_baud_rate.style.display = "block";
+      break;
+    case "board-port":
+      reroute_board_port.style.display = "block";
       break;
   }
 }
@@ -623,4 +652,90 @@ reroute_baud_rate.onclick = function () {
   reroute_baud_rate.style.display = "none";
   manualReroute.style.display = "flex";
   reroute_which = "baud-rate";
+}
+
+const reroute_board_port = document.getElementById("reroute-boardport");
+reroute_board_port.onclick = function () {
+  resetManualReroute("BOARD PORT")
+
+  reroute_board_port.style.display = "none";
+  manualReroute.style.display = "flex";
+  reroute_which = "board-port";
+}
+
+// arduino board communication
+const heater_status = document.getElementById("heater-status");
+const pressure_tank_status = document.getElementById("pressure-tank-status");
+
+function send_signal_to_board (boardSignal) {
+  fetch ("/send_signal_to_board", {
+    method : "POST",
+    headers : {
+      "Content-Type" : "application/json"
+    },
+    body : JSON.stringify({
+      signal_num : String(boardSignal),
+      baud_rater : parseInt(localStorage.getItem("baud_rate")),
+      board_porter : String(localStorage.getItem("board_port"))
+    })
+  })
+  .then(response => response.text())
+  .then(data => {
+    if (data == "sent") {
+      console.log(String(boardSignal) + " was sent to the board.");
+      switch (String(boardSignal)) {
+        case "4":
+        case "5":
+          heater_status.innerText = "ACTION PENDING";
+          break;
+        case "6":
+        case "7":
+          pressure_tank_status.innerText = "ACTION PENDING"
+          break;
+        default:
+          console.warn('"' + String(boardSignal) + '" is not a recognised board signal.');
+          break;
+      }
+    }
+
+    else {
+      console.warn("Data has not been sent to the board.");  
+    }
+  })
+  .catch(error => {
+    warningArray.push("PRGM_ERR");
+    console.error(error);
+    urgent_warningArray.push("REBOOT SYSTEM");
+  });
+}
+
+function read_from_board () {
+  fetch ("/read_signal_from_board", {
+    method : "POST",
+    headers : {
+      "Content-Type" : "application/json"
+    },
+    body : JSON.stringify({
+      baud_rater : parseInt(localStorage.getItem("baud_rate")),
+      board_porter : String(localStorage.getItem("board_port"))
+    })
+  })
+  .then(response => response.text())
+  .then(data => {
+    switch (data) {
+      case "nothing":
+        break;
+      case "unicode_error":
+        console.warn("Unicode Error: Could not decode Arduino reply message.");
+        break;
+      default:
+        console.log(data);
+        break;
+    }
+  })
+  .catch(error => {
+    warningArray.push("PRGM_ERR");
+    console.error(error);
+    urgent_warningArray.push("REBOOT SYSTEM");
+  });
 }
