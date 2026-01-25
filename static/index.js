@@ -192,24 +192,28 @@ async function generateWarnings () {
           warningArray.push("BOARD");
           urgent_warningArray.push("CONNECT DEVICE TO BOARD");
           isConnectedToBoard = false;
+          resolve();
         }
 
         else if (data == "port_not_found") {
           warningArray.push("PORT");
           urgent_warningArray.push("FIND CORRECT PORT");
           isConnectedToBoard = false;
+          resolve();
         }
 
         else if (data.includes("Access is denied")) {
           warningArray.push("ACCESS");
           urgent_warningArray.push("ACCESS TO BOARD DENIED");
           isConnectedToBoard = false;
+          resolve();
         }
 
         else if (data.includes("wsgi_app response")) {
           warningArray.push("ACCESS");
           urgent_warningArray.push("REBOOT SYSTEM");
           isConnectedToBoard = false;
+          resolve();
         }
 
         else {
@@ -228,19 +232,23 @@ async function generateWarnings () {
           .then(data => {
             switch (data) {
               case "nothing":
+                resolve();
                 break;
               default:
                 if (data.includes("Encountered an error: ")) {
                   console.error(data);
+                  resolve();
                 }
 
                 else {
                   switch (true) {
                     case (data.includes("wsgi_app response")):
                       console.error(data);
+                      resolve();
                       break;
                     default:
                       console.log(data);
+                      resolve();
                   }
                 }
                 break;
@@ -250,9 +258,10 @@ async function generateWarnings () {
             warningArray.push("PRGM_ERR");
             console.error(error);
             urgent_warningArray.push("REBOOT SYSTEM");
+            resolve();
           });
         }
-        resolve();
+        // resolve();
       })
       .catch(error => {
         warningArray.push("PRGM_ERR");
@@ -285,9 +294,9 @@ async function generateWarnings () {
 
         else {
           // read_from_board();
-          if (data.includes("wsgi_app response")) {
+          if (String(data).includes("The debugger caught an exception")) {
             isConnectedToBoard = false;
-            warningArray.push("ACCESS");
+            warningArray.push("PRGM_ERR");
             urgent_warningArray.push("REBOOT SYSTEM");
           }
 
@@ -313,19 +322,25 @@ async function generateWarnings () {
           .then(data => {
             switch (data) {
               case "nothing":
+                resolve();
                 break;
               default:
                 if (data.includes("Encountered an error: ")) {
                   console.error(data);
+                  resolve();
                 }
 
                 else {
                   switch (true) {
-                    case (data.includes("wsgi_app response")):
+                    case (String(data).includes("The debugger caught an exception")):
                       console.error(data);
+                      warningArray.push("PRGM_ERR");
+                      urgent_warningArray.push("REBOOT SYSTEM");
+                      resolve();
                       break;
                     default:
                       console.log(data);
+                      resolve();
                   }
                 }
                 break;
@@ -335,8 +350,8 @@ async function generateWarnings () {
             warningArray.push("PRGM_ERR");
             console.error(error);
             urgent_warningArray.push("REBOOT SYSTEM");
+            resolve();
           });
-          resolve();
         }
       })
       .catch(error => {
@@ -346,9 +361,35 @@ async function generateWarnings () {
         resolve();
       });
     }
-  })
+  });
 
-  asyncChecks.push(batteryCheckPromise, boardCheckPromise);
+
+  const boardReturnErrPromise = new Promise((resolve) => {
+    // let hasManConsoleChanged = false;
+    // const resizeObserver = new ResizeObserver(entries => {
+    //   for (const entry of entries) {
+    //     hasManConsoleChanged = true;
+    //   }
+    // });
+
+    // if (manualCommandConsole) {
+    //   resizeObserver.observe(manualCommandConsole);
+    // }
+
+    // switch (true) {
+    //   case (hasManConsoleChanged):
+    //     let checkForErrs = manualCommandConsole.innerHTML;
+    //     if (String(checkForErrs).includes("The debugger caught")) {
+    //       warningArray.push("PRGM ERR");
+    //       urgent_warningArray.push("REBOOT SYSTEM");
+    //     }
+    //     break;
+    // }
+    
+    resolve();
+  });
+
+  asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise);
   await Promise.all(asyncChecks);
 
   if (warningArray.length === 0) {
@@ -586,7 +627,16 @@ function scrollToBottom_manualCommandConsole () {
 }
 
 console.log = (...args) => {
-  manualCommandConsole.innerHTML += "<p>" + escapeHtml(String(args)) + "</p>";
+  if (String(args).includes("The debugger caught an exception")) {
+    manualCommandConsole.innerHTML += "<p class='error'>" + escapeHtml(String(args)) + "</p>"; 
+    isConnectedToBoard = false;
+    warningArray.push("PRGM_ERR");
+    urgent_warningArray.push("REBOOT SYSTEM");
+  }
+
+  else {
+    manualCommandConsole.innerHTML += "<p>" + escapeHtml(String(args)) + "</p>";
+  }
   scrollToBottom_manualCommandConsole();
 }
 
