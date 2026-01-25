@@ -1,3 +1,5 @@
+int isHeaterOn = 0;
+
 void setup() {
   Serial.begin(9600); 
 }
@@ -35,6 +37,14 @@ void loop() {
         break;
       case '4':
         Serial.println("heater_on");
+        // switch (isHeaterOn) {
+        //   case 0:
+        //     isHeaterOn = 1;
+        //     break;
+        //   case 1:
+        //     Serial.println("heater_already_on");
+        //     break;
+        // }
         break;
       case '5':
         Serial.println("heater_off");
@@ -44,6 +54,9 @@ void loop() {
         break;
       case '7':
         Serial.println("psi_tank_off");
+        break;
+      case '8':
+        Serial.println("emergency_stop");
         break;
       default:
         Serial.print("Received unknown character: ");

@@ -206,9 +206,51 @@ async function generateWarnings () {
           isConnectedToBoard = false;
         }
 
+        else if (data.includes("wsgi_app response")) {
+          warningArray.push("ACCESS");
+          urgent_warningArray.push("REBOOT SYSTEM");
+          isConnectedToBoard = false;
+        }
+
         else {
           isConnectedToBoard = true;
-          read_from_board();
+          fetch ("/read_signal_from_board", {
+            method : "POST",
+            headers : {
+              "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({
+              baud_rater : parseInt(localStorage.getItem("baud_rate")),
+              board_porter : String(localStorage.getItem("board_port"))
+            })
+          })
+          .then(response => response.text())
+          .then(data => {
+            switch (data) {
+              case "nothing":
+                break;
+              default:
+                if (data.includes("Encountered an error: ")) {
+                  console.error(data);
+                }
+
+                else {
+                  switch (true) {
+                    case (data.includes("wsgi_app response")):
+                      console.error(data);
+                      break;
+                    default:
+                      console.log(data);
+                  }
+                }
+                break;
+            }
+          })
+          .catch(error => {
+            warningArray.push("PRGM_ERR");
+            console.error(error);
+            urgent_warningArray.push("REBOOT SYSTEM");
+          });
         }
         resolve();
       })
@@ -238,17 +280,64 @@ async function generateWarnings () {
           warningArray.push("BOARD");
           isConnectedToBoard = false;
           urgent_warningArray.push("CONNECT DEVICE TO BOARD");
+          resolve();
         }
 
         else {
-          isConnectedToBoard = true;
-          read_from_board();
-          if (localStorage.getItem("board_port") !== String(data)) {
-            localStorage.setItem("board_port", String(data));
-            board_port.innerText = String(data);
+          // read_from_board();
+          if (data.includes("wsgi_app response")) {
+            isConnectedToBoard = false;
+            warningArray.push("ACCESS");
+            urgent_warningArray.push("REBOOT SYSTEM");
           }
+
+          else {
+            isConnectedToBoard = true;
+            if (localStorage.getItem("board_port") !== String(data)) {
+              localStorage.setItem("board_port", String(data));
+              board_port.innerText = String(data);
+            }
+          }
+
+          fetch ("/read_signal_from_board", {
+            method : "POST",
+            headers : {
+              "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({
+              baud_rater : parseInt(localStorage.getItem("baud_rate")),
+              board_porter : String(localStorage.getItem("board_port"))
+            })
+          })
+          .then(response => response.text())
+          .then(data => {
+            switch (data) {
+              case "nothing":
+                break;
+              default:
+                if (data.includes("Encountered an error: ")) {
+                  console.error(data);
+                }
+
+                else {
+                  switch (true) {
+                    case (data.includes("wsgi_app response")):
+                      console.error(data);
+                      break;
+                    default:
+                      console.log(data);
+                  }
+                }
+                break;
+            }
+          })
+          .catch(error => {
+            warningArray.push("PRGM_ERR");
+            console.error(error);
+            urgent_warningArray.push("REBOOT SYSTEM");
+          });
+          resolve();
         }
-        resolve();
       })
       .catch(error => {
         warningArray.push("PRGM_ERR");
@@ -347,6 +436,10 @@ function checkETEMP () {
         external_temp_status.innerText = "ENDPOINT ERROR";
         break;
       default:
+        if (data.includes("Error") || data.includes("error")) {
+          external_temp_status.innerText = "LONGITUDE ERROR";
+          return false;
+        }
         farenheitTemp = (parseInt(data) * 1.8) + 32;
         external_temp_status.innerText = String(data) + " * C" + " || " + farenheitTemp + " * F";
         break;
@@ -493,17 +586,17 @@ function scrollToBottom_manualCommandConsole () {
 }
 
 console.log = (...args) => {
-  manualCommandConsole.innerHTML += "<p>" + String(args) + "</p>";
+  manualCommandConsole.innerHTML += "<p>" + escapeHtml(String(args)) + "</p>";
   scrollToBottom_manualCommandConsole();
 }
 
 console.error = (...args) => {
-  manualCommandConsole.innerHTML += "<p class='error'>" + String(args) + "</p>";
+  manualCommandConsole.innerHTML += "<p class='error'>" + escapeHtml(String(args)) + "</p>";
   scrollToBottom_manualCommandConsole();
 }
 
 console.warn = (...args) => {
-  manualCommandConsole.innerHTML += "<p class='warning-console'>" + String(args) + "</p>";
+  manualCommandConsole.innerHTML += "<p class='warning-console'>" + escapeHtml(String(args)) + "</p>";
   scrollToBottom_manualCommandConsole();
 }
 
@@ -742,7 +835,13 @@ function read_from_board () {
         }
 
         else {
-          console.log(data);
+          switch (true) {
+            case (data.includes("wsgi_app response")):
+              console.error(data);
+              break;
+            default:
+              console.log(data);
+          }
         }
         break;
     }
