@@ -27,10 +27,12 @@ current_autoclave_pressure = 0
 autoclave_time = 0
 current_vendor_id = ""
 current_baud_rate = 9600
+current_board_port = "COM3"
+arduino_board = ""
 
 URL = "http://127.0.0.1:5000";
 app = Flask(__name__);
-board = "";
+# board = "";
 
 temp_file_path = os.path.join(tempfile.gettempdir(), 'os_output.txt');
 def clean_exit_file():
@@ -105,9 +107,17 @@ def connect_to_board_for_command():
   except:
     return "board_error"
   try:
-    arduino_board = serial.Serial(port=current_board_port, baudrate=current_board_port, timeout=1)
+    arduino_board = serial.Serial(port=current_board_port, baudrate=current_baud_rate, timeout=1)
   except:
     return "board_error"
+
+def connect_to_board_precheck(my_port, my_rate):
+  global arduino_board
+
+  if (arduino_board == "" or not arduino_board.is_open):
+    arduino_board = serial.Serial(port=str(my_port), baudrate=int(my_rate), timeout=1)
+    time.sleep(2)
+  return arduino_board
 
 # async def get_weather() -> None:
 #   async with python_weather.Client(unit=python_weather.IMPERIAL) as client
@@ -180,29 +190,33 @@ def send_signal_to_board():
   signal_to_send = request.get_json()
   final_signal_to_send = signal_to_send.get("signal_num")
 
-  current_board_port = signal_to_send.get("board_porter")
-  current_baud_rate = signal_to_send.get("baud_rater")
+  curr_port = signal_to_send.get("board_porter")
+  curr_rate = signal_to_send.get("baud_rater")
 
-  arduino_board_alpha = serial.Serial(port=current_board_port, baudrate=current_baud_rate, timeout=1)
+  # arduino_board_alpha = serial.Serial(port=current_board_port, baudrate=current_baud_rate, timeout=1)
+  board = connect_to_board_precheck(curr_port, curr_rate)
 
-  arduino_board_alpha.write(final_signal_to_send.encode('utf-8'))
-  time.sleep(0.1)
+  board.write(final_signal_to_send.encode('utf-8'))
   return "sent"
 
 @app.route('/read_signal_from_board', methods=['POST'])
 def read_signal_from_board():
   signal_to_send = request.get_json()
-  current_board_port = signal_to_send.get("board_porter")
-  current_baud_rate = signal_to_send.get("baud_rater")
+  curr_port = signal_to_send.get("board_porter")
+  curr_rate = signal_to_send.get("baud_rater")
 
-  arduino_board_alpha = serial.Serial(port=current_board_port, baudrate=current_baud_rate, timeout=1)
-  if (arduino_board_alpha.in_waiting):
+  # arduino_board_alpha = serial.Serial(port=current_board_port, baudrate=current_baud_rate, timeout=1)
+  board = connect_to_board_precheck(curr_port, curr_rate)
+
+  if (board.in_waiting > 0):
     try:
-      data = arduino.readline('utf-8').strip()
+      raw_data = board.readline()
+      data = raw_data.decode('utf-8').strip()
+      
       if (data):
         return data
-    except:
-      return "unicode_error"
+    except Exception as e:
+      return ("Encountered an error: " + e)
   else:
     return "nothing"
 

@@ -1,5 +1,6 @@
 let warningArray = [];
 let urgent_warningArray = [];
+let isConnectedToBoard = false;
 
 const warningDiv = document.getElementById("warnings");
 const issueDiv = document.getElementById("issues");
@@ -190,19 +191,23 @@ async function generateWarnings () {
         if (data == "not_found" || data.includes("The system cannot find the file specified")) {
           warningArray.push("BOARD");
           urgent_warningArray.push("CONNECT DEVICE TO BOARD");
+          isConnectedToBoard = false;
         }
 
         else if (data == "port_not_found") {
           warningArray.push("PORT");
           urgent_warningArray.push("FIND CORRECT PORT");
+          isConnectedToBoard = false;
         }
 
         else if (data.includes("Access is denied")) {
           warningArray.push("ACCESS");
           urgent_warningArray.push("ACCESS TO BOARD DENIED");
+          isConnectedToBoard = false;
         }
 
         else {
+          isConnectedToBoard = true;
           read_from_board();
         }
         resolve();
@@ -211,6 +216,7 @@ async function generateWarnings () {
         warningArray.push("PRGM_ERR");
         console.error(error);
         urgent_warningArray.push("REBOOT SYSTEM");
+        isConnectedToBoard = false;
         resolve();
       });
     }
@@ -230,10 +236,12 @@ async function generateWarnings () {
       .then(data => {
         if (data == "None") {
           warningArray.push("BOARD");
+          isConnectedToBoard = false;
           urgent_warningArray.push("CONNECT DEVICE TO BOARD");
         }
 
         else {
+          isConnectedToBoard = true;
           read_from_board();
           if (localStorage.getItem("board_port") !== String(data)) {
             localStorage.setItem("board_port", String(data));
@@ -725,11 +733,17 @@ function read_from_board () {
     switch (data) {
       case "nothing":
         break;
-      case "unicode_error":
-        console.warn("Unicode Error: Could not decode Arduino reply message.");
-        break;
+      // case "unicode_error":
+      //   console.warn("Unicode Error: Could not decode Arduino reply message.");
+      //   break;
       default:
-        console.log(data);
+        if (data.includes("Encountered an error: ")) {
+          console.error(data);
+        }
+
+        else {
+          console.log(data);
+        }
         break;
     }
   })

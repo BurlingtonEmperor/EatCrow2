@@ -3,8 +3,10 @@ void setup() {
 }
 
 void loop() {
+  // Serial.print("running");
   if (Serial.available() > 0) {
     char incomingByte = Serial.read(); 
+    Serial.print("Incoming signal: ");
 
     // if (incomingByte == '0') {
     //   Serial.println("raising temperature"); // raising temperature    
@@ -42,6 +44,10 @@ void loop() {
         break;
       case '7':
         Serial.println("psi_tank_off");
+        break;
+      default:
+        Serial.print("Received unknown character: ");
+        Serial.println(incomingByte);
         break;
     }
   }
