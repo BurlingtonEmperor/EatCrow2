@@ -920,6 +920,287 @@ function read_from_board () {
 // charts
 let time_values = [];
 
-const tempChart = document.getElementById("temp-chart");
+const chartRate = document.getElementById("chart-rate");
+const pressureRate = document.getElementById("pressure-rate");
 let temp_values = [];
+let pressure_values = [];
 
+setInterval(function () {
+  const ctx = document.createElement('canvas');
+  const ctx_double = document.createElement('canvas');
+
+  chartRate.appendChild(ctx);
+  pressureRate.appendChild(ctx_double);
+
+  
+  if (document.getElementById("temp-chart")) {
+    document.getElementById("temp-chart").remove();
+  }
+  ctx.id = "temp-chart";
+
+  if (document.getElementById("pressure-chart")) {
+    document.getElementById("pressure-chart").remove();
+  }
+  ctx_double.id = "pressure-chart";
+
+  const crossLinePlugin = {
+    id: 'crossLinePlugin',
+    afterDraw(chart) {
+      const { ctx, chartArea: { top, bottom, left, right } } = chart;
+
+      ctx.save();
+      ctx.strokeStyle = "rgba(136,238,136,1.000)"; 
+      ctx.lineWidth = 2;
+
+      ctx.beginPath();
+
+      ctx.moveTo(left, top);
+      ctx.lineTo(right, bottom);
+    
+      ctx.moveTo(right, top);
+      ctx.lineTo(left, bottom);
+    
+      ctx.stroke();
+      ctx.restore();
+    }
+  };
+
+  if (time_values.length < 5 || temp_values < 5) {
+    new Chart(ctx, {
+      type : "line",
+      data : {
+        labels : time_values,
+        datasets : [{
+          fill : false,
+          lineTension : 0,
+          backgroundColor : "rgba(136,238,136,1.000)",
+          borderColor : "rgba(136,238,136,1.000)",
+          data: temp_values
+        }]
+      },
+      options : {
+        plugins : {
+          legend : {
+            display : false
+          },
+          title : {
+            display : true,
+            text : "TEMPERATURE",
+            color : "rgba(136,238,136,1.000)",
+            font : {
+              family : "Hornet"
+            }
+          }
+        },
+        scales : {
+          y : {
+            ticks : {
+              display : false
+            },
+            grid : {
+              display : false
+            }
+          }
+        }
+      },
+      plugins: [crossLinePlugin]
+    });
+  }
+
+  else {
+    new Chart(ctx, {
+      type : "line",
+      data : {
+        labels : time_values,
+        datasets : [{
+          fill : false,
+          lineTension : 0,
+          backgroundColor : "rgba(136,238,136,1.000)",
+          borderColor : "rgba(136,238,136,1.000)",
+          data: temp_values
+        }]
+      },
+      options : {
+        plugins : {
+          legend : {
+            display : false
+          },
+          title : {
+            display : true,
+            text : "TEMPERATURE",
+            color : "rgba(136,238,136,1.000)",
+            font : {
+              family : "Hornet"
+            }
+          }
+        },
+        scales : {
+          y : {
+            ticks : {
+              font : {
+                family : "Hornet"
+              },
+              color : "rgba(136,238,136,1.000)"
+            },
+            grid : {
+              color : "rgba(136,238,136,1.000)"
+            },
+            border : {
+              color : "rgba(136,238,136,1.000)"
+            },
+            title : {
+              display : true,
+              text : "FAREN.",
+              font : {
+                family : "Hornet"
+              },
+              color : "rgba(136,238,136,1.000)"
+            }
+          },
+          x : {
+            ticks : {
+              font : {
+                family : "Hornet"
+              },
+              color : "rgba(136,238,136,1.000)"
+            },
+            grid : {
+              color : "rgba(136,238,136,1.000)"
+            },
+            border : {
+              color : "rgba(136,238,136,1.000)"
+            },
+            title : {
+              display : true,
+              text : "TIME (MIN.)",
+              font : {
+                family : "Hornet"
+              },
+              color : "rgba(136,238,136,1.000)"
+            }
+          }
+        }
+      }
+    });
+  }
+
+  if (time_values.length < 5 || pressure_values.length < 5) {
+    new Chart(ctx_double, {
+      type : "line",
+      data : {
+        labels : time_values,
+        datasets : [{
+          fill : false,
+          lineTension : 0,
+          backgroundColor : "rgba(136,238,136,1.000)",
+          borderColor : "rgba(136,238,136,1.000)",
+          data: pressure_values
+        }]
+      },
+      options : {
+        plugins : {
+          legend : {
+            display : false
+          },
+          title : {
+            display : true,
+            text : "PRESSURE",
+            color : "rgba(136,238,136,1.000)",
+            font : {
+              family : "Hornet"
+            }
+          }
+        },
+        scales : {
+          y : {
+            ticks : {
+              display : false
+            },
+            grid : {
+              display : false
+            }
+          }
+        }
+      },
+      plugins: [crossLinePlugin]
+    });
+  }
+
+  else {
+    new Chart(ctx_double, {
+      type : "line",
+      data : {
+        labels : time_values,
+        datasets : [{
+          fill : false,
+          lineTension : 0,
+          backgroundColor : "rgba(136,238,136,1.000)",
+          borderColor : "rgba(136,238,136,1.000)",
+          data: pressure_values
+        }]
+      },
+      options : {
+        plugins : {
+          legend : {
+            display : false
+          },
+          title : {
+            display : true,
+            text : "PRESSURE",
+            color : "rgba(136,238,136,1.000)",
+            font : {
+              family : "Hornet"
+            }
+          }
+        },
+        scales : {
+          y : {
+            ticks : {
+              font : {
+                family : "Hornet"
+              },
+              color : "rgba(136,238,136,1.000)"
+            },
+            grid : {
+              color : "rgba(136,238,136,1.000)"
+            },
+            border : {
+              color : "rgba(136,238,136,1.000)"
+            },
+            title : {
+              display : true,
+              text : "PSI",
+              font : {
+                family : "Hornet"
+              },
+              color : "rgba(136,238,136,1.000)"
+            }
+          },
+          x : {
+            ticks : {
+              font : {
+                family : "Hornet"
+              },
+              color : "rgba(136,238,136,1.000)"
+            },
+            grid : {
+              color : "rgba(136,238,136,1.000)"
+            },
+            border : {
+              color : "rgba(136,238,136,1.000)"
+            },
+            title : {
+              display : true,
+              text : "TIME (MIN.)",
+              font : {
+                family : "Hornet"
+              },
+              color : "rgba(136,238,136,1.000)"
+            }
+          }
+        }
+      }
+    });
+  }
+}, 1000);
+Chart.defaults.animation = false;
