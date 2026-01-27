@@ -16,3 +16,9 @@ function escapeHtml (unsafe) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
+// setInterval(function () {
+//   if (manualCommandConsole.scrollHeight > 1000000) {
+//     manAutoArray = String(manualCommandConsole.innerHTML).split("</p>");
+//   }
+// }, 10000);

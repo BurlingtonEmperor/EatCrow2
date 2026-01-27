@@ -92,6 +92,10 @@
           <div id="decrease-psi-btn" class="twenty button">DECREASE PRESSURE</div>
           <div id="log-autoclave-btn" class="twenty button">LOG AUTOCLAVE</div>
         </div>
+        <br/>
+        <div class="btn-class">
+          <div id="soft-reboot-btn" class="twenty button">SOFT REBOOT</div>
+        </div>
       </div>
       <div id="subcontainer5">
         <div class="btn-class">
@@ -111,11 +115,14 @@
         <div>PSI: <a id="psi_gauge2">NO DATA</a></div>
       </div>
       <div id="chart-rate">
+        <div>DEVICE BATTERY: <a id="device-battery-percent">STANDBY</a></div>
         <div>TEMP CHANGE RATE: <a id="temp-change-rate">NO DATA</a></div>
         <div>PSI CHANGE RATE: <a id="psi-change-rate">NO DATA</a></div>
+        <canvas id="temp-chart"></canvas>
       </div>
     </div>
-
+    
+    <script src="{{ url_for('static', filename='chart.js' )}}"></script>
     <script src="{{ url_for('static', filename='index.js' )}}"></script>
     <script src="{{ url_for('static', filename='man_cmd_console.js' )}}"></script>
   </body>

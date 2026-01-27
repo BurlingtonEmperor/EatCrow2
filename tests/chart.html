@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
+<body style="background-color:black;">
+<canvas id="myChart" style="width:100px;"></canvas>
+
+<script>
+const xValues = [50,60,70,80,90,100,110,120,130,140,150];
+const yValues = [7,8,8,9,9,9,10,11,14,14,15];
+
+const ctx = document.createElement('canvas');
+document.body.appendChild(ctx);
+
+setInterval(function () {
+yValues.push(yValues[yValues.length - 1] + 5);
+
+const ctx = document.createElement('canvas');
+document.body.appendChild(ctx);
+
+if (document.getElementById("yay")) {
+  document.getElementById("yay").remove();
+}
+ctx.id = "yay";
+
+new Chart(ctx, {
+  type: "line",
+  options: {
+    animation: false // Disables all animations
+  },
+  data: {
+    labels: xValues,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(136,238,136,1.000)",
+      borderColor: "rgba(136,238,136,1.000)",
+      data: yValues
+    }]
+  },
+  options: {
+    plugins: {
+      legend: {display:false},
+      title: {
+        display: true,
+        text: "House Prices vs. Size",
+        font: {
+          size:16,
+          family : "monospace"
+        },
+        color : "rgba(136,238,136,1.000)"
+      }
+    },
+    scales : {
+      y : {
+        grid: {
+          color : "rgba(136,238,136,1.000)"
+        },
+        border : {
+          color : "rgba(136,238,136,1.000)"
+        },
+        ticks : {
+          color : "rgba(136,238,136,1.000)",
+          font : {
+            family : "monospace"
+          }
+        },
+        title : {
+          display: true,
+          text : "Size",
+          font : {
+            family: "monospace",
+          },
+          color: "rgba(136,238,136,1.000)"
+        }
+      },
+      x : {
+        grid : {
+          color : "rgba(136,238,136,1.000)"
+        },
+        border : {
+          color : "rgba(136,238,136,1.000)"
+        },
+        ticks : {
+          color : "rgba(136,238,136,1.000)",
+          font : {
+            family : "monospace"
+          }
+        }
+      }
+    }
+  }
+});
+}, 1000);
+Chart.defaults.animation = false;
+</script>
+
+</body>
+</html>

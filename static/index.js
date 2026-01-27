@@ -8,6 +8,7 @@ const urgentWarningDiv = document.getElementById("urgent-warnings");
 
 let last_maintained = localStorage.getItem("last_maintained");
 const issue_resolve_msg = document.getElementById("issue-resolve-msg");
+const device_battery_percent = document.getElementById("device-battery-percent");
 
 // start precheck
 const vendorID = localStorage.getItem("vendor_id");
@@ -163,16 +164,29 @@ async function generateWarnings () {
     
     else {
       navigator.getBattery().then(function (battery) {
-        if (!battery.charging) {
-          warningArray.push("POWER");
-        }
+        device_battery_percent.innerText = (battery.level * 100) + "%";
+        // if (!battery.charging) {
+        //   warningArray.push("POWER");
+        //   device_battery_percent.style.color = "yellow";
+        // }
         
         if (battery.level < 0.50) {
           warningArray.push("BATTERY");
+          device_battery_percent.style.color = "orange";
 
           if (battery.level < 0.25) {
             urgent_warningArray.push("CONNECT TO POWER NOW");
+            device_battery_percent.style.color = "red";
           }
+        }
+
+        else {
+          device_battery_percent.style.color = "rgb(136, 238, 136);";
+        }
+
+        if (!battery.charging) {
+          warningArray.push("POWER");
+          device_battery_percent.style.color = "yellow";
         }
 
         resolve();
@@ -411,7 +425,7 @@ async function generateWarnings () {
       if (i > 0) {
         warning_space = " ";
       }
-      urgent_warningString += (warning_space + "<p class='warning'>" + urgent_warningArray[i] + "</p>");
+      urgent_warningString += (warning_space + "<div class='warning'>" + urgent_warningArray[i] + "</div>");
     }
     urgentWarningDiv.innerHTML = urgent_warningString;
   }
@@ -902,3 +916,10 @@ function read_from_board () {
     urgent_warningArray.push("REBOOT SYSTEM");
   });
 }
+
+// charts
+let time_values = [];
+
+const tempChart = document.getElementById("temp-chart");
+let temp_values = [];
+
