@@ -832,6 +832,8 @@ reroute_board_port.onclick = function () {
 const heater_status = document.getElementById("heater-status");
 const pressure_tank_status = document.getElementById("pressure-tank-status");
 
+lower_raise_value = 5; // lowers or raises temp or pressure by 5 degrees or psi
+
 function send_signal_to_board (boardSignal) {
   fetch ("/send_signal_to_board", {
     method : "POST",
@@ -1204,3 +1206,34 @@ setInterval(function () {
   }
 }, 1000);
 Chart.defaults.animation = false;
+
+// board modes
+const autoclaveMode = document.getElementById("autoclave-mode");
+
+const manualControls = document.getElementById("manual-controls");
+const automaticControls = document.getElementById("automatic-controls");
+const semiManualControls = document.getElementById("semi-manual-controls");
+
+let modal_value = autoclaveMode.value;
+setInterval(function () {
+  if (autoclaveMode.value != modal_value) {
+    modal_value = autoclaveMode.value;
+    switch (modal_value) {
+      case "manual":
+        automaticControls.style.display = "none";
+        semiManualControls.style.display = "none";
+        manualControls.style.display = "block";
+        break;
+      case "semi-manual":
+        automaticControls.style.display = "none";
+        semiManualControls.style.display = "block";
+        manualControls.style.display = "none";
+        break;
+      case "automatic":
+        automaticControls.style.display = "flex";
+        semiManualControls.style.display = "none";
+        manualControls.style.display = "none";
+        break;
+    }
+  }
+}, 100);

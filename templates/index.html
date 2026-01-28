@@ -30,9 +30,27 @@
           <p>TIME: <a id="clock"></a></p>
           <p>EXTERNAL TEMP: <a id="etemp">STANDBY</a></p>
         </div>
-        <div class="btn-class">
+        <div class="btn-class" id="automatic-controls">
           <div id="start-autoclave-btn" class="twenty button">START AUTOCLAVE</div>
           <div id="stop-autoclave-btn" class="twenty button">STOP AUTOCLAVE</div>
+        </div>
+        <div id="manual-controls">
+          <div class="btn-class">CHANGE TEMP BY:&nbsp;<input type="number" id="temp-raise-amount" class="raise-by"/>&nbsp;CHANGE PRESSURE BY:&nbsp;<input type="number" id="psi-raise-amount" class="raise-by"/></div>
+          <div class="btn-class">
+            <div class="twenty button" id="raise-temp-manually">RAISE TEMP</div>
+            <div class="twenty button" id="decrease-temp-manually">DECREASE TEMP</div>
+          </div>
+          <div class="btn-class">
+            <div class="twenty button" id="raise-psi-manually">RAISE PSI</div>
+            <div class="twenty button" id="decrease-psi-manually">DECREASE PSI</div>
+          </div>
+        </div>
+        <div id="semi-manual-controls">
+          <div class="btn-class">SET TEMP TO:&nbsp;<input type="number" id="temp-set-amount" class="raise-by"/>&nbsp;SET PRESSURE TO:&nbsp;<input type="number" id="psi-set-amount" class="raise-by"/></div>
+          <div class="btn-class">
+            <div class="twenty button" id="start-autoclave-semi">START AUTOCLAVE</div>
+            <div class="twenty button" id="stop-autoclave-semi">STOP AUTOCLAVE</div>
+          </div>
         </div>
       </div>
       <div id="subcontainer2"> 
@@ -120,7 +138,16 @@
         <div>PSI CHANGE RATE: <a id="psi-change-rate">NO DATA</a></div>
         <!-- <canvas id="temp-chart"></canvas> -->
       </div>
-      <div id="pressure-rate"></div>
+      <div id="pressure-rate">
+        <div>
+          <label for="autoclave-mode">MODE: </label>
+          <select name="autoclave-mode" id="autoclave-mode">
+            <option value="manual">MANUAL</option>
+            <option value="semi-manual">SEMI-MANUAL</option>
+            <option value="automatic">AUTOMATIC</option>
+           </select>
+        </div>
+      </div>
     </div>
     
     <script src="{{ url_for('static', filename='chart.js' )}}"></script>
