@@ -1204,6 +1204,8 @@ setInterval(function () {
       }
     });
   }
+
+  checkFor_other();
 }, 1000);
 Chart.defaults.animation = false;
 
@@ -1236,8 +1238,6 @@ setInterval(function () {
         break;
     }
   }
-
-  checkFor_other();
 }, 100);
 
 // compatibility
@@ -1282,7 +1282,7 @@ function checkFor_other () {
                   switch (true) {
                     case (localStorage.getItem("compatible_heater") !== null):
                     case (localStorage.getItem("compatible_heater") !== ""):
-                      heater_status_comp_check = String(data).split(localStorage.getItem("compatible_heater"))[1].slice(0, 3).toLowerCase();
+                      heater_status_comp_check = String(data).split(localStorage.getItem("compatible_heater"))[1].slice(0, 4).toLowerCase();
 
                       if (heater_status_comp_check.includes("on")) {
                         heater_status.innerText = "ON";
@@ -1294,6 +1294,47 @@ function checkFor_other () {
 
                       else {
                         heater_status.innerText = "UNKNOWN";
+                      }
+                      break;
+                    case (localStorage.getItem("compatible_solenoid") !== null):
+                    case (localStorage.getItem("compatible_solenoid") !== ""):
+                      ult_pressure_tank_status = "";
+                      pressure_tank_status_comp_check1 = String(data).split(localStorage.getItem("compatible_solenoid"))[1].slice(0, 4).toLowerCase();
+
+                      if (pressure_tank_status_comp_check1.includes("on")) {
+                        pressure_tank_status_comp_check1 = "ON";
+                      }
+
+                      else if (pressure_tank_status_comp_check1.includes("off") || pressure_tank_status_comp_check1.includes("of")) {
+                        pressure_tank_status_comp_check1 = "OFF";
+                      }
+
+                      else {
+                        pressure_tank_status_comp_check1 = "UNKNOWN";
+                      }
+                      switch (true) {
+                        case (localStorage.getItem("compatible_solenoid2") !== null):
+                        case (localStorage.getItem("compatible_solenoid2") !== ""):
+                          pressure_tank_status_comp_check2 = String(data).split(localStorage.getItem("compatible_solenoid2"))[1].slice(0, 4).toLowerCase();
+
+                          if (pressure_tank_status_comp_check2.includes("on")) {
+                            pressure_tank_status_comp_check2 = "ON";
+                          }
+
+                          else if (pressure_tank_status_comp_check2.includes("off") || pressure_tank_status_comp_check2.includes("of")) {
+                            pressure_tank_status_comp_check2 = "OFF";
+                          }
+
+                          else {
+                            pressure_tank_status_comp_check2 = "UNKNOWN";
+                          }
+
+                          ult_pressure_tank_status = pressure_tank_status_comp_check1 + "||" + pressure_tank_status_comp_check2;
+                          pressure_tank_status.innerText = ult_pressure_tank_status; 
+                          break;
+                        default:
+                          pressure_tank_status.innerText = pressure_tank_status_comp_check1;
+                          break;                        
                       }
                       break;
                   }
