@@ -1,11 +1,7 @@
 int tempPin = A0;
 int pressurePin = A1;
-int heaterPin = 11;
-int inletPin = 10;
-int outletPin = 9;
-
-int setPressure = 14.7;
-int setTemp = 70;
+int setPressure = 20;
+int setTemp = 120;
 
 int sumArray(int arr[], int size) {
   int s = 0;
@@ -17,12 +13,6 @@ int sumArray(int arr[], int size) {
 
 void setup() {
   Serial.begin(9600);
-  pinMode(heaterPin, OUTPUT);
-  pinMode(inletPin, OUTPUT);
-  pinMode(outletPin, OUTPUT);
-  digitalWrite(heaterPin, LOW);
-  digitalWrite(inletPin, LOW);
-  digitalWrite(outletPin, LOW);
 }
 
 int tempData[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -35,7 +25,7 @@ void loop() {
   pressureData[sample] = analogRead(pressurePin);
   sample = sample + 1;
 
-  if (sample == 15) {
+  if (sample == 20) {
     int rawVT = sumArray(tempData, sample)/sample;
     int rawVP = sumArray(pressureData, sample)/sample;
 
@@ -59,35 +49,28 @@ void loop() {
     Serial.println("Desired States:");
     if (temperatureF < setTemp) {
       Serial.print("Heater: ON, ");
-      digitalWrite(heaterPin, HIGH);
     }
     else {
       Serial.print("Heater: OFF, ");
-      digitalWrite(heaterPin, LOW);
     }
 
     if (pressure + 2 < setPressure) {
       Serial.print("Inlet Solenoid: ON, ");
-      digitalWrite(inletPin, HIGH);
     }
     else {
       Serial.print("Inlet Solenoid: OFF, ");
-      digitalWrite(inletPin, LOW);
     }
 
     if (pressure - 2 > setPressure) {
       Serial.println("Outlet Solenoid: ON, ");
-      digitalWrite(outletPin, HIGH);
     }
     else {
       Serial.println("Outlet Solenoid: OFF, ");
-      digitalWrite(outletPin, LOW);
-      
     }
 
     Serial.println();
   }
   
 
-  delay(50);
+  delay(200);
 }
