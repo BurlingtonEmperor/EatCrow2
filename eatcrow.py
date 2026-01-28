@@ -7,7 +7,7 @@ import subprocess
 import socket
 import time
 
-from troubleshoot import *
+# from troubleshoot import *
 from autoclave_simulator import *
 
 which_os = "";

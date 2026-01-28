@@ -1236,4 +1236,77 @@ setInterval(function () {
         break;
     }
   }
+
+  checkFor_other();
 }, 100);
+
+// compatibility
+let can_read_from_others = 0;
+let single_read = false;
+let solenoid_2 = false;
+
+function checkFor_other () {
+  if (can_read_from_others == 1) {
+    fetch ("/read_signal_from_board", {
+      method : "POST",
+      headers : {
+        "Content-Type" : "application/json"
+      },
+      body : JSON.stringify({
+        baud_rater : parseInt(localStorage.getItem("baud_rate")),
+        board_porter : String(localStorage.getItem("board_port"))
+      })
+    })
+    .then(response => response.text())
+    .then(data => {
+      switch (data) {
+        case "nothing":
+          break;
+        // case "unicode_error":
+        //   console.warn("Unicode Error: Could not decode Arduino reply message.");
+        //   break;
+        default:
+          if (data.includes("Encountered an error: ")) {
+            console.error(data);
+          }
+
+          else {
+            switch (true) {
+              case (data.includes("wsgi_app response")):
+                console.error(data);
+                break;
+              default:
+                console.log(data);
+
+                if (single_read) {
+                  switch (true) {
+                    case (localStorage.getItem("compatible_heater") !== null):
+                    case (localStorage.getItem("compatible_heater") !== ""):
+                      heater_status_comp_check = String(data).split(localStorage.getItem("compatible_heater"))[1].slice(0, 3).toLowerCase();
+
+                      if (heater_status_comp_check.includes("on")) {
+                        heater_status.innerText = "ON";
+                      }
+
+                      else if (heater_status_comp_check.includes("off") || heater_status_comp_check.includes("of")) {
+                        heater_status.innerText = "OFF";
+                      }
+
+                      else {
+                        heater_status.innerText = "UNKNOWN";
+                      }
+                      break;
+                  }
+                }
+            }
+          }
+          break;
+      }
+    })
+    .catch(error => {
+      warningArray.push("PRGM_ERR");
+      console.error(error);
+      urgent_warningArray.push("REBOOT SYSTEM");
+    });
+  } 
+}
