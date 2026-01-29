@@ -852,6 +852,7 @@ reroute_board_port.onclick = function () {
 // arduino board communication
 const heater_status = document.getElementById("heater-status");
 const pressure_tank_status = document.getElementById("pressure-tank-status");
+const pressure_tank_status2 = document.getElementById("pressure-tank-status2");
 
 const temp_gauge2 = document.getElementById("temp_gauge2");
 const psi_gauge2 = document.getElementById("psi_gauge2");
@@ -1406,18 +1407,60 @@ function checkFor_other () {
 function getTemp_fromModel (data_log) {
   if (can_read_from_others == 1 && is_using_modelclave == true) {
     if (data_log.includes("Temp:") == false) {
+      if (data_log.includes("Heater:")) {
+        heater_comp_check = String(data_log).split("Heater: ")[1].slice(0, 4).toLowerCase();
+        switch (true) {
+          case (heater_comp_check.includes("on")):
+            heater_status.innerText = "ON";
+            break;
+          default:
+            heater_status.innerText = "OFF";
+            break;
+        } 
+      }
       return false;
     }
-    temp_comp_check = String(data_log).split("Temp: ")[1].slice(0, 4).toLowerCase();
-    temp_comp_check = parseInt(temp_comp_check);
+    temp_comp_check = String(data_log).split("Temp: ")[1]; //.slice(0, 4).toLowerCase();
+    // temp_comp_check = parseInt(temp_comp_check);
+    temp_gauge2.innerText = temp_comp_check;
 
-    temp_values.push(temp_comp_check);
+    temp_comp_check2 = String(temp_comp_check).split(" °C   (");
+    temp_comp_check2 = temp_comp_check2[1];
+    temp_comp_check2 = temp_comp_check2.split(" °F)");
+    temp_comp_check2 = temp_comp_check2[0];
+    temp_comp_check2 = parseInt(temp_comp_check2);
+
+    temp_values.push(temp_comp_check2);
   } 
 }
 
 function getPSI_fromModel (data_log) {
   if (can_read_from_others == 1 && is_using_modelclave == true) {
     if (data_log.includes("Pressure: ") == false) {
+      if (data_log.includes("Inlet Solenoid:")) {
+        psi_comp_check = String(data_log).split("Inlet Solenoid: ")[1].slice(0, 4).toLowerCase();
+        switch (true) {
+          case (psi_comp_check.includes("on")):
+            pressure_tank_status.innerText = "ON";
+            break;
+          default:
+            pressure_tank_status.innerText = "OFF";
+            break;
+        } 
+      }
+
+      else if (data_log.includes("Outlet Solenoid:")) {
+        psi_comp_check = String(data_log).split("Outlet Solenoid: ")[1].slice(0, 4).toLowerCase();
+        switch (true) {
+          case (psi_comp_check.includes("on")):
+            pressure_tank_status2.innerText = "ON";
+            break;
+          default:
+            pressure_tank_status2.innerText = "OFF";
+            break;
+        } 
+      }
+
       return false;
     }
     psi_comp_check = String(data_log).split("Pressure: ")[1].slice(0, 4).toLowerCase();
