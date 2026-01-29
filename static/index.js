@@ -1056,8 +1056,143 @@ bringToLevels.onclick = function () {
     return false;
   }
 
-  if (tempSetAmount.value < temp_values[temp_values.length - 1]) {
-    
+  let temp_and_set_diff = Math.abs(temp_values[temp_values.length - 1] - parseInt(tempSetAmount.value));
+  let psi_and_set_diff = Math.abs(pressure_values[pressure_values.length - 1] - parseInt(psiSetAmount.value));
+
+  if (parseInt(tempSetAmount.value) < temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) >= pressure_values[pressure_values.length - 1]) {
+    for (let i = 0; i < temp_and_set_diff; i++) {
+      switch (true) {
+        case (is_using_modelclave):
+          send_signal_to_board(3);
+          break;
+        default:
+          send_signal_to_board(1);
+          break;
+      }
+    }
+
+    for (let i = 0; i < psi_and_set_diff; i++) {
+      switch (true) {
+        case (is_using_modelclave):
+          send_signal_to_board(1);
+          break;
+        default:
+          send_signal_to_board(2);
+          break;
+      }
+    }
+  }
+
+  else if (parseInt(tempSetAmount.value) >= temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) < pressure_values[pressure_values.length - 1]) {
+    for (let i = 0; i < temp_and_set_diff; i++) {
+      send_signal_to_board(0);
+    }
+
+    for (let i = 0; i < psi_and_set_diff; i++) {
+      switch (true) {
+        case (is_using_modelclave):
+          send_signal_to_board(4);
+          break;
+        default:
+          send_signal_to_board(3);
+          break;
+      }
+    }
+  }
+
+  else if (parseInt(tempSetAmount.value) >= temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) >= pressure_values[pressure_values.length - 1]) {
+    for (let i = 0; i < temp_and_set_diff; i++) {
+      send_signal_to_board(0);
+    }
+
+    for (let i = 0; i < psi_and_set_diff; i++) {
+      switch (true) {
+        case (is_using_modelclave):
+          send_signal_to_board(1);
+          break;
+        default:
+          send_signal_to_board(2);
+          break;
+      }
+    }
+  }
+
+  else if (parseInt(tempSetAmount.value) < temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) < pressure_values[pressure_values.length - 1]) {
+    for (let i = 0; i < temp_and_set_diff; i++) {
+      switch (true) {
+        case (is_using_modelclave):
+          send_signal_to_board(3);
+          break;
+        default:
+          send_signal_to_board(1);
+          break;
+      }
+    }
+
+    for (let i = 0; i < psi_and_set_diff; i++) {
+      switch (true) {
+        case (is_using_modelclave):
+          send_signal_to_board(4);
+          break;
+        default:
+          send_signal_to_board(3);
+          break;
+      }
+    }
+  }
+}
+
+stopAutoclaveSemi.onclick = function () {
+  if (isConnectedToBoard == false) {
+    return false;
+  }
+
+  let temp_and_set_diff = Math.abs(70 - parseInt(tempSetAmount.value));
+  let psi_and_set_diff = Math.abs(14.7 - parseInt(psiSetAmount.value));
+
+  if (parseInt(tempSetAmount.value) < temp_values[temp_values.length - 1]) {
+    for (let i = 0; i < temp_and_set_diff; i++) {
+      switch (true) {
+        case (is_using_modelclave):
+          send_signal_to_board(3);
+          break;
+        default:
+          send_signal_to_board(1);
+          break;
+      }
+    }
+  }
+
+  else if (parseInt(tempSetAmount.value) > temp_values[temp_values.length - 1]) {
+    for (let i = 0; i < temp_and_set_diff; i++) {
+      send_signal_to_board(0);
+    }
+  }
+
+  if (parseInt(psiSetAmount.value) < pressure_values[pressure_values.length - 1]) {
+    for (let i = 0; i < psi_and_set_diff; i++) {
+      switch (true) {
+        case (is_using_modelclave):
+          send_signal_to_board(4);
+          break;
+        default:
+          send_signal_to_board(3);
+          break;
+      }
+    }
+  }
+
+  else if (parseInt(psiSetAmount.value) > pressure_values[pressure_values.length - 1]) {
+    for (let i = 0; i < psi_and_set_diff; i++) {
+      switch (true) {
+        case (is_using_modelclave):
+          send_signal_to_board(1);
+          break;
+        default:
+          send_signal_to_board(2);
+          break;
+      }
+    }
   }
 }
 
