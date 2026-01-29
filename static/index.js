@@ -957,8 +957,12 @@ let time_values = [];
 
 const chartRate = document.getElementById("chart-rate");
 const pressureRate = document.getElementById("pressure-rate");
+
 let temp_values = [];
 let pressure_values = [];
+
+const temp_change_rate = document.getElementById("temp-change-rate");
+const psi_change_rate = document.getElementById("psi-change-rate");
 
 setInterval(function () {
   const ctx = document.createElement('canvas');
@@ -1471,11 +1475,30 @@ function getPSI_fromModel (data_log) {
 }
 
 let minutes_passed = 0;
-setInterval(function () {
+let rate_of_change_temp = 0;
+
+function passMinutes () {
   if (isConnectedToBoard) {
     minutes_passed += 1;
     time_values.push(minutes_passed);
-  }
 
-  getTemp_fromModel();
-}, 1000);
+    if (temp_values.length > 2) {
+      rate_of_change_temp = (temp_values[temp_values.length - 1] - temp_values[0]) / (time_values[time_values.length - 1] - time_values[0]);
+      temp_change_rate = rate_of_change_temp;
+    }
+
+    if (pressure_values.length > 2) {
+      rate_of_change_psi = (pressure_values[pressure_values.length - 1] - pressure_values[0]) / (time_values[time_values.length - 1] - time_values[0]);
+      psi_change_rate = rate_of_change_psi;
+    }
+  }
+}
+
+setInterval(function () {
+  // if (isConnectedToBoard) {
+  //   minutes_passed += 1;
+  //   time_values.push(minutes_passed);
+  // }
+
+  passMinutes();
+}, 60000);
