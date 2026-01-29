@@ -95,6 +95,8 @@ async function generateWarnings () {
   PRESSURE - Autoclave pressure is too high
   T-CLIMB - Autoclave temperature is increasing too quickly
   P-CLIMB - Autoclave pressure is increasing too quickly
+  T-STALL - Autoclave temperature is increasing too slowly (when curing)
+  P-STALL - Autoclave pressure is increasing too slowly (when curing)
 
   <Device and Interface>
   INTERNET - No internet connection
@@ -421,7 +423,20 @@ async function generateWarnings () {
     //     break;
     // }
     
-    resolve();
+    if (rate_of_change_temp_board > 2.49) {
+      warningArray.push("T-CLIMB");
+      urgent_warningArray.push("RAPID TEMPERATURE CLIMB");
+      resolve();
+    }
+    
+    else if (rate_of_change_temp_board < 1.51 && is_actively_curing) {
+      warningArray.push("T-STALL");
+      resolve();
+    }
+
+    else {
+      resolve();
+    }
   });
 
   asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise);
@@ -857,7 +872,8 @@ const pressure_tank_status2 = document.getElementById("pressure-tank-status2");
 const temp_gauge2 = document.getElementById("temp_gauge2");
 const psi_gauge2 = document.getElementById("psi_gauge2");
 
-lower_raise_value = 5; // lowers or raises temp or pressure by 5 degrees or psi
+let lower_raise_value = 5; // lowers or raises temp or pressure by 5 degrees or psi
+let is_actively_curing = false;
 
 function send_signal_to_board (boardSignal) {
   fetch ("/send_signal_to_board", {
@@ -1475,7 +1491,7 @@ function getPSI_fromModel (data_log) {
 }
 
 let minutes_passed = 0;
-let rate_of_change_temp = 0;
+let rate_of_change_temp_board = 0;
 
 function passMinutes () {
   if (isConnectedToBoard) {
