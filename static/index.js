@@ -968,6 +968,99 @@ function read_from_board () {
   });
 }
 
+const raiseTempManually = document.getElementById("raise-temp-manually");
+const decreaseTempManually = document.getElementById("decrease-temp-manually");
+
+const raisePSIManually = document.getElementById("raise-psi-manually");
+const decreasePSIManually = document.getElementById("decrease-psi-manually");
+
+const tempRaiseAmount = document.getElementById("temp-raise-amount");
+const psiRaiseAmount = document.getElementById("psi-raise-amount");
+
+raiseTempManually.onclick = function () {
+  if (tempRaiseAmount.value == null || isConnectedToBoard == false) {
+    return false;
+  }
+
+  for (let i = 0; i < parseInt(tempRaiseAmount.value); i++) {
+    // switch (true) {
+    //   case (is_using_modelclave):
+    //     send_signal_to_board(0);
+    //     break;
+    //   default:
+    //     break;
+    // }
+    send_signal_to_board(0);
+  }
+}
+
+decreaseTempManually.onclick = function () {
+  if (tempRaiseAmount.value == null || isConnectedToBoard == false) {
+    return false;
+  }
+
+  for (let i = 0; i < parseInt(tempRaiseAmount.value); i++) {
+    switch (true) {
+      case (is_using_modelclave):
+        send_signal_to_board(3);
+        break;
+      default:
+        send_signal_to_board(1);
+        break;
+    }
+  }
+}
+
+raisePSIManually.onclick = function () {
+  if (psiRaiseAmount.value == null || isConnectedToBoard == false) {
+    return false;
+  }
+
+  for (let i = 0; i < parseInt(psiRaiseAmount.value); i++) {
+    switch (true) {
+      case (is_using_modelclave):
+        send_signal_to_board(1);
+        break;
+      default:
+        send_signal_to_board(2);
+        break;
+    }
+  }
+}
+
+decreasePSIManually.onclick = function () {
+  if (psiRaiseAmount.value == null || isConnectedToBoard == false) {
+    return false;
+  }
+
+  for (let i = 0; i < parseInt(psiRaiseAmount.value); i++) {
+    switch (true) {
+      case (is_using_modelclave):
+        send_signal_to_board(4);
+        break;
+      default:
+        send_signal_to_board(3);
+        break;
+    }
+  }
+}
+
+const bringToLevels = document.getElementById("start-autoclave-semi");
+const stopAutoclaveSemi = document.getElementById("stop-autoclave-semi");
+
+const tempSetAmount = document.getElementById("temp-set-amount");
+const psiSetAmount = document.getElementById("psi-set-amount");
+
+bringToLevels.onclick = function () {
+  if (tempSetAmount.value == null || isConnectedToBoard == false || psiSetAmount.value == null || tempSetAmount.value < 0 || psiSetAmount.value < 0) {
+    return false;
+  }
+
+  if (tempSetAmount.value < temp_values[temp_values.length - 1]) {
+    
+  }
+}
+
 // charts
 let time_values = [];
 
@@ -1269,8 +1362,8 @@ const manualControls = document.getElementById("manual-controls");
 const automaticControls = document.getElementById("automatic-controls");
 const semiManualControls = document.getElementById("semi-manual-controls");
 
-ignore_errors = false;
-is_using_modelclave = false;
+let ignore_errors = false;
+let is_using_modelclave = false;
 
 let modal_value = autoclaveMode.value;
 setInterval(function () {

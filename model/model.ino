@@ -31,6 +31,32 @@ int sample = 0;
 
 void loop() {
 
+  if (Serial.available > 0) {
+    char incomingByte = Serial.read(); 
+    switch (incomingByte) {
+      case '0': // raise temperature
+        setTemp += 1;
+        break;
+      case '1': // raise psi
+        setPressure += 1;
+        break;
+      case '2': // raise temp and psi
+        setTemp += 1;
+        setPressure += 1;
+        break;
+      case '3': // decrease temperature
+        setTemp -= 1;
+        break;
+      case '4': // decrease psi
+        setPressure -= 1;
+        break;
+      case '5': // decrease temp and psi
+        setTemp -= 1;
+        setPressure -= 1;
+        break;
+    }
+  }
+
   tempData[sample] = analogRead(tempPin);
   pressureData[sample] = analogRead(pressurePin);
   sample = sample + 1;
