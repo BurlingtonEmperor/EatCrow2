@@ -250,18 +250,25 @@ async function generateWarnings () {
                 break;
               default:
                 if (data.includes("Encountered an error: ")) {
-                  console.error(data);
+                  if (ignore_errors == false) {
+                    console.error(data);
+                  }
                   resolve();
                 }
 
                 else {
                   switch (true) {
                     case (data.includes("wsgi_app response")):
-                      console.error(data);
+                      if (ignore_errors == false) {
+                        console.error(data);
+                      }
                       resolve();
                       break;
                     default:
                       console.log(data);
+                      getTemp_fromModel(data);
+                      getPSI_fromModel(data);
+                      // checkFor_other();
                       resolve();
                   }
                 }
@@ -270,7 +277,9 @@ async function generateWarnings () {
           })
           .catch(error => {
             warningArray.push("PRGM_ERR");
-            console.error(error);
+            if (ignore_errors == false) {
+              console.error(error);
+            }
             urgent_warningArray.push("REBOOT SYSTEM");
             resolve();
           });
@@ -279,7 +288,9 @@ async function generateWarnings () {
       })
       .catch(error => {
         warningArray.push("PRGM_ERR");
-        console.error(error);
+        if (ignore_errors == false) {
+          console.error(error);
+        }
         urgent_warningArray.push("REBOOT SYSTEM");
         isConnectedToBoard = false;
         resolve();
@@ -340,20 +351,26 @@ async function generateWarnings () {
                 break;
               default:
                 if (data.includes("Encountered an error: ")) {
-                  console.error(data);
+                  if (ignore_errors == false) {
+                    console.error(data);
+                  }
                   resolve();
                 }
 
                 else {
                   switch (true) {
                     case (String(data).includes("The debugger caught an exception")):
-                      console.error(data);
+                      if (ignore_errors == false) {
+                        console.error(data);
+                      }
                       warningArray.push("PRGM_ERR");
                       urgent_warningArray.push("REBOOT SYSTEM");
                       resolve();
                       break;
                     default:
                       console.log(data);
+                      getTemp_fromModel(data);
+                      getPSI_fromModel(data);
                       resolve();
                   }
                 }
@@ -362,7 +379,9 @@ async function generateWarnings () {
           })
           .catch(error => {
             warningArray.push("PRGM_ERR");
-            console.error(error);
+            if (ignore_errors == false) {
+              console.error(error);
+            }
             urgent_warningArray.push("REBOOT SYSTEM");
             resolve();
           });
@@ -370,7 +389,9 @@ async function generateWarnings () {
       })
       .catch(error => {
         warningArray.push("PRGM_ERR");
-        console.error(error);
+        if (ignore_errors == false) {
+          console.error(error);
+        }
         urgent_warningArray.push("REBOOT SYSTEM");
         resolve();
       });
@@ -832,6 +853,9 @@ reroute_board_port.onclick = function () {
 const heater_status = document.getElementById("heater-status");
 const pressure_tank_status = document.getElementById("pressure-tank-status");
 
+const temp_gauge2 = document.getElementById("temp_gauge2");
+const psi_gauge2 = document.getElementById("psi_gauge2");
+
 lower_raise_value = 5; // lowers or raises temp or pressure by 5 degrees or psi
 
 function send_signal_to_board (boardSignal) {
@@ -897,16 +921,22 @@ function read_from_board () {
       //   break;
       default:
         if (data.includes("Encountered an error: ")) {
-          console.error(data);
+          if (ignore_errors == false) {
+            console.error(data);
+          }
         }
 
         else {
           switch (true) {
             case (data.includes("wsgi_app response")):
-              console.error(data);
+              if (ignore_errors == false) {
+                console.error(data);
+              }
               break;
             default:
               console.log(data);
+              getTemp_fromModel(data);
+              getPSI_fromModel(data);
           }
         }
         break;
@@ -914,7 +944,9 @@ function read_from_board () {
   })
   .catch(error => {
     warningArray.push("PRGM_ERR");
-    console.error(error);
+    if (ignore_errors == false) {
+      console.error(error);
+    }
     urgent_warningArray.push("REBOOT SYSTEM");
   });
 }
@@ -1216,6 +1248,9 @@ const manualControls = document.getElementById("manual-controls");
 const automaticControls = document.getElementById("automatic-controls");
 const semiManualControls = document.getElementById("semi-manual-controls");
 
+ignore_errors = false;
+is_using_modelclave = false;
+
 let modal_value = autoclaveMode.value;
 setInterval(function () {
   if (autoclaveMode.value != modal_value) {
@@ -1267,21 +1302,28 @@ function checkFor_other () {
         //   break;
         default:
           if (data.includes("Encountered an error: ")) {
-            console.error(data);
+            if (ignore_errors == false) {
+              console.error(data);
+            }
           }
 
           else {
             switch (true) {
               case (data.includes("wsgi_app response")):
-                console.error(data);
+                if (ignore_errors == false) {
+                  console.error(data);
+                }
                 break;
               default:
                 console.log(data);
+                getTemp_fromModel(data);
+                getPSI_fromModel(data);
 
-                if (single_read) {
+                if (single_read && isConnectedToBoard) {
                   switch (true) {
                     case (localStorage.getItem("compatible_heater") !== null):
                     case (localStorage.getItem("compatible_heater") !== ""):
+                      // if (data.includes(localStorage.getItem("compatible_hea")))
                       heater_status_comp_check = String(data).split(localStorage.getItem("compatible_heater"))[1].slice(0, 4).toLowerCase();
 
                       if (heater_status_comp_check.includes("on")) {
@@ -1337,6 +1379,13 @@ function checkFor_other () {
                           break;                        
                       }
                       break;
+                    case (localStorage.getItem("compatible_temp") !== null):
+                    case (localStorage.getItem("compatible_temp") !== ""):
+                      temp_comp_check = String(data).split(localStorage.getItem("compatible_temp"))[1].slice(0, 4).toLowerCase();
+                      temp_comp_check = parseFloat(temp_comp_check);
+                      temp_values.push(temp_comp_check);
+                      console.log("Pushed 1 compatible temp value");
+                      break;
                   }
                 }
             }
@@ -1346,8 +1395,44 @@ function checkFor_other () {
     })
     .catch(error => {
       warningArray.push("PRGM_ERR");
-      console.error(error);
+      if (ignore_errors == false) {
+        console.error(error);
+      }
       urgent_warningArray.push("REBOOT SYSTEM");
     });
   } 
 }
+
+function getTemp_fromModel (data_log) {
+  if (can_read_from_others == 1 && is_using_modelclave == true) {
+    if (data_log.includes("Temp:") == false) {
+      return false;
+    }
+    temp_comp_check = String(data_log).split("Temp: ")[1].slice(0, 4).toLowerCase();
+    temp_comp_check = parseInt(temp_comp_check);
+
+    temp_values.push(temp_comp_check);
+  } 
+}
+
+function getPSI_fromModel (data_log) {
+  if (can_read_from_others == 1 && is_using_modelclave == true) {
+    if (data_log.includes("Pressure: ") == false) {
+      return false;
+    }
+    psi_comp_check = String(data_log).split("Pressure: ")[1].slice(0, 4).toLowerCase();
+    psi_comp_check = parseInt(temp_comp_check);
+
+    pressure_values.push(psi_comp_check);
+  }  
+}
+
+let minutes_passed = 0;
+setInterval(function () {
+  if (isConnectedToBoard) {
+    minutes_passed += 1;
+    time_values.push(minutes_passed);
+  }
+
+  getTemp_fromModel();
+}, 1000);

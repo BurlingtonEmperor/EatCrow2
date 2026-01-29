@@ -10,6 +10,8 @@ function console_help () {
   console.log('compatible_psi([PSI SIGNAL]); - read psi (other board software)');
   console.log('single_read = [true or false]; - read from single line or read from multiple lines');
   console.log('solenoid_2 = [true or false]; - read for a second solenoid');
+  console.log('ignore_errors = [true or false]; - ignores console errors if true');
+  console.log('is_using_modelclave = [true or false]; - uses modelclave for alternate program if true');
 }
 
 function console_clear () {
