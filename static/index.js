@@ -1311,6 +1311,14 @@ setInterval(function () {
             grid : {
               display : false
             }
+          },
+          x : {
+            ticks : {
+              display: false
+            },
+            grid : {
+              display : false
+            }
           }
         }
       },
@@ -1426,6 +1434,14 @@ setInterval(function () {
           y : {
             ticks : {
               display : false
+            },
+            grid : {
+              display : false
+            }
+          },
+          x : {
+            ticks : {
+              display: false
             },
             grid : {
               display : false
@@ -1774,3 +1790,11 @@ setInterval(function () {
 
   passMinutes();
 }, 60000);
+
+setTimeout(function () {
+  let starter_time_val = 0;
+  setInterval(function () {
+    starter_time_val += 0.017;
+    time_values.push(starter_time_val);
+  }, 1000);
+}, 6000);
