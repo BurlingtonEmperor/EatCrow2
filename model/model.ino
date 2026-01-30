@@ -31,7 +31,7 @@ int sample = 0;
 
 void loop() {
 
-  if (Serial.available > 0) {
+  if (Serial.available() > 0) {
     char incomingByte = Serial.read(); 
     switch (incomingByte) {
       case '0': // raise temperature

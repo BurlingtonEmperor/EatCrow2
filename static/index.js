@@ -1233,6 +1233,9 @@ const pressureRate = document.getElementById("pressure-rate");
 let temp_values = [];
 let pressure_values = [];
 
+// let temp_change_r;
+let psi_change_r;
+
 const temp_change_rate = document.getElementById("temp-change-rate");
 const psi_change_rate = document.getElementById("psi-change-rate");
 
@@ -1741,7 +1744,7 @@ function getPSI_fromModel (data_log) {
         } 
       }
 
-      else if (data_log.includes("Outlet Solenoid:")) {
+      if (data_log.includes("Outlet Solenoid:")) {
         psi_comp_check = String(data_log).split("Outlet Solenoid: ")[1].slice(0, 4).toLowerCase();
         switch (true) {
           case (psi_comp_check.includes("on")):
@@ -1772,12 +1775,15 @@ function passMinutes () {
 
     if (temp_values.length > 2) {
       rate_of_change_temp = (temp_values[temp_values.length - 1] - temp_values[0]) / (time_values[time_values.length - 1] - time_values[0]);
-      temp_change_rate = rate_of_change_temp;
+      temp_change_rate.innerText = rate_of_change_temp;
+      rate_of_change_temp_board = rate_of_change_temp;
+
     }
 
     if (pressure_values.length > 2) {
       rate_of_change_psi = (pressure_values[pressure_values.length - 1] - pressure_values[0]) / (time_values[time_values.length - 1] - time_values[0]);
-      psi_change_rate = rate_of_change_psi;
+      psi_change_rate.innerText = rate_of_change_psi;
+      psi_change_r = rate_of_change_psi;
     }
   }
 }
