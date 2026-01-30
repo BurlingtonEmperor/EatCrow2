@@ -85,6 +85,9 @@ async function resolveIssue (issueCode) {
   }
 }
 
+// general display
+const temp_gauge = document.getElementById("temp_gauge");
+
 async function generateWarnings () {
   warningArray = [];
   urgent_warningArray = []; 
@@ -426,15 +429,18 @@ async function generateWarnings () {
     if (rate_of_change_temp_board > 2.49) {
       warningArray.push("T-CLIMB");
       urgent_warningArray.push("RAPID TEMPERATURE CLIMB");
+      temp_gauge.style.color = "red";
       resolve();
     }
     
     else if (rate_of_change_temp_board < 1.51 && is_actively_curing) {
       warningArray.push("T-STALL");
+      temp_gauge.style.color = "yellow";
       resolve();
     }
 
     else {
+      temp_gauge.style.color = "rgb(136, 238, 136);";
       resolve();
     }
   });
@@ -1759,9 +1765,10 @@ function getPSI_fromModel (data_log) {
       return false;
     }
     psi_comp_check = String(data_log).split("Pressure: ")[1].slice(0, 4).toLowerCase();
-    psi_comp_check = parseInt(temp_comp_check);
+    psi_comp_check = parseInt(psi_comp_check);
 
     pressure_values.push(psi_comp_check);
+    psi_gauge2.innerText = psi_comp_check;
   }  
 }
 
