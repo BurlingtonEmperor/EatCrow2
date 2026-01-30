@@ -147,6 +147,14 @@ input[type=number] {
   font-family: monospace;
 }
 
+#warnings {
+  height: 8%;
+}
+
+#warnings p {
+  margin: 0;
+}
+
 #urgent-warnings {
   top: 5px;
   left: 5px;

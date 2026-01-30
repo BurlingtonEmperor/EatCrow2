@@ -1768,7 +1768,7 @@ function getPSI_fromModel (data_log) {
     psi_comp_check = parseInt(psi_comp_check);
 
     pressure_values.push(psi_comp_check);
-    psi_gauge2.innerText = psi_comp_check;
+    psi_gauge2.innerText = psi_comp_check + " PSI";
   }  
 }
 
