@@ -54,6 +54,12 @@ void loop() {
         setTemp -= 1;
         setPressure -= 1;
         break;
+      case 's':
+        digitalWrite(heaterPin, LOW);
+        digitalWrite(inletPin, LOW);
+        Serial.println("Emergency stop.");
+        while(true);
+        break;
     }
   }
 

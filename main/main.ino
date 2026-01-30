@@ -58,6 +58,9 @@ void loop() {
       case '8':
         Serial.println("emergency_stop");
         break;
+      case 's':
+        while(true);
+        break;
       default:
         Serial.print("Received unknown character: ");
         Serial.println(incomingByte);

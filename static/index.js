@@ -439,7 +439,23 @@ async function generateWarnings () {
     }
   });
 
-  asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise);
+  const emergencyStopCheckPromise = new Promise((resolve) => {
+    switch (true) {
+      case (emergency_stopped):
+        urgent_warningArray.push("AUTOCLAVE EMERGENCY");
+        warningArray.push("PRGM_ERR");
+        urgent_warningArray.push("REBOOT SYSTEM");
+        isConnectedToBoard = false;
+        is_actively_curing = false;
+        resolve();
+        break;
+      default:
+        resolve();
+        break;
+    }
+  });
+
+  asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise, emergencyStopCheckPromise);
   await Promise.all(asyncChecks);
 
   if (warningArray.length === 0) {
@@ -872,8 +888,11 @@ const pressure_tank_status2 = document.getElementById("pressure-tank-status2");
 const temp_gauge2 = document.getElementById("temp_gauge2");
 const psi_gauge2 = document.getElementById("psi_gauge2");
 
+const emergency_stop_btn = document.getElementById("emergency-stop-btn");
+
 let lower_raise_value = 5; // lowers or raises temp or pressure by 5 degrees or psi
 let is_actively_curing = false;
+let emergency_stopped = false;
 
 function send_signal_to_board (boardSignal) {
   fetch ("/send_signal_to_board", {
@@ -966,6 +985,15 @@ function read_from_board () {
     }
     urgent_warningArray.push("REBOOT SYSTEM");
   });
+}
+
+emergency_stop_btn.onclick = function () {
+  if (isConnectedToBoard == false) {
+    return false;
+  }
+
+  send_signal_to_board('s');
+  console.warn("Autoclave has been emergency stopped.");
 }
 
 const raiseTempManually = document.getElementById("raise-temp-manually");
