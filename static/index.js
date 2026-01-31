@@ -900,6 +900,9 @@ let lower_raise_value = 5; // lowers or raises temp or pressure by 5 degrees or 
 let is_actively_curing = false;
 let emergency_stopped = false;
 
+const modelclave_heat_limit = 120;
+const modelclave_pressure_limit = 60;
+
 function send_signal_to_board (boardSignal) {
   fetch ("/send_signal_to_board", {
     method : "POST",
@@ -1054,6 +1057,10 @@ raisePSIManually.onclick = function () {
   for (let i = 0; i < parseInt(psiRaiseAmount.value); i++) {
     switch (true) {
       case (is_using_modelclave):
+        // if (parseInt(psiRaiseAmount.value) >= modelclave_pressure_limit) {
+        //   console.warn("PSI");
+        //   return false;
+        // }
         send_signal_to_board(1);
         break;
       default:
@@ -1294,7 +1301,7 @@ setInterval(function () {
     }
   };
 
-  if (time_values.length < 5 || temp_values < 5) {
+  if (time_values.length < 5 || temp_values < 5 || isConnectedToBoard == false) {
     new Chart(ctx, {
       type : "line",
       data : {
@@ -1421,7 +1428,7 @@ setInterval(function () {
     });
   }
 
-  if (time_values.length < 5 || pressure_values.length < 5) {
+  if (time_values.length < 5 || pressure_values.length < 5 || isConnectedToBoard == false) {
     new Chart(ctx_double, {
       type : "line",
       data : {

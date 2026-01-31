@@ -208,19 +208,19 @@ def read_signal_from_board():
   # arduino_board_alpha = serial.Serial(port=current_board_port, baudrate=current_baud_rate, timeout=1)
   try:
     board = connect_to_board_precheck(curr_port, curr_rate)
-  except:
-    return "nothing"
 
-  if (board.in_waiting > 0):
-    try:
-      raw_data = board.readline()
-      data = raw_data.decode('utf-8').strip()
-      
-      if (data):
-        return data
-    except Exception as e:
-      return ("Encountered an error: " + e)
-  else:
+    if (board.in_waiting > 0):
+      try:
+        raw_data = board.readline()
+        data = raw_data.decode('utf-8').strip()
+        
+        if (data):
+          return data
+      except Exception as e:
+        return ("Encountered an error: " + e)
+    else:
+      return "nothing"
+  except:
     return "nothing"
 
 def open_browser():
