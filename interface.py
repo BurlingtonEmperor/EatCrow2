@@ -206,7 +206,10 @@ def read_signal_from_board():
   curr_rate = signal_to_send.get("baud_rater")
 
   # arduino_board_alpha = serial.Serial(port=current_board_port, baudrate=current_baud_rate, timeout=1)
-  board = connect_to_board_precheck(curr_port, curr_rate)
+  try:
+    board = connect_to_board_precheck(curr_port, curr_rate)
+  except:
+    return "nothing"
 
   if (board.in_waiting > 0):
     try:
