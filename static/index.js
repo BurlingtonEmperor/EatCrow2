@@ -595,6 +595,11 @@ const cmdBtn = document.getElementById("cmd-btn");
 const commandBackBtn = document.getElementById("command-back-btn");
 
 const refreshInterfaceBtn = document.getElementById("refresh-interface-btn");
+const call_off_emergency_btn = document.getElementById("call-off-emergency-btn");
+const ignore_errors_btn = document.getElementById("ignore-console-errors-btn");
+const show_errors_btn = document.getElementById("show-console-errors-btn");
+const use_modelclave_btn = document.getElementById("use-modelclave-btn");
+const disconnect_modelclave_btn = document.getElementById("disconnect-modelclave-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -668,6 +673,33 @@ commandBackBtn.onclick = function () {
 
 refreshInterfaceBtn.onclick = function () {
   location = "";
+}
+
+call_off_emergency_btn.onclick = function () {
+  emergency_stopped = false;
+  console.warn("Emergency stop called off.");
+}
+
+ignore_errors_btn.onclick = function () {
+  ignore_errors = true;
+  console.log("Hiding console errors.");
+}
+
+show_errors_btn.onclick = function () {
+  ignore_errors = false;
+  console.log("Showing console errors.");
+}
+
+use_modelclave_btn.onclick = function () {
+  set_compatible(1);
+  is_using_modelclave = true;
+  console.log("Using modelclave.");
+}
+
+disconnect_modelclave_btn.onclick = function () {
+  set_compatible(0);
+  is_using_modelclave = false;
+  console.log("Disconnecting from modelclave.");
 }
 
 // manual command console
