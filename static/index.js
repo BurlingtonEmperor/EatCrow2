@@ -440,7 +440,7 @@ async function generateWarnings () {
     }
 
     else {
-      temp_gauge.style.color = "rgb(136, 238, 136);";
+      temp_gauge.style.color = "rgb(136, 238, 136)";
       resolve();
     }
   });
@@ -1091,6 +1091,8 @@ bringToLevels.onclick = function () {
     return false;
   }
 
+  is_actively_curing = false;
+
   let temp_and_set_diff = Math.abs(temp_values[temp_values.length - 1] - parseInt(tempSetAmount.value));
   let psi_and_set_diff = Math.abs(pressure_values[pressure_values.length - 1] - parseInt(psiSetAmount.value));
 
@@ -1119,6 +1121,8 @@ bringToLevels.onclick = function () {
   }
 
   else if (parseInt(tempSetAmount.value) >= temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) < pressure_values[pressure_values.length - 1]) {
+    is_actively_curing = true;
+
     for (let i = 0; i < temp_and_set_diff; i++) {
       send_signal_to_board(0);
     }
@@ -1136,6 +1140,8 @@ bringToLevels.onclick = function () {
   }
 
   else if (parseInt(tempSetAmount.value) >= temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) >= pressure_values[pressure_values.length - 1]) {
+    is_actively_curing = true;
+    
     for (let i = 0; i < temp_and_set_diff; i++) {
       send_signal_to_board(0);
     }
@@ -1181,6 +1187,8 @@ stopAutoclaveSemi.onclick = function () {
   if (isConnectedToBoard == false) {
     return false;
   }
+
+  is_actively_curing = false;
 
   let temp_and_set_diff = Math.abs(70 - parseInt(tempSetAmount.value));
   let psi_and_set_diff = Math.abs(14.7 - parseInt(psiSetAmount.value));
