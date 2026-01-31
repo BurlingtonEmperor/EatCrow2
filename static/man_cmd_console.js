@@ -1,6 +1,7 @@
 function console_help () {
   console.log('console_help(); - returns a list of commands');
   console.log('console_clear(); - clears the console');
+  console.log('periodic_clearing([0 or 1]); - if 1, periodically clears the console, if 0, shuts off interval');
   console.log('send_signal_to_board([YOUR SIGNAL NUMBER]); - sends signal to board');
   console.log('set_compatible([0 or 1]); - sets compatibility with other board software');
   console.log('compatible_heater([HEATER SIGNAL]); - read from heater (other board software)');
@@ -61,6 +62,20 @@ function compatible_temp (temp_reader) {
 
 function compatible_psi (psi_reader) {
   localStorage.setItem("compatible_psi", psi_reader);
+}
+
+let periodic_clearing_interval = 0;
+function periodic_clearing (clear_yes_or_no) {
+  switch (clear_yes_or_no) {
+    case 1:
+      periodic_clearing_interval = setInterval(function () {
+        console_clear();
+      }, 30000);
+      break;
+    case 0:
+      clearInterval(periodic_clearing_interval);
+      break;
+  }
 }
 
 // setInterval(function () {

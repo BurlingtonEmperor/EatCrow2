@@ -999,6 +999,7 @@ emergency_stop_btn.onclick = function () {
   }
 
   send_signal_to_board('s');
+  emergency_stopped = true;
   console.warn("Autoclave has been emergency stopped.");
 }
 
