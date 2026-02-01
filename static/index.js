@@ -426,14 +426,14 @@ async function generateWarnings () {
     //     break;
     // }
     
-    if (rate_of_change_temp_board > 2.49) {
+    if (rate_of_change_temp_board > 2.49 || real_temp_change_rate_board > 2.49) {
       warningArray.push("T-CLIMB");
       urgent_warningArray.push("RAPID TEMPERATURE CLIMB");
       temp_gauge.style.color = "red";
       resolve();
     }
     
-    else if (rate_of_change_temp_board < 1.51 && is_actively_curing) {
+    else if ((rate_of_change_temp_board < 1.51 && is_actively_curing) || (real_temp_change_rate_board < 1.51 && is_actively_curing)) {
       warningArray.push("T-STALL");
       temp_gauge.style.color = "yellow";
       resolve();
@@ -600,6 +600,9 @@ const ignore_errors_btn = document.getElementById("ignore-console-errors-btn");
 const show_errors_btn = document.getElementById("show-console-errors-btn");
 const use_modelclave_btn = document.getElementById("use-modelclave-btn");
 const disconnect_modelclave_btn = document.getElementById("disconnect-modelclave-btn");
+const periodic_clearing_btn = document.getElementById("periodic-clearing-btn");
+const end_clearing_btn = document.getElementById("end-clearing-btn");
+const clear_console_btn = document.getElementById("clear-console-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -694,12 +697,32 @@ use_modelclave_btn.onclick = function () {
   set_compatible(1);
   is_using_modelclave = true;
   console.log("Using modelclave.");
+  if (isConnectedToBoard) {
+    usage_mode.innerText = "TRAINER";
+  }
 }
 
 disconnect_modelclave_btn.onclick = function () {
   set_compatible(0);
   is_using_modelclave = false;
   console.log("Disconnecting from modelclave.");
+  if (isConnectedToBoard) {
+    usage_mode.innerText = "IDLE";
+  }
+}
+
+periodic_clearing_btn.onclick = function () {
+  periodic_clearing(1);
+  console.log("Periodic clearing enabled.");
+}
+
+end_clearing_btn.onclick = function () {
+  periodic_clearing_btn(0);
+  console.log("Periodic clearing disabled.");
+}
+
+clear_console_btn.onclick = function () {
+  clear_console();
 }
 
 // manual command console
@@ -1290,8 +1313,11 @@ let pressure_values = [];
 // let temp_change_r;
 let psi_change_r;
 
-const temp_change_rate = document.getElementById("temp-change-rate");
+const temp_change_rate = document.getElementById("temp-change-rate"); // average rates
 const psi_change_rate = document.getElementById("psi-change-rate");
+
+const real_temp_change_rate = document.getElementById("real-temp-change-rate"); // most recent rates
+const real_psi_change_rate = document.getElementById("real-psi-change-rate");
 
 setInterval(function () {
   const ctx = document.createElement('canvas');
@@ -1593,6 +1619,7 @@ Chart.defaults.animation = false;
 
 // board modes
 const autoclaveMode = document.getElementById("autoclave-mode");
+const usage_mode = document.getElementById("usage-mode");
 
 const manualControls = document.getElementById("manual-controls");
 const automaticControls = document.getElementById("automatic-controls");
@@ -1823,6 +1850,9 @@ function getPSI_fromModel (data_log) {
 let minutes_passed = 0;
 let rate_of_change_temp_board = 0;
 
+let real_temp_change_rate_board = 0;
+let real_psi_change_rate_board = 0;
+
 function passMinutes () {
   if (isConnectedToBoard) {
     minutes_passed += 1;
@@ -1830,15 +1860,20 @@ function passMinutes () {
 
     if (temp_values.length > 2) {
       rate_of_change_temp = (temp_values[temp_values.length - 1] - temp_values[0]) / (time_values[time_values.length - 1] - time_values[0]);
-      temp_change_rate.innerText = rate_of_change_temp;
+      temp_change_rate.innerText = rate_of_change_temp.toFixed(2) + " *F/MIN";
       rate_of_change_temp_board = rate_of_change_temp;
-
+      
+      rr_temp = (temp_values[temp_values.length - 1] - temp_values[temp_values.length - 2]) / (time_values[time_values.length - 1] - time_values[time_values.length - 2]);
+      real_temp_change_rate.innerText = rr_temp.toFixed(2) + " *F/MIN";
     }
 
     if (pressure_values.length > 2) {
       rate_of_change_psi = (pressure_values[pressure_values.length - 1] - pressure_values[0]) / (time_values[time_values.length - 1] - time_values[0]);
-      psi_change_rate.innerText = rate_of_change_psi;
+      psi_change_rate.innerText = rate_of_change_psi.toFixed(2) + " PSI/MIN";
       psi_change_r = rate_of_change_psi;
+
+      rr_psi = (pressure_values[pressure_values.length - 1] - pressure_values[pressure_values.length - 2]) / (time_values[time_values.length - 1] - time_values[time_values.length - 2]);
+      real_psi_change_rate.innerText = rr_psi.toFixed(2) + " PSI/MIN";
     }
   }
 }

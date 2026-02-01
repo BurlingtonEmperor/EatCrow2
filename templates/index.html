@@ -114,6 +114,12 @@
         <div class="btn-class">
           <div id="soft-reboot-btn" class="twenty button">SOFT REBOOT</div>
           <div id="call-off-emergency-btn" class="twenty button">CALL OFF EMERGENCY</div>
+          <div id="clear-console-btn" class="twenty button">CLEAR CONSOLE</div>
+        </div>
+        <br/>
+        <div class="btn-class">
+          <div id="periodic-clearing-btn" class="twenty button">CLEAR PERIODICALLY</div>
+          <div id="end-clearing-btn" class="twenty button">END CLEARING INTERVAL</div>
         </div>
       </div>
       <div id="subcontainer5">
@@ -136,12 +142,15 @@
       </div>
       <div id="chart-rate">
         <div>DEVICE BATTERY: <a id="device-battery-percent">STANDBY</a></div>
-        <div>TEMP CHANGE RATE: <a id="temp-change-rate">NO DATA</a></div>
-        <div>PSI CHANGE RATE: <a id="psi-change-rate">NO DATA</a></div>
+        <div>AVG TEMP CHANGE RATE: <a id="temp-change-rate">NO DATA</a></div>
+        <div>AVG PSI CHANGE RATE: <a id="psi-change-rate">NO DATA</a></div>
         <!-- <canvas id="temp-chart"></canvas> -->
       </div>
       <div id="pressure-rate">
         <div>
+          <div>TEMP CHANGE RATE: <a id="real-temp-change-rate">NO DATA</a></div>
+          <div>PSI CHANGE RATE: <a id="real-psi-change-rate">NO DATA</a></div>
+          <div>USAGE: <a id="usage-mode">IDLE</a></div>
           <label for="autoclave-mode">MODE: </label>
           <select name="autoclave-mode" id="autoclave-mode">
             <option value="manual">MANUAL</option>
