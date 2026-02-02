@@ -296,10 +296,7 @@ Would you like to...
         runCommand(user_choice_ask.lower());
         loopThroughInterface();
 
-"""
 #test
 runParameterCommand("echo Eat Crow");
 #end test
-loopThroughInterface();
-""";
-        
+loopThroughInterface()

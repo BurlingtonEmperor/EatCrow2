@@ -7,7 +7,7 @@ import subprocess
 import socket
 import time
 
-from troubleshoot import *
+# from troubleshoot import *
 from autoclave_simulator import *
 
 which_os = "";
@@ -296,8 +296,7 @@ Would you like to...
         runCommand(user_choice_ask.lower());
         loopThroughInterface();
 
-#test
-runParameterCommand("echo Eat Crow");
-#end test
-loopThroughInterface();
-        
+# #test
+# runParameterCommand("echo Eat Crow");
+# #end test
+# loopThroughInterface();

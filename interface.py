@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify;
 from threading import Timer;
 from Arduino import Arduino;
 
-from eatcrow import *;
+from croweat import *;
 
 import webbrowser;
 import time;
