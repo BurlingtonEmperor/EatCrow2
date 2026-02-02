@@ -10,6 +10,9 @@ let last_maintained = localStorage.getItem("last_maintained");
 const issue_resolve_msg = document.getElementById("issue-resolve-msg");
 const device_battery_percent = document.getElementById("device-battery-percent");
 
+const temp_ceiling = 300;
+const psi_ceiling = 100;
+
 // start precheck
 const vendorID = localStorage.getItem("vendor_id");
 function checkForVendorID () {
@@ -87,6 +90,8 @@ async function resolveIssue (issueCode) {
 
 // general display
 const temp_gauge = document.getElementById("temp_gauge");
+const autoclave_diagram = document.getElementById("autoclave-diagram");
+const autoclave_status = document.getElementById("autoclave-status");
 
 async function generateWarnings () {
   warningArray = [];
@@ -461,7 +466,37 @@ async function generateWarnings () {
     }
   });
 
-  asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise, emergencyStopCheckPromise);
+  const temperatureWarningPromise = new Promise((resolve) => {
+    switch (true) {
+      case (temp_values[temp_values.length - 1] >= temp_ceiling):
+        warningArray.push("TEMPERATURE");
+        urgent_warningArray.push("REDUCE TEMPERATURE");
+        autoclave_diagram.style.border = "1px solid red";
+        resolve();
+        break;
+      default:
+        resolve();
+        autoclave_diagram.style.border = "1px solid rgb(136, 238, 136)";
+        break;
+    }
+  });
+
+  const pressureWarningPromise = new Promise((resolve) => {
+    switch (true) {
+      case (pressure_values[pressure_values.length - 1] >= psi_ceiling):
+        warningArray.push("PRESSURE");
+        urgent_warningArray.push("REDUCE PRESSURE");
+        autoclave_status.style.border = "1px solid red";
+        resolve();
+        break;
+      default:
+        autoclave_status.style.border = "1px solid rgb(136, 238, 136)";
+        resolve();
+        break;
+    }
+  });
+
+  asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise, emergencyStopCheckPromise, temperatureWarningPromise, pressureWarningPromise);
   await Promise.all(asyncChecks);
 
   if (warningArray.length === 0) {

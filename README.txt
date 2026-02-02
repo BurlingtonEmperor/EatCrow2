@@ -15,6 +15,23 @@ AUTOMATIC mode: Use preprogrammed macros for different curing processes.
 
 The default mode is the MANUAL mode. To change modes, simply select the drop-down menu on the left-hand corner of the screen.
 
+Section 3: Usage Modes 
+Usage Modes can be found on the left-hand corner of the screen.
+IDLE - Default state of the autoclave. The board is not connected, or the autoclave is not actively curing or cooling.
+ACTIVE - Autoclave is actively curing or cooling.
+TRAINER - Autoclave is in trainer mode (using the Modelclave).
+
+Section 4: The Interface 
+Autoclave Diagram *
+The Autoclave Diagram is located in the very center of the screen, and is a large rectangle with a smaller 
+rectangle inside of it with "TEMP" and "PSI" inside of the smaller rectangle. The large rectangle represents the autoclave integrity
+with respect to temperature (ie. when the "TEMPERATURE" warning displays, the larger rectangle will turn red), and the smaller 
+rectangle represents autoclave integrity with respect to pressure (ie. when the "PRESSURE" warning displays, the smaller rectangle will turn red).
+"TEMP" and "PSI" indictate risks with respect to temperature and pressure rates (ie. when the "T-CLIMB" warning displays, the "TEMP" indicator
+will turn red, and when the "P-CLIMB" warning displays, the "PSI" indicator will turn red).
+
+* see warnings below.
+
 -- SAFETY --
 Section 1: Warnings
 Warning List:
