@@ -60,6 +60,9 @@ void loop() {
         Serial.println("Emergency stop.");
         while(true);
         break;
+      case 'c':
+        Serial.println("comm");
+        break;
     }
   }
 
