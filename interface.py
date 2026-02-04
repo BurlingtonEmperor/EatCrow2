@@ -21,6 +21,7 @@ from subprocess import Popen
 
 import pandas as pd;
 import asyncio
+import pickle
 
 current_autoclave_temp = 0
 current_autoclave_pressure = 0
@@ -222,6 +223,20 @@ def read_signal_from_board():
       return "nothing"
   except:
     return "nothing"
+
+@app.route('/create_log', methods=['POST'])
+def create_log():
+  signal_to_read = request.get_json()
+  log_data = signal_to_read.get("log_data")
+  log_data = str(log_data).split("|]P//+=;|")
+
+  try:
+    with open (("autoclave_log_" + datetime.now()).replace(" ", "_") + ".txt", "wb") as f:
+      for (x in log_data):
+        f.write(log_data[x] + "\n")
+      return "Created log."
+  except Exception as e:
+    return "File Error: " + e
 
 def open_browser():
   checkWhichPlatform();
