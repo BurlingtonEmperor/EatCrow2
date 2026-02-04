@@ -1394,7 +1394,7 @@ setInterval(function () {
     }
   };
 
-  if (time_values.length < 5 || temp_values < 5 || isConnectedToBoard == false) {
+  if (time_values.length < 5 || temp_values.length < 5 || isConnectedToBoard == false) {
     new Chart(ctx, {
       type : "line",
       data : {

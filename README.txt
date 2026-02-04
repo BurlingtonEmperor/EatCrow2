@@ -30,7 +30,10 @@ rectangle represents autoclave integrity with respect to pressure (ie. when the 
 "TEMP" and "PSI" indictate risks with respect to temperature and pressure rates (ie. when the "T-CLIMB" warning displays, the "TEMP" indicator
 will turn red, and when the "P-CLIMB" warning displays, the "PSI" indicator will turn red).
 
-* see warnings below.
+* see warnings in the SAFETY section below.
+
+Autoclave Readings
+
 
 -- SAFETY --
 Section 1: Warnings
