@@ -63,3 +63,11 @@ MAINTENANCE - Autoclave maintenance recommended
 BOARD - Board connection not found
 PORT - Board port not found
 ACCESS - Port access denied to interface program
+
+-- COMMANDS --
+On the main command pannel with the autoclave graphs and status diagram, there wil be a button 
+on top of the status diagram listed as "COMMAND". Once entered, you can access a variety of custom controls 
+from that panel.
+
+MANUAL COMMAND CONSOLE - Opens a command console in which you can enter commands.
+LOG AUTOCLAVE - Logs current autoclave data.
