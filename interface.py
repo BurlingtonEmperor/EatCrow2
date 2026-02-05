@@ -20,7 +20,8 @@ from geo_city_locator import get_nearest_city
 from subprocess import Popen
 
 import pandas as pd;
-import asyncio
+import asyncio;
+import json;
 
 current_autoclave_temp = 0
 current_autoclave_pressure = 0
@@ -228,7 +229,7 @@ def create_log_auto():
   signal_to_read = request.get_json()
   log_data_au = signal_to_read.get("log_data")
     
-  lines = str(log_data_au).split("|]P//+=;|")
+  lines = log_data_au
     
   timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
   filename = f"autoclave_log_{timestamp}.txt"
