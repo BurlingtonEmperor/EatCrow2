@@ -232,12 +232,16 @@ def create_log_auto():
     
   timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
   filename = f"autoclave_log_{timestamp}.txt"
+  foldername = "logs"
+
+  os.makedirs(foldername, exist_ok=True)
+  file_path = os.path.join(foldername, filename)
 
   try:
-    with open(filename, "w") as f:
+    with open(file_path, "w") as f:
       for line in lines:
         f.write(line + "\n")
-      return "Created log."
+      return "Created log as " + file_path
   except Exception as err:
     return f"File Error: {str(err)}"
 

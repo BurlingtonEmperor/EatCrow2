@@ -638,6 +638,7 @@ const disconnect_modelclave_btn = document.getElementById("disconnect-modelclave
 const periodic_clearing_btn = document.getElementById("periodic-clearing-btn");
 const end_clearing_btn = document.getElementById("end-clearing-btn");
 const clear_console_btn = document.getElementById("clear-console-btn");
+const log_autoclave_btn = document.getElementById("log-autoclave-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -758,6 +759,19 @@ end_clearing_btn.onclick = function () {
 
 clear_console_btn.onclick = function () {
   clear_console();
+}
+
+log_autoclave_btn.onclick = function () {
+  createAutoclaveLog(
+    temp_values, 
+    pressure_values, 
+    usage_mode.innerText, 
+    external_temp_status.innerText, 
+    device_battery_percent.innerText, 
+    timeDOM.innerText, 
+    warningArray, 
+    time_values
+  );
 }
 
 // manual command console

@@ -1,4 +1,5 @@
-EatCrow2 -- Industrial Autoclave Interface
+EatCrow2 -- Autoclave Interface
+(NOT TO BE USED FOR INDUSTRY LEVEL MANUFACTURING OPERATIONS!)
 
 -- USAGE --
 Section 1: Download and Setup
@@ -18,7 +19,8 @@ The default mode is the MANUAL mode. To change modes, simply select the drop-dow
 Section 3: Usage Modes 
 Usage Modes can be found on the left-hand corner of the screen.
 IDLE - Default state of the autoclave. The board is not connected, or the autoclave is not actively curing or cooling.
-ACTIVE - Autoclave is actively curing or cooling.
+ACTIVE DEFAULT - Autoclave is actively curing or cooling (and is not in TRAINER mode).
+ACTIVE STERILE - Autoclave is actively sterilizing (and is not in TRAINER mode).
 TRAINER - Autoclave is in trainer mode (using the Modelclave).
 
 Section 4: The Interface 
