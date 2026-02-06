@@ -1119,10 +1119,19 @@ const decreasePSIManually = document.getElementById("decrease-psi-manually");
 const tempRaiseAmount = document.getElementById("temp-raise-amount");
 const psiRaiseAmount = document.getElementById("psi-raise-amount");
 
+function notifyActiveCureStatus () {
+  if (is_using_modelclave == false) {
+    usage_mode.innerText = "ACTIVE DEFAULT";
+  }
+}
+
 raiseTempManually.onclick = function () {
   if (tempRaiseAmount.value == null || isConnectedToBoard == false) {
     return false;
   }
+
+  is_actively_curing = true;
+  notifyActiveCureStatus();
 
   for (let i = 0; i < parseInt(tempRaiseAmount.value); i++) {
     // switch (true) {
@@ -1157,6 +1166,9 @@ raisePSIManually.onclick = function () {
   if (psiRaiseAmount.value == null || isConnectedToBoard == false) {
     return false;
   }
+
+  is_actively_curing = true;
+  notifyActiveCureStatus();
 
   for (let i = 0; i < parseInt(psiRaiseAmount.value); i++) {
     switch (true) {
@@ -1203,6 +1215,15 @@ bringToLevels.onclick = function () {
   }
 
   is_actively_curing = false;
+  if (is_using_modelclave == false) {
+    usage_mode.innerText = "IDLE";
+  }
+
+  // function notifyActiveCureStatus () {
+  //   if (is_using_modelclave == false) {
+  //     usage_mode.innerText = "ACTIVE DEFAULT";
+  //   }
+  // }
 
   let temp_and_set_diff = Math.abs(temp_values[temp_values.length - 1] - parseInt(tempSetAmount.value));
   let psi_and_set_diff = Math.abs(pressure_values[pressure_values.length - 1] - parseInt(psiSetAmount.value));
@@ -1233,6 +1254,7 @@ bringToLevels.onclick = function () {
 
   else if (parseInt(tempSetAmount.value) >= temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) < pressure_values[pressure_values.length - 1]) {
     is_actively_curing = true;
+    notifyActiveCureStatus();
 
     for (let i = 0; i < temp_and_set_diff; i++) {
       send_signal_to_board(0);
@@ -1252,6 +1274,7 @@ bringToLevels.onclick = function () {
 
   else if (parseInt(tempSetAmount.value) >= temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) >= pressure_values[pressure_values.length - 1]) {
     is_actively_curing = true;
+    notifyActiveCureStatus();
     
     for (let i = 0; i < temp_and_set_diff; i++) {
       send_signal_to_board(0);
@@ -1300,6 +1323,9 @@ stopAutoclaveSemi.onclick = function () {
   }
 
   is_actively_curing = false;
+  if (is_using_modelclave == false) {
+    usage_mode.innerText = "IDLE";
+  }
 
   let temp_and_set_diff = Math.abs(70 - parseInt(tempSetAmount.value));
   let psi_and_set_diff = Math.abs(14.7 - parseInt(psiSetAmount.value));

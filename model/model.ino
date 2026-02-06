@@ -7,6 +7,8 @@ int outletPin = 9;
 int setPressure = 14.7;
 int setTemp = 70;
 
+int tempCeiling = 120;
+
 int sumArray(int arr[], int size) {
   int s = 0;
   for (int i = 0; i < size; i++) {
@@ -90,6 +92,15 @@ void loop() {
     Serial.print(temperatureF);
     Serial.println(" °F)");
     sample = 0;
+
+    // switch (true) {
+    //   case (temperatureF >= tempCeiling):
+    //     break;
+    // }
+
+    if (temperatureF >= tempCeiling) {
+      Serial.println("TEMP CEILING");
+    }
 
     Serial.println("Desired States:");
     if (temperatureF < setTemp) {

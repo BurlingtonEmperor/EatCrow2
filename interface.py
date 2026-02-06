@@ -9,15 +9,16 @@ import time;
 import os;
 import tempfile;
 import requests;
-import sys
+import sys;
 
 import serial.tools.list_ports;
 import serial;
 
 from meteostat import Point, Daily;
 from datetime import datetime;
-from geo_city_locator import get_nearest_city
-from subprocess import Popen
+from geo_city_locator import get_nearest_city;
+from subprocess import Popen;
+from nava import play, stop;
 
 import pandas as pd;
 import asyncio;
@@ -34,6 +35,8 @@ arduino_board = ""
 URL = "http://127.0.0.1:5000";
 app = Flask(__name__);
 # board = "";
+
+sound_dir = os.path.dirname(os.path.abspath(__file__) + "\\alarms")
 
 temp_file_path = os.path.join(tempfile.gettempdir(), 'os_output.txt');
 def clean_exit_file():
@@ -216,6 +219,8 @@ def read_signal_from_board():
         data = raw_data.decode('utf-8').strip()
         
         if (data):
+          if (str(data) == "TEMP CEILING"):
+            play(sound_dir + "\\temp.wav", async_mode=True)
           return data
       except Exception as e:
         return ("Encountered an error: " + e)

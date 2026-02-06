@@ -10,7 +10,7 @@ if %errorlevel% neq 0 (
   winget install -e --id Python.Python.3.13 --scope machine
 )
 
-python -m pip install arduino-python3 pyserial flask requests meteostat pandas geo-city-locator
+python -m pip install arduino-python3 pyserial flask requests meteostat pandas geo-city-locator nava
 if %errorlevel% neq 0 (
   set installation_error=1
 )

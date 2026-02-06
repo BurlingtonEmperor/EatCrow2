@@ -61,6 +61,9 @@ void loop() {
       case 's':
         while(true);
         break;
+      case 't':
+        Serial.println("TEMP CEILING");
+        break;
       default:
         Serial.print("Received unknown character: ");
         Serial.println(incomingByte);
