@@ -1434,7 +1434,7 @@ setInterval(function () {
     }
   };
 
-  if (time_values.length < 5 || temp_values.length < 5 || isConnectedToBoard == false) {
+  if (time_values.length < 5 || temp_values.length < 5 || (isConnectedToBoard == false && is_using_modelclave == false)) {
     new Chart(ctx, {
       type : "line",
       data : {
@@ -1561,7 +1561,7 @@ setInterval(function () {
     });
   }
 
-  if (time_values.length < 5 || pressure_values.length < 5 || isConnectedToBoard == false) {
+  if (time_values.length < 5 || pressure_values.length < 5 || (isConnectedToBoard == false && is_using_modelclave == false)) {
     new Chart(ctx_double, {
       type : "line",
       data : {
