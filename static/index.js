@@ -1044,7 +1044,9 @@ function send_signal_to_board (boardSignal) {
   })
   .catch(error => {
     warningArray.push("PRGM_ERR");
-    console.error(error);
+    if (ignore_errors == false) {
+      console.error(error);
+    }
     urgent_warningArray.push("REBOOT SYSTEM");
   });
 }
