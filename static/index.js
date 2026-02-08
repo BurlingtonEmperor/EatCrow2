@@ -753,7 +753,7 @@ periodic_clearing_btn.onclick = function () {
 }
 
 end_clearing_btn.onclick = function () {
-  periodic_clearing_btn(0);
+  periodic_clearing(0);
   console.log("Periodic clearing disabled.");
 }
 

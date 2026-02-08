@@ -42,6 +42,10 @@ function parseUserSpeech () {
                   break;
               }
               break;
+            case (rest_of_command.includes("switch displays")):
+              console.log("Switching displays.");
+              convertTextToSpeech("Switching displays.");
+              break;
           }
           break;
       }
