@@ -220,6 +220,7 @@ def read_signal_from_board():
         
         if (data):
           if (str(data) == "TEMP CEILING"):
+            # print("temp")
             play(sound_dir + "\\temp.wav", async_mode=True)
           return data
       except Exception as e:
