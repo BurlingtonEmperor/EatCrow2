@@ -185,7 +185,7 @@ input[type=number] {
   outline: 1px solid orange;
 }
 
-#automatic-controls, #semi-manual-controls {
+#automatic-controls, #semi-manual-controls, #command-list-2 {
   display: none;
 }
 

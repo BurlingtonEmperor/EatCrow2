@@ -612,6 +612,9 @@ const subcontainer_3 = document.getElementById("subcontainer3");
 const subcontainer_4 = document.getElementById("subcontainer4");
 const subcontainer_5 = document.getElementById("subcontainer5");
 
+const command_list_1 = document.getElementById("command-list-1");
+const command_list_2 = document.getElementById("command-list-2");
+
 // buttons
 const autoclaveRepairBtn = document.getElementById("autoclave-repair-btn");
 const repairBackBtn = document.getElementById("repair-back-btn");
@@ -639,6 +642,10 @@ const periodic_clearing_btn = document.getElementById("periodic-clearing-btn");
 const end_clearing_btn = document.getElementById("end-clearing-btn");
 const clear_console_btn = document.getElementById("clear-console-btn");
 const log_autoclave_btn = document.getElementById("log-autoclave-btn");
+const cmd_list_1_btn = document.getElementById("cmd-list-1-btn");
+const cmd_list_2_btn = document.getElementById("cmd-list-2-btn");
+const enable_voice_commands_btn = document.getElementById("enable-voice-commands-btn");
+const disable_voice_commands_btn = document.getElementById("disable-voice-commands-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -772,6 +779,27 @@ log_autoclave_btn.onclick = function () {
     warningArray, 
     time_values
   );
+}
+
+cmd_list_2_btn.onclick = function () {
+  command_list_1.style.display = "none";
+  command_list_2.style.display = "block";
+}
+
+cmd_list_1_btn.onclick = function () {
+  command_list_1.style.display = "block";
+  command_list_2.style.display = "none";
+}
+
+enable_voice_commands_btn.onclick = function () {
+  if (continue_parsing_speech == false) {
+    continue_parsing_speech = true;
+    parseUserSpeech();
+  }
+}
+
+disable_voice_commands_btn.onclick = function () {
+  continue_parsing_speech = false;
 }
 
 // manual command console
