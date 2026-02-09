@@ -24,7 +24,7 @@ function parseUserSpeech () {
     const recognition = new SpeechRecognition();
 
     recognition.lang = "en-US"; 
-    recognition.continuous = true; 
+    recognition.continuous = false; 
     recognition.interimResults = false;
 
     recognition.onresult = (event) => {
@@ -59,6 +59,19 @@ function parseUserSpeech () {
             case (rest_of_command.includes("switch displays")):
               console.log("Switching displays.");
               convertTextToSpeech("Switching displays.");
+              break;
+            case (rest_of_command.includes("enable parsing")):
+              console.log("Continuous parsing enabled.");
+              convertTextToSpeech("Continuous parsing enabled.");
+              continue_parsing_speech = true;
+              break;
+            case (rest_of_command.includes("end parsing")):
+              console.log("Continuous parsing disabled.");
+              convertTextToSpeech("Continuous parsing disabled.");
+              continue_parsing_speech = false;
+              break;
+            case (rest_of_command.includes("refresh interface")):
+              location = "";
               break;
             default:
               console.log("Not a valid voice command.");
