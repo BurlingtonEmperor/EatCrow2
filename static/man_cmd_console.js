@@ -13,6 +13,8 @@ function console_help () {
   console.log('solenoid_2 = [true or false]; - read for a second solenoid');
   console.log('ignore_errors = [true or false]; - ignores console errors if true');
   console.log('is_using_modelclave = [true or false]; - uses modelclave for alternate program if true');
+  console.log('speech_command_pointer = [speech command pointer]; - switches speech command pointer');
+  console.log('continue_parsing_speech = [true or false]; - if true, continues to parse speech commands');
 }
 
 function console_clear () {

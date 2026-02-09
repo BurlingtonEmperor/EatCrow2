@@ -1,17 +1,31 @@
 window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const text_to_speech = new SpeechSynthesisUtterance();
+let additional_words = "";
+
+let speech_command_pointer = "computer";
+let continue_parsing_speech = false;
 
 function convertTextToSpeech (message_text) {
   text_to_speech.text = String(message_text);
+  additional_words = message_text;
   window.speechSynthesis.speak(text_to_speech);
+}
+
+function getSpeechTime (given_text) {
+  const ind_words = given_text.trim().split("/\s+/").length;
+  const word_minutes = ind_words / 140;
+  const word_seconds = Math.ceil(word_minutes * 60);
+
+  return (word_seconds * 1000);
 }
 
 function parseUserSpeech () {
   if (window.SpeechRecognition) {
     const recognition = new SpeechRecognition();
-    recognition.continuous = false;
+
     recognition.lang = "en-US"; 
-    recognition.interimResults = false; 
+    recognition.continuous = true; 
+    recognition.interimResults = false;
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
@@ -19,7 +33,7 @@ function parseUserSpeech () {
       
       const first_word_to_comp = String(transcript.trim().split(' ')[0]).toLowerCase();
       switch (true) {
-        case (first_word_to_comp == "computer"):
+        case (first_word_to_comp == speech_command_pointer):
           const command_array_org = transcript.trim().split(' ');
           command_array_org[0] = " ";
 
@@ -46,9 +60,19 @@ function parseUserSpeech () {
               console.log("Switching displays.");
               convertTextToSpeech("Switching displays.");
               break;
+            default:
+              console.log("Not a valid voice command.");
+              convertTextToSpeech("Not a valid voice command.");
+              break;
           }
           break;
       }
+
+      setTimeout(function () {
+        if (continue_parsing_speech) {
+          parseUserSpeech();
+        }
+      }, getSpeechTime(transcript));
     }
 
     recognition.onerror = (event) => {
@@ -57,6 +81,11 @@ function parseUserSpeech () {
 
     recognition.start();
     console.log("Began parsing user speech.");
+
+    // recognition.onend = () => {
+    //   recognition.start();
+    //   console.log("Listening restarted...");
+    // };
   }
 
   else {
