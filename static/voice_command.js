@@ -24,7 +24,7 @@ function parseUserSpeech () {
     const recognition = new SpeechRecognition();
 
     recognition.lang = "en-US"; 
-    recognition.continuous = false; 
+    recognition.continuous = true; 
     recognition.interimResults = false;
 
     recognition.onresult = (event) => {
@@ -59,6 +59,7 @@ function parseUserSpeech () {
             case (rest_of_command.includes("switch displays")):
               console.log("Switching displays.");
               convertTextToSpeech("Switching displays.");
+              switch_Displays_Graph();
               break;
             case (rest_of_command.includes("enable parsing")):
               console.log("Continuous parsing enabled.");

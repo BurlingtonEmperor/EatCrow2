@@ -185,8 +185,16 @@ input[type=number] {
   outline: 1px solid orange;
 }
 
-#automatic-controls, #semi-manual-controls, #command-list-2 {
+#automatic-controls, #semi-manual-controls, #command-list-2, #autoclave-plot {
   display: none;
+}
+
+#autoclave-plot {
+  width: 400px;
+  margin: auto;
+  position: relative;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Classes */

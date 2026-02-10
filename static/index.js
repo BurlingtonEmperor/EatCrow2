@@ -92,6 +92,7 @@ async function resolveIssue (issueCode) {
 const temp_gauge = document.getElementById("temp_gauge");
 const autoclave_diagram = document.getElementById("autoclave-diagram");
 const autoclave_status = document.getElementById("autoclave-status");
+const autoclave_plot = document.getElementById("autoclave-plot");
 
 async function generateWarnings () {
   warningArray = [];
@@ -646,6 +647,7 @@ const cmd_list_1_btn = document.getElementById("cmd-list-1-btn");
 const cmd_list_2_btn = document.getElementById("cmd-list-2-btn");
 const enable_voice_commands_btn = document.getElementById("enable-voice-commands-btn");
 const disable_voice_commands_btn = document.getElementById("disable-voice-commands-btn");
+const switch_displays_btn = document.getElementById("switch-displays-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -800,6 +802,10 @@ enable_voice_commands_btn.onclick = function () {
 
 disable_voice_commands_btn.onclick = function () {
   continue_parsing_speech = false;
+}
+
+switch_displays_btn.onclick = function () {
+  switch_Displays_Graph();
 }
 
 // manual command console
@@ -1411,6 +1417,7 @@ let time_values = [];
 
 const chartRate = document.getElementById("chart-rate");
 const pressureRate = document.getElementById("pressure-rate");
+const autoclavePlot = document.getElementById("autoclave-plot");
 
 let temp_values = [];
 let pressure_values = [];
@@ -1424,23 +1431,27 @@ const psi_change_rate = document.getElementById("psi-change-rate");
 const real_temp_change_rate = document.getElementById("real-temp-change-rate"); // most recent rates
 const real_psi_change_rate = document.getElementById("real-psi-change-rate");
 
+let is_using_alternate_display = false;
+
+function switch_Displays_Graph () {
+  switch (true) {
+    case (is_using_alternate_display):
+      is_using_alternate_display = false;
+      autoclavePlot.style.display = "none";
+      autoclave_diagram.style.display = "flex";
+      break;
+    default:
+      is_using_alternate_display = true;
+      autoclavePlot.style.display = "flex";
+      autoclave_diagram.style.display = "none";
+      break;
+  }
+}
+
 setInterval(function () {
   const ctx = document.createElement('canvas');
   const ctx_double = document.createElement('canvas');
-
-  chartRate.appendChild(ctx);
-  pressureRate.appendChild(ctx_double);
-
-  
-  if (document.getElementById("temp-chart")) {
-    document.getElementById("temp-chart").remove();
-  }
-  ctx.id = "temp-chart";
-
-  if (document.getElementById("pressure-chart")) {
-    document.getElementById("pressure-chart").remove();
-  }
-  ctx_double.id = "pressure-chart";
+  let ctx_triple;
 
   const crossLinePlugin = {
     id: 'crossLinePlugin',
@@ -1463,6 +1474,192 @@ setInterval(function () {
       ctx.restore();
     }
   };
+
+  chartRate.appendChild(ctx);
+  pressureRate.appendChild(ctx_double);
+
+  switch (true) {
+    case (is_using_alternate_display):
+      ctx_triple = document.createElement('canvas');
+      autoclavePlot.appendChild(ctx_triple);
+
+      if (document.getElementById("main-plot-jarvis")) {
+        document.getElementById("main-plot-jarvis").remove();
+      }
+      ctx_triple.id = "main-plot-jarvis";
+
+      if ((time_values.length < 5 && temp_values.length < 5 && pressure_values.length < 5) || (isConnectedToBoard == false && is_using_modelclave == false)) {
+        new Chart(ctx_triple, {
+          type : "line",
+          data : {
+            labels : time_values,
+            datasets : [
+              {
+                fill : false,
+                lineTension : 0,
+                backgroundColor : "rgba(136,238,136,1.000)",
+                borderColor : "rgba(136,238,136,1.000)",
+                data : temp_values
+              },
+              {
+                fill : false,
+                lineTension : 0,
+                backgroundColor : "rgba(188, 155, 209, 0.8)",
+                borderColor : "rgba(188, 155, 209, 0.8)",
+                data : pressure_values
+              }
+            ]
+          },
+          options : {
+            plugins : {
+              legend : {
+                display : false
+              },
+              title : {
+                display : true,
+                text : "GENERAL DISPLAY",
+                color : "rgba(136,238,136,1.000)",
+                font : {
+                  family : "Hornet"
+                }
+              }
+            },
+            scales : {
+              y : {
+                ticks : {
+                  display : false
+                },
+                grid : {
+                  display : false
+                }
+              },
+              x : {
+                ticks : {
+                  display: false
+                },
+                grid : {
+                  display : false
+                }
+              }
+            }
+          },
+          plugins: [crossLinePlugin]
+        });
+      }
+
+      else {
+        new Chart(ctx_triple, {
+          type : "line",
+          data : {
+            labels : time_values,
+            datasets : [
+              {
+                fill : false,
+                lineTension : 0,
+                backgroundColor : "rgba(136,238,136,1.000)",
+                borderColor : "rgba(136,238,136,1.000)",
+                data: temp_values
+              }
+            ]
+          },
+          options : {
+            plugins : {
+              legend : {
+                display : false
+              },
+              title : {
+                display : true,
+                text : "TEMPERATURE OR PRESSURE",
+                color : "rgba(136,238,136,1.000)",
+                font : {
+                  family : "Hornet"
+                }
+              }
+            },
+            scales : {
+              y : {
+                ticks : {
+                  font : {
+                    family : "Hornet"
+                  },
+                  color : "rgba(136,238,136,1.000)"
+                },
+                grid : {
+                  color : "rgba(136,238,136,1.000)"
+                },
+                border : {
+                  color : "rgba(136,238,136,1.000)"
+                },
+                title : {
+                  display : true,
+                  text : "FAREN. OR PSI",
+                  font : {
+                    family : "Hornet"
+                  },
+                  color : "rgba(136,238,136,1.000)"
+                }
+              },
+              x : {
+                ticks : {
+                  font : {
+                    family : "Hornet"
+                  },
+                  color : "rgba(136,238,136,1.000)"
+                },
+                grid : {
+                  color : "rgba(136,238,136,1.000)"
+                },
+                border : {
+                  color : "rgba(136,238,136,1.000)"
+                },
+                title : {
+                  display : true,
+                    text : "TIME (MIN.)",
+                    font : {
+                      family : "Hornet"
+                    },
+                    color : "rgba(136,238,136,1.000)"
+                }
+              }
+            }
+          }
+        });
+      }
+      break;
+  }
+
+  
+  if (document.getElementById("temp-chart")) {
+    document.getElementById("temp-chart").remove();
+  }
+  ctx.id = "temp-chart";
+
+  if (document.getElementById("pressure-chart")) {
+    document.getElementById("pressure-chart").remove();
+  }
+  ctx_double.id = "pressure-chart";
+
+  // const crossLinePlugin = {
+  //   id: 'crossLinePlugin',
+  //   afterDraw(chart) {
+  //     const { ctx, chartArea: { top, bottom, left, right } } = chart;
+
+  //     ctx.save();
+  //     ctx.strokeStyle = "rgba(136,238,136,1.000)"; 
+  //     ctx.lineWidth = 2;
+
+  //     ctx.beginPath();
+
+  //     ctx.moveTo(left, top);
+  //     ctx.lineTo(right, bottom);
+    
+  //     ctx.moveTo(right, top);
+  //     ctx.lineTo(left, bottom);
+    
+  //     ctx.stroke();
+  //     ctx.restore();
+  //   }
+  // };
 
   if (time_values.length < 5 || temp_values.length < 5 || (isConnectedToBoard == false && is_using_modelclave == false)) {
     new Chart(ctx, {
