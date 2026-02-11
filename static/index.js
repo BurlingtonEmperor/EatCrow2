@@ -798,6 +798,10 @@ enable_voice_commands_btn.onclick = function () {
     continue_parsing_speech = true;
     parseUserSpeech();
   }
+
+  else if (is_actively_listening == false) {
+    parseUserSpeech();
+  }
 }
 
 disable_voice_commands_btn.onclick = function () {
@@ -1559,6 +1563,13 @@ setInterval(function () {
                 backgroundColor : "rgba(136,238,136,1.000)",
                 borderColor : "rgba(136,238,136,1.000)",
                 data: temp_values
+              },
+              {
+                fill : false,
+                lineTension : 0,
+                backgroundColor : "rgba(188, 155, 209, 0.8)",
+                borderColor : "rgba(188, 155, 209, 0.8)",
+                data : pressure_values
               }
             ]
           },
@@ -2186,13 +2197,25 @@ setInterval(function () {
   //   time_values.push(minutes_passed);
   // }
 
+  if (time_values.length > 9) {
+    time_values.splice(0, 5);
+  }
+
   passMinutes();
 }, 60000);
 
+let int_to_clear;
 setTimeout(function () {
   let starter_time_val = 0;
-  setInterval(function () {
+  int_to_clear = setInterval(function () {
     starter_time_val += 0.017;
     time_values.push(starter_time_val);
   }, 1000);
 }, 6000);
+
+setTimeout(function () {
+  clearInterval(int_to_clear);
+  if (time_values.length > 5) {
+    time_values.splice(5);
+  }
+}, 12000);
