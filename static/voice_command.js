@@ -45,6 +45,7 @@ function parseUserSpeech () {
       switch (true) {
         case (first_word_to_comp == speech_command_pointer):
           recognition.stop();
+          is_actively_listening = false;
           const command_array_org = transcript.trim().split(' ');
           command_array_org[0] = " ";
 
@@ -87,10 +88,28 @@ function parseUserSpeech () {
               location = "";
               break;
             case (rest_of_command.includes("goodbye")):
+            case (rest_of_command.includes("shut off")):
+            case (rest_of_command.includes("shutoff")):
+            case (rest_of_command.includes("shut down")):
+            case (rest_of_command.includes("shutdown")):
               console.log("Goodbye to you as well!");
               convertTextToSpeech("Goodbye to you as well!");
             //   spamPreventer();
               error_handler_speech = 2;
+              break;
+            case (rest_of_command.includes("create log")):
+            case (rest_of_command.includes("record log")):
+              createAutoclaveLog(
+                temp_values, 
+                pressure_values, 
+                usage_mode.innerText, 
+                external_temp_status.innerText, 
+                device_battery_percent.innerText, 
+                timeDOM.innerText, 
+                warningArray, 
+                time_values
+              );
+              convertTextToSpeech("Created a log.");
               break;
             default:
               console.log("Not a valid voice command.");

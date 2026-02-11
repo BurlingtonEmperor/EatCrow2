@@ -1,0 +1,8 @@
+Temperature Data (°F): []
+Pressure Data (PSI): []
+Minutes: [0.017,0.034,0.051000000000000004,0.068,0.085]
+Usage Mode: IDLE
+External Temperature: LOCATION ERROR
+Device Battery: 65%
+Date and Time: 3:19:43 PM
+Warnings: ["POWER","BOARD"]
