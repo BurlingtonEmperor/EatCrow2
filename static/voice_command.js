@@ -9,6 +9,28 @@ let is_actively_listening = false;
 // let stutter_prevent_count = 0;
 // let stutter_word_storage = "";
 
+const audioCtx_dalek = new (window.AudioContext || window.webkitAudioContext)();
+
+async function speakDalek (dalek_text) {
+  const oscillator = audioCtx_dalek.createOscillator();
+  const modulator = audioCtx_dalek.createGain();
+  
+  oscillator.type = 'sine';
+  oscillator.frequency.value = 30; 
+  modulator.gain.value = 0; 
+
+  oscillator.connect(modulator.gain);
+  oscillator.start();
+
+  const utterance = new SpeechSynthesisUtterance(dalek_text);
+  
+  utterance.pitch = 0.8; 
+  utterance.rate = 1.1; 
+
+  window.speechSynthesis.speak(utterance);
+  modulator.connect(audioCtx_dalek.destination);
+}
+
 function convertTextToSpeech (message_text) {
   text_to_speech.text = String(message_text);
   additional_words = message_text;
