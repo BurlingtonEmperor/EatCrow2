@@ -822,6 +822,14 @@ const manualCommandConsoleBackBtn = document.getElementById("manual-command-cons
 const manualCommandConsoleInput = document.getElementById("manual-command-console-input");
 const manualCommandConsoleInputFinish = document.getElementById("manual-command-console-input-submit");
 
+function clearIfMore () {
+  const MCC_array = String(manualCommandConsole.innerHTML).split('</p>').filter(item => item.trim() !== "").map(item => item + '</p>');
+  if (MCC_array > 110) {
+    manualCommandConsole.innerHTML = "";
+    manualCommandConsole.innerHTML += MCC_array[MCC_array.length - 1];
+  }
+}
+
 manualCommandConsoleBtn.onclick = function () {
   subcontainer_5.style.display = "block";
   subcontainer_4.style.display = "none";
@@ -842,7 +850,9 @@ function scrollToBottom_manualCommandConsole () {
 
 console.log = (...args) => {
   if (String(args).includes("The debugger caught an exception")) {
-    manualCommandConsole.innerHTML += "<p class='error'>" + escapeHtml(String(args)) + "</p>"; 
+    if (ignore_errors == false) {
+      manualCommandConsole.innerHTML += "<p class='error'>" + escapeHtml(String(args)) + "</p>"; 
+    }
     isConnectedToBoard = false;
     warningArray.push("PRGM_ERR");
     urgent_warningArray.push("REBOOT SYSTEM");
@@ -852,16 +862,19 @@ console.log = (...args) => {
     manualCommandConsole.innerHTML += "<p>" + escapeHtml(String(args)) + "</p>";
   }
   scrollToBottom_manualCommandConsole();
+  clearIfMore();
 }
 
 console.error = (...args) => {
   manualCommandConsole.innerHTML += "<p class='error'>" + escapeHtml(String(args)) + "</p>";
   scrollToBottom_manualCommandConsole();
+  clearIfMore();
 }
 
 console.warn = (...args) => {
   manualCommandConsole.innerHTML += "<p class='warning-console'>" + escapeHtml(String(args)) + "</p>";
   scrollToBottom_manualCommandConsole();
+  clearIfMore();
 }
 
 manualCommandConsoleInputFinish.onclick = function () {
