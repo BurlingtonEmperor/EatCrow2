@@ -2138,6 +2138,8 @@ function getTemp_fromModel (data_log) {
             break;
           default:
             heater_status.innerText = "OFF";
+
+            if (parseInt(temp_values[temp_values.length - 1])) {}
             break;
         } 
       }
@@ -2225,14 +2227,16 @@ function passMinutes () {
   }
 }
 
+let has_spliced_one = 0;
 setInterval(function () {
   // if (isConnectedToBoard) {
   //   minutes_passed += 1;
   //   time_values.push(minutes_passed);
   // }
 
-  if (time_values.length > 9) {
+  if (time_values.length > 9 && has_spliced_one == 0) {
     time_values.splice(0, 5);
+    has_spliced_one = 1;
   }
 
   passMinutes();
