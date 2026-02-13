@@ -90,6 +90,7 @@ async function resolveIssue (issueCode) {
 
 // general display
 const temp_gauge = document.getElementById("temp_gauge");
+const psi_gauge = document.getElementById("psi_gauge");
 const autoclave_diagram = document.getElementById("autoclave-diagram");
 const autoclave_status = document.getElementById("autoclave-status");
 const autoclave_plot = document.getElementById("autoclave-plot");
@@ -451,6 +452,26 @@ async function generateWarnings () {
     }
   });
 
+  const pressureClimbOrStall = new Promise((resolve) => {
+    if (psi_change_r > 0.17 || real_psi_change_rate_board > 0.17) {
+      warningArray.push("P-CLIMB");
+      urgent_warningArray.push("RAPID PRESSURE CLIMB");
+      psi_gauge.style.color = "red";
+      resolve();
+    }
+
+    else if ((psi_change_r < 0.08 && is_actively_curing) || (real_psi_change_rate_board < 0.08 && is_actively_curing)) {
+      warningArray.push("P-STALL");
+      temp_gauge.style.color = "yellow";
+      resolve();
+    }
+
+    else {
+      psi_gauge.style.color = "rgb(136, 238, 136)";
+      resolve();
+    }
+  });
+
   const emergencyStopCheckPromise = new Promise((resolve) => {
     switch (true) {
       case (emergency_stopped):
@@ -497,7 +518,7 @@ async function generateWarnings () {
     }
   });
 
-  asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise, emergencyStopCheckPromise, temperatureWarningPromise, pressureWarningPromise);
+  asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise, emergencyStopCheckPromise, temperatureWarningPromise, pressureWarningPromise, pressureClimbOrStall);
   await Promise.all(asyncChecks);
 
   if (warningArray.length === 0) {
