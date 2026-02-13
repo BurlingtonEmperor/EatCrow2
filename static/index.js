@@ -1199,6 +1199,12 @@ function notifyActiveCureStatus () {
   }
 }
 
+function ceaseCuringStatus () {
+  if (is_using_modelclave == false) {
+    usage_mode.innerText = "IDLE";
+  }
+}
+
 raiseTempManually.onclick = function () {
   if (tempRaiseAmount.value == null || isConnectedToBoard == false) {
     return false;
@@ -1206,6 +1212,8 @@ raiseTempManually.onclick = function () {
 
   is_actively_curing = true;
   notifyActiveCureStatus();
+
+  set_temp_amount_interface = tempRaiseAmount + temp_values[temp_values.length - 1];
 
   for (let i = 0; i < parseInt(tempRaiseAmount.value); i++) {
     // switch (true) {
@@ -1223,6 +1231,9 @@ decreaseTempManually.onclick = function () {
   if (tempRaiseAmount.value == null || isConnectedToBoard == false) {
     return false;
   }
+
+  is_actively_curing = false;
+  ceaseCuringStatus();
 
   for (let i = 0; i < parseInt(tempRaiseAmount.value); i++) {
     switch (true) {
@@ -1265,6 +1276,9 @@ decreasePSIManually.onclick = function () {
     return false;
   }
 
+  is_actively_curing = false;
+  ceaseCuringStatus();
+
   for (let i = 0; i < parseInt(psiRaiseAmount.value); i++) {
     switch (true) {
       case (is_using_modelclave):
@@ -1282,6 +1296,8 @@ const stopAutoclaveSemi = document.getElementById("stop-autoclave-semi");
 
 const tempSetAmount = document.getElementById("temp-set-amount");
 const psiSetAmount = document.getElementById("psi-set-amount");
+
+let set_temp_amount_interface = 0;
 
 bringToLevels.onclick = function () {
   if (tempSetAmount.value == null || isConnectedToBoard == false || psiSetAmount.value == null || tempSetAmount.value < 0 || psiSetAmount.value < 0) {
@@ -1303,6 +1319,9 @@ bringToLevels.onclick = function () {
   let psi_and_set_diff = Math.abs(pressure_values[pressure_values.length - 1] - parseInt(psiSetAmount.value));
 
   if (parseInt(tempSetAmount.value) < temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) >= pressure_values[pressure_values.length - 1]) {
+    is_actively_curing = false;
+    ceaseCuringStatus();
+
     for (let i = 0; i < temp_and_set_diff; i++) {
       switch (true) {
         case (is_using_modelclave):
@@ -1330,6 +1349,8 @@ bringToLevels.onclick = function () {
     is_actively_curing = true;
     notifyActiveCureStatus();
 
+    set_temp_amount_interface = parseInt(tempSetAmount.value);
+
     for (let i = 0; i < temp_and_set_diff; i++) {
       send_signal_to_board(0);
     }
@@ -1349,6 +1370,8 @@ bringToLevels.onclick = function () {
   else if (parseInt(tempSetAmount.value) >= temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) >= pressure_values[pressure_values.length - 1]) {
     is_actively_curing = true;
     notifyActiveCureStatus();
+
+    set_temp_amount_interface = parseInt(tempSetAmount.value);
     
     for (let i = 0; i < temp_and_set_diff; i++) {
       send_signal_to_board(0);
@@ -1367,6 +1390,9 @@ bringToLevels.onclick = function () {
   }
 
   else if (parseInt(tempSetAmount.value) < temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) < pressure_values[pressure_values.length - 1]) {
+    is_actively_curing = false;
+    ceaseCuringStatus();
+
     for (let i = 0; i < temp_and_set_diff; i++) {
       switch (true) {
         case (is_using_modelclave):
@@ -2138,8 +2164,12 @@ function getTemp_fromModel (data_log) {
             break;
           default:
             heater_status.innerText = "OFF";
-
-            if (parseInt(temp_values[temp_values.length - 1])) {}
+            
+            let temp_cure_percent = Math.abs(parseInt(temp_values[temp_values.length - 1]) / set_temp_amount_interface);
+            if (temp_cure_percent < 1.5) {
+              is_actively_curing = false;
+              ceaseCuringStatus();
+            }
             break;
         } 
       }
