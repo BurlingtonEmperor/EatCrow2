@@ -66,6 +66,7 @@ function parseUserSpeech () {
       const first_word_to_comp = String(transcript.trim().split(' ')[0]).toLowerCase();
       switch (true) {
         case (first_word_to_comp == speech_command_pointer):
+        case (first_word_to_comp == (speech_command_pointer + ",")):
           recognition.stop();
           is_actively_listening = false;
           const command_array_org = transcript.trim().split(' ');
