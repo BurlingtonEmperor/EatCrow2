@@ -94,6 +94,7 @@ const psi_gauge = document.getElementById("psi_gauge");
 const autoclave_diagram = document.getElementById("autoclave-diagram");
 const autoclave_status = document.getElementById("autoclave-status");
 const autoclave_plot = document.getElementById("autoclave-plot");
+const interfaceSetTemp = document.getElementById("html-interface-set-temp");
 
 async function generateWarnings () {
   warningArray = [];
@@ -440,7 +441,7 @@ async function generateWarnings () {
       resolve();
     }
     
-    else if ((rate_of_change_temp_board < 1.51 && is_actively_curing) || (real_temp_change_rate_board < 1.51 && is_actively_curing)) {
+    else if (((rate_of_change_temp_board < 1.51 && is_actively_curing) || (real_temp_change_rate_board < 1.51 && is_actively_curing)) && time_values.length > 19) {
       warningArray.push("T-STALL");
       temp_gauge.style.color = "yellow";
       resolve();
@@ -460,7 +461,7 @@ async function generateWarnings () {
       resolve();
     }
 
-    else if ((psi_change_r < 0.08 && is_actively_curing) || (real_psi_change_rate_board < 0.08 && is_actively_curing)) {
+    else if (((psi_change_r < 0.08 && is_actively_curing) || (real_psi_change_rate_board < 0.08 && is_actively_curing)) && time_values.length > 19) {
       warningArray.push("P-STALL");
       temp_gauge.style.color = "yellow";
       resolve();
@@ -548,6 +549,12 @@ async function generateWarnings () {
 
 const warningInterval = setInterval(function () {
   generateWarnings();
+
+  switch (false) {
+    case (set_temp_amount_interface == 0):
+      interfaceSetTemp.innerText = set_temp_amount_interface + " *F";
+      break;
+  }
 }, 1000);
 
 const timeDOM = document.getElementById("clock");
