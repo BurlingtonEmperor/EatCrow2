@@ -676,6 +676,8 @@ const cmd_list_2_btn = document.getElementById("cmd-list-2-btn");
 const enable_voice_commands_btn = document.getElementById("enable-voice-commands-btn");
 const disable_voice_commands_btn = document.getElementById("disable-voice-commands-btn");
 const switch_displays_btn = document.getElementById("switch-displays-btn");
+const expand_graph_btn = document.getElementById("expand-graph-btn");
+const shrink_graph_btn = document.getElementById("shrink-graph-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -838,6 +840,14 @@ disable_voice_commands_btn.onclick = function () {
 
 switch_displays_btn.onclick = function () {
   switch_Displays_Graph();
+}
+
+expand_graph_btn.onclick = function () {
+  autoclavePlot.style.width = "600px";
+}
+
+shrink_graph_btn.onclick = function () {
+  autoclavePlot.style.width = "400px";
 }
 
 // manual command console

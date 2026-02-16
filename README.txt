@@ -63,6 +63,7 @@ MAINTENANCE - Autoclave maintenance recommended
 BOARD - Board connection not found
 PORT - Board port not found
 ACCESS - Port access denied to interface program
+DISPARITY - Board readings and interface readings are different
 
 -- COMMANDS --
 On the main command pannel with the autoclave graphs and status diagram, there wil be a button 

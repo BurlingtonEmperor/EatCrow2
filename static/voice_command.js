@@ -134,6 +134,12 @@ function parseUserSpeech () {
               );
               convertTextToSpeech("Created a log.");
               break;
+            case (rest_of_command.includes("expand graph")):
+              autoclavePlot.style.width = "600px";
+              break;
+            case (rest_of_command.includes("shrink graph")):
+              autoclavePlot.style.width = "400px";
+              break;
             default:
               console.log("Not a valid voice command.");
               convertTextToSpeech("Not a valid voice command.");
