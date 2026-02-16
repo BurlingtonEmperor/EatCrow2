@@ -140,6 +140,10 @@ function parseUserSpeech () {
             case (rest_of_command.includes("shrink graph")):
               autoclavePlot.style.width = "400px";
               break;
+            case (rest_of_command.includes("fullscreen")):
+            case (rest_of_command.includes("full screen")):
+              fullscreenOption();
+              break;
             default:
               console.log("Not a valid voice command.");
               convertTextToSpeech("Not a valid voice command.");

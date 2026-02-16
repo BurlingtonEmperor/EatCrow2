@@ -678,6 +678,7 @@ const disable_voice_commands_btn = document.getElementById("disable-voice-comman
 const switch_displays_btn = document.getElementById("switch-displays-btn");
 const expand_graph_btn = document.getElementById("expand-graph-btn");
 const shrink_graph_btn = document.getElementById("shrink-graph-btn");
+const fullscreen_btn = document.getElementById("fullscreen-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -848,6 +849,22 @@ expand_graph_btn.onclick = function () {
 
 shrink_graph_btn.onclick = function () {
   autoclavePlot.style.width = "400px";
+}
+
+function fullscreenOption () {
+  if (document.fullscreenElement) {
+    document.exitFullscreen()
+    .catch(err => console.error(err));
+  } 
+  
+  else {
+    document.documentElement.requestFullscreen()
+    .catch(err => console.error(err)); 
+  }
+}
+
+fullscreen_btn.onclick = function () {
+  fullscreenOption();
 }
 
 // manual command console
