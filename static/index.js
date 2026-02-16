@@ -679,6 +679,7 @@ const switch_displays_btn = document.getElementById("switch-displays-btn");
 const expand_graph_btn = document.getElementById("expand-graph-btn");
 const shrink_graph_btn = document.getElementById("shrink-graph-btn");
 const fullscreen_btn = document.getElementById("fullscreen-btn");
+const quit_btn = document.getElementById("quit-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -865,6 +866,17 @@ function fullscreenOption () {
 
 fullscreen_btn.onclick = function () {
   fullscreenOption();
+}
+
+quit_btn.onclick = function () {
+  fetch ("/exit_system")
+  .then(response => response.text())
+  .then(data => {
+    console.log("Disconnected interface." + String(data));
+  })
+  .catch(error => {
+    console.error(error);
+  });
 }
 
 // manual command console

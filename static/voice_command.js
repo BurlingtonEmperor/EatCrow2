@@ -144,6 +144,10 @@ function parseUserSpeech () {
             case (rest_of_command.includes("full screen")):
               fullscreenOption();
               break;
+            case (rest_of_command.includes("open pod bay doors")):
+            case (rest_of_command.includes("open pod bay door")):
+              convertTextToSpeech("I'm sorry Dave, I'm afraid I can't do that.");
+              break;
             default:
               console.log("Not a valid voice command.");
               convertTextToSpeech("Not a valid voice command.");

@@ -10,6 +10,7 @@ import os;
 import tempfile;
 import requests;
 import sys;
+import signal;
 
 import serial.tools.list_ports;
 import serial;
@@ -251,6 +252,13 @@ def create_log_auto():
       return "Created log as " + file_path
   except Exception as err:
     return f"File Error: {str(err)}"
+
+@app.route('/exit_system')
+def exit_system():
+  func = request.environ.get('werkzeug.server.shutdown')
+  if func is None:
+    os.kill(os.getpid(), signal.SIGINT)
+  func()
 
 def open_browser():
   checkWhichPlatform();
