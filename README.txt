@@ -47,6 +47,7 @@ T-CLIMB - Autoclave temperature is increasing too quickly
 P-CLIMB - Autoclave pressure is increasing too quickly
 T-STALL - Autoclave temperature is increasing too slowly (when curing)
 P-STALL - Autoclave pressure is increasing too slowly (when curing)
+VACUUM - Potential vacuum bag leak or damage
 
 <Device and Interface>
 INTERNET - No internet connection
