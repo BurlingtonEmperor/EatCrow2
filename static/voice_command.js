@@ -148,6 +148,11 @@ function parseUserSpeech () {
             case (rest_of_command.includes("open pod bay door")):
               convertTextToSpeech("I'm sorry Dave, I'm afraid I can't do that.");
               break;
+            case (rest_of_command.includes("save power")):
+              batteryETEMP_int = 20000;
+              batteryMSTATUS_int = 20000;
+              reroute_bint_text.innerText = "BATTERY INTERVAL [BAT_INT2]";
+              break;
             default:
               console.log("Not a valid voice command.");
               convertTextToSpeech("Not a valid voice command.");

@@ -54,7 +54,7 @@ WEATHER - Incoming storms which may affect power supply (NOT ADDED YET)
 GB-FUNC - Unknown battery status
 POWER - No power supply stream for device
 BATTERY - Low device power
-PRGM_ERR - Interface program may be faulty or corrupted
+PRGM_ERR - Board program may be faulty or corrupted
 
 <Autoclave>
 MAINTENANCE - Autoclave maintenance recommended
