@@ -159,6 +159,9 @@ function parseUserSpeech () {
               break;
           }
           break;
+        default:
+          transcript = "this is here because nobody said anything.";
+          break;
       }
 
       setTimeout(function () {
@@ -184,6 +187,12 @@ function parseUserSpeech () {
           is_actively_listening = false;
           break;
       }
+    };
+
+    recognition.onend = () => {
+      if (continue_parsing_speech || is_actively_listening) {
+        recognition.start();
+      }   
     };
 
     recognition.start();

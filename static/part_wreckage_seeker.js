@@ -58,10 +58,12 @@ function take_from_session (what_value) {
 
   let session_card = current_check_session_split[split_num_for_checking];
   let session_card_val = session_card.split(":");
-  return parseFloat(session_card_val);
+  return parseFloat(session_card_val) + ":" + String(split_num_for_checking);
 }
 
-function insert_to_session (what_value, value_what) {}
+function insert_to_session (what_value, value_what) {
+  
+}
 
 function check_for_faulty_parts () {
   let warning_list_snapshot = warningArray;
