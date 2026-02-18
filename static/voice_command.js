@@ -49,11 +49,14 @@ function getSpeechTime (given_text) {
 //   let this_is_a_Fake_variable = 0;
 // }
 
+let buggy_jarvis = false;
 function parseUserSpeech () {
   if (window.SpeechRecognition) {
     is_actively_listening = true;
     const recognition = new SpeechRecognition();
     error_handler_speech = 0;
+    buggy_jarvis = false;
+    additional_words = "";
 
     recognition.lang = "en-US"; 
     recognition.continuous = true; 
@@ -61,6 +64,7 @@ function parseUserSpeech () {
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
+      additional_words += String(transcript);
       console.log('Parsed user speech: ' + transcript);
       
       const first_word_to_comp = String(transcript.trim().split(' ')[0]).toLowerCase();
@@ -68,6 +72,7 @@ function parseUserSpeech () {
         case (first_word_to_comp == speech_command_pointer):
         case (first_word_to_comp == (speech_command_pointer + ",")):
           recognition.stop();
+          buggy_jarvis = true;
           is_actively_listening = false;
           const command_array_org = transcript.trim().split(' ');
           command_array_org[0] = " ";
@@ -160,39 +165,70 @@ function parseUserSpeech () {
           }
           break;
         default:
-          transcript = "this is here because nobody said anything.";
+          recognition.stop();
+          buggy_jarvis = true;
+          is_actively_listening = false;
           break;
       }
 
-      setTimeout(function () {
-        if (error_handler_speech == 2) {
-          recognition.stop();
-          is_actively_listening = false;
-          return false;
-        }
-        error_handler_speech = 1;
-        if (continue_parsing_speech) {
-          parseUserSpeech();
-        }
-      }, getSpeechTime(transcript));
+      // setTimeout(function () {
+      //   buggy_jarvis = false;
+      //   // transcript = "";
+      //   if (error_handler_speech == 2) {
+      //     recognition.stop();
+      //     is_actively_listening = false;
+      //     return false;
+      //   }
+      //   error_handler_speech = 1;
+      //   // if (continue_parsing_speech) {
+      //   //   parseUserSpeech();
+      //   // }
+      // }, getSpeechTime(transcript));
     }
 
     recognition.onerror = (event) => {
       console.error('Speech recognition error: ' + event.error);
-      switch (error_handler_speech) {
-        case 1:
-          parseUserSpeech();
-          break;
-        default:
-          is_actively_listening = false;
-          break;
-      }
+      // switch (error_handler_speech) {
+      //   case 0:
+      //   case 1:
+      //     parseUserSpeech();
+      //     break;
+      //   default:
+      //     is_actively_listening = false;
+      //     break;
+      // }
     };
 
     recognition.onend = () => {
-      if (continue_parsing_speech || is_actively_listening) {
-        recognition.start();
-      }   
+      // if (buggy_jarvis == true) {
+      //   buggy_jarvis = false;
+      // }
+      // if (continue_parsing_speech || is_actively_listening) {
+      //   parseUserSpeech();
+      // }   
+      if (buggy_jarvis == true || buggy_jarvis == false) {
+        switch (error_handler_speech) {
+          case 0:
+          case 1:
+            // parseUserSpeech();
+            setTimeout(function () {
+              // buggy_jarvis = false;
+              // transcript = "";
+              if (error_handler_speech == 2) {
+                recognition.stop();
+                buggy_jarvis = "";
+                is_actively_listening = false;
+                return false;
+              }
+              error_handler_speech = 1;
+              parseUserSpeech();
+            }, getSpeechTime(additional_words));
+            break;
+          default:
+            is_actively_listening = false;
+            break;
+        }
+      }
     };
 
     recognition.start();
