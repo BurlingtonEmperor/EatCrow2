@@ -1,12 +1,12 @@
 const potential_faulty_parts = document.getElementById("potential-faulty-parts");
 
-let faulty_session_temp = 0;
-let faulty_session_psi = 0;
-let faulty_session_pclimb = 0;
-let faulty_session_tclimb = 0;
-let faulty_session_pstall = 0;
-let faulty_session_tstall = 0;
-let faulty_session_vacuum = 0;
+// let faulty_session_temp = 0;
+// let faulty_session_psi = 0;
+// let faulty_session_pclimb = 0;
+// let faulty_session_tclimb = 0;
+// let faulty_session_pstall = 0;
+// let faulty_session_tstall = 0;
+// let faulty_session_vacuum = 0;
 
 let last_warning_session_marker = "";
 
@@ -85,7 +85,7 @@ function insert_to_session (what_value_to_find, value_what) {
 
 function check_for_faulty_parts () {
   let warning_list_snapshot = warningArray;
-  if (String(warning_list_snapshot) == last_warning_session_marker) {
+  if (String(warning_list_snapshot) == last_warning_session_marker || is_actively_curing == false) {
     return false;
   }
   last_warning_session_marker = warning_list_snapshot;
@@ -110,6 +110,40 @@ function check_for_faulty_parts () {
       let curr_warn_val = taken_sesh_cosh.split(":");
       curr_warn_val = parseInt(curr_warn_val[0]);
       curr_warn_val += 1;
+    }
+  }
+
+  let curr_full_func = parseInt(String(localStorage.getItem("fully_func")));
+  let iz_bat = [];
+
+  let error_token_check = String(localStorage.getItem("warnings_catalogue"));
+  let error_token_check_arr = error_token_check.split(";");
+  for (let i = 0; i < error_token_check_arr.length; i++) {
+    let error_token_check_taken_val = error_token_check_arr[i].split(":");
+    error_token_check_taken_val = parseInt(error_token_check_taken_val[1]);
+
+    if (error_token_check_taken_val > curr_full_func) {
+      switch (i) {
+        case 0:
+          iz_bat.push("HEATER || ");
+          break;
+        case 1:
+          iz_bat.push("SOLENOIDS OR TANK || ");
+          break;
+        case 2:
+          iz_bat.push("INLET SOLENOIDS || ");
+          break;
+        case 3:
+        case 5:
+          iz_bat.push("VOLTAGE OR HEATER || ");
+          break;
+        case 4:
+          iz_bat.push("OUTLET SOLENOIDS || ");
+          break;
+        case 6:
+          iz_bat.push("VACUUM BAG || ");
+          break;
+      }
     }
   }
 }
