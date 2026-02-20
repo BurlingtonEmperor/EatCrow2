@@ -17,3 +17,13 @@ close_window_macro_window.onclick = function () {
 open_macros_btn.onclick = function () {
   macro_window.style.display = "block";
 }
+
+const macro_default = document.getElementById("macro-default");
+
+const soft_macros_btn = document.getElementById("soft-macros-btn");
+const soft_macro_content = document.getElementById("soft-macro-content");
+
+soft_macros_btn.onclick = function () {
+  macro_default.style.display = "none";
+  soft_macro_content.style.display = "block";
+}

@@ -37,7 +37,7 @@
           <div id="stop-autoclave-btn" class="twenty button">STOP AUTOCLAVE</div>
         </div>
         <div id="manual-controls">
-          <div class="btn-class">CHANGE TEMP BY:&nbsp;<input type="number" id="temp-raise-amount" class="raise-by"/>&nbsp;CHANGE PRESSURE BY:&nbsp;<input type="number" id="psi-raise-amount" class="raise-by"/></div>
+          <div class="btn-class">CHANGE TEMP BY:&nbsp;<input type="number" id="temp-raise-amount" class="raise-by" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"/>&nbsp;CHANGE PRESSURE BY:&nbsp;<input type="number" id="psi-raise-amount" class="raise-by" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"/></div>
           <div class="btn-class">
             <div class="twenty button" id="raise-temp-manually">RAISE TEMP</div>
             <div class="twenty button" id="decrease-temp-manually">DECREASE TEMP</div>
@@ -48,7 +48,7 @@
           </div>
         </div>
         <div id="semi-manual-controls">
-          <div class="btn-class">SET TEMP TO:&nbsp;<input type="number" id="temp-set-amount" class="raise-by"/>&nbsp;SET PRESSURE TO:&nbsp;<input type="number" id="psi-set-amount" class="raise-by"/></div>
+          <div class="btn-class">SET TEMP TO:&nbsp;<input type="number" id="temp-set-amount" class="raise-by" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"/>&nbsp;SET PRESSURE TO:&nbsp;<input type="number" id="psi-set-amount" class="raise-by" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"/></div>
           <div class="btn-class">
             <div class="twenty button" id="start-autoclave-semi">BRING TO LEVELS</div>
             <div class="twenty button" id="stop-autoclave-semi">STOP AUTOCLAVE</div>
@@ -215,7 +215,10 @@
             <p>HARD MACROS CAN BE PERMANENT, BUT CANNOT BE USED WHEN THE INTERFACE IS DISCONNECTED.</p>
           </div>
           <div id="soft-macro-content">
-
+            <div class="seventy button text-center" id="create-new-soft-macro-btn">CREATE MACRO</div>
+            <div class="seventy button text-center" id="delete-soft-macro-btn">DELETE MACRO</div>
+            <div class="seventy button text-center" id="edit-soft-macro-btn">EDIT MACRO</div>
+            <div class="seventy button text-center" id="select-soft-macro-to-run-btn">SELECT MACRO TO RUN</div>
           </div>
         </div>
       </div>
