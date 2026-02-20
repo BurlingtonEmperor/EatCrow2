@@ -27,7 +27,6 @@
           </div>
         </div>
         <div id="autoclave-plot">
-          <p>PRESSURE IS PURPLE</p>
         </div>
         <div id="time">
           <p>TIME: <a id="clock"></a></p>
@@ -148,6 +147,9 @@
             <div id="fullscreen-btn" class="twenty button">FULLSCREEN</div>
             <div id="open-macros-btn" class="twenty button">OPEN MACROS</div>
           </div>
+          <div class="btn-class">
+            <p>PRESSURE IS PURPLE</p>
+          </div>
         </div>
       </div>
       <div id="subcontainer5">
@@ -189,7 +191,17 @@
            </select>
         </div>
       </div>
+      <div id="macro-window" class="draggable">
+        <div class="seventy button">
+          CLOSE WINDOW  
+        </div>
+        <div id="macro-window-content"></div>
+      </div>
     </div>
+
+    <!-- Libraries -->
+    <script src="{{ url_for('static', filename='/libs/jquery.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='/libs/jqueryui.js')}}"></script>
     
     <script src="{{ url_for('static', filename='chart.js' )}}"></script>
     <script src="{{ url_for('static', filename='more_comms.js') }}"></script>

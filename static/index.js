@@ -555,6 +555,8 @@ const warningInterval = setInterval(function () {
       interfaceSetTemp.innerText = set_temp_amount_interface + " *F";
       break;
   }
+
+  check_for_faulty_parts();
 }, 1000);
 
 const timeDOM = document.getElementById("clock");
@@ -1543,6 +1545,9 @@ const real_psi_change_rate = document.getElementById("real-psi-change-rate");
 
 let is_using_alternate_display = false;
 
+let using_gridlines = true;
+let gridline_usage = {color : "rgba(136,238,136,1.000)"};
+
 function switch_Displays_Graph () {
   switch (true) {
     case (is_using_alternate_display):
@@ -1724,7 +1729,8 @@ setInterval(function () {
                   color : "rgba(136,238,136,1.000)"
                 },
                 grid : {
-                  color : "rgba(136,238,136,1.000)"
+                  // color : "rgba(136,238,136,1.000)"
+                  gridline_usage
                 },
                 border : {
                   color : "rgba(136,238,136,1.000)"
@@ -2316,6 +2322,7 @@ setInterval(function () {
   }
 
   passMinutes();
+  // check_for_faulty_parts();
 }, 60000);
 
 let int_to_clear;

@@ -32,3 +32,7 @@ function createAutoclaveLog (t_data, p_data, u_mode, ex_temp, d_batt, date_n_tim
     console.error(error);
   });
 }
+
+$(function () {
+  $(".draggable").draggable();
+});
