@@ -146,6 +146,7 @@
           <div class="btn-class">
             <div id="fullscreen-btn" class="twenty button">FULLSCREEN</div>
             <div id="open-macros-btn" class="twenty button">OPEN MACROS</div>
+            <div id="create-instant-log-btn" class="twent button">CREATE INSTANT LOG</div>
           </div>
           <div class="btn-class">
             <p>PRESSURE IS PURPLE</p>
@@ -192,7 +193,7 @@
         </div>
       </div>
       <div id="macro-window" class="draggable">
-        <div class="seventy button">
+        <div class="seventy button text-center" id="close-window-macro-window">
           CLOSE WINDOW  
         </div>
         <div id="macro-window-content"></div>
@@ -209,5 +210,6 @@
     <script src="{{ url_for('static', filename='man_cmd_console.js' )}}"></script>
     <script src="{{ url_for('static', filename='voice_command.js' )}}"></script>
     <script src="{{ url_for('static', filename='part_wreckage_seeker.js' )}}"></script>
+    <script src="{{ url_for('static', filename='soft_macros.js' )}}"></script>
   </body>
 </html>

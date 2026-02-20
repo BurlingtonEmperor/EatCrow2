@@ -158,6 +158,19 @@ function parseUserSpeech () {
               batteryMSTATUS_int = 20000;
               reroute_bint_text.innerText = "BATTERY INTERVAL [BAT_INT2]";
               break;
+            case (rest_of_command.includes("create instant log")):
+              createInstantLog(
+                temp_values, 
+                pressure_values, 
+                usage_mode.innerText, 
+                external_temp_status.innerText, 
+                device_battery_percent.innerText, 
+                timeDOM.innerText, 
+                warningArray, 
+                time_values
+              );
+              convertTextToSpeech("Created an instant log.");
+              break;
             default:
               console.log("Not a valid voice command.");
               convertTextToSpeech("Not a valid voice command.");

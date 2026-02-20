@@ -682,6 +682,7 @@ const expand_graph_btn = document.getElementById("expand-graph-btn");
 const shrink_graph_btn = document.getElementById("shrink-graph-btn");
 const fullscreen_btn = document.getElementById("fullscreen-btn");
 const quit_btn = document.getElementById("quit-btn");
+const create_instant_log_btn = document.getElementById("create-instant-log-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -879,6 +880,19 @@ quit_btn.onclick = function () {
   .catch(error => {
     console.error(error);
   });
+}
+
+create_instant_log_btn.onclick = function () {
+  createInstantLog(
+    temp_values, 
+    pressure_values, 
+    usage_mode.innerText, 
+    external_temp_status.innerText, 
+    device_battery_percent.innerText, 
+    timeDOM.innerText, 
+    warningArray, 
+    time_values
+  );
 }
 
 // manual command console
