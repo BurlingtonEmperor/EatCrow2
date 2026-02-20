@@ -683,6 +683,10 @@ const shrink_graph_btn = document.getElementById("shrink-graph-btn");
 const fullscreen_btn = document.getElementById("fullscreen-btn");
 const quit_btn = document.getElementById("quit-btn");
 const create_instant_log_btn = document.getElementById("create-instant-log-btn");
+// const hide_x_gridlines_btn = document.getElementById("hide-x-gridlines-btn");
+// const hide_y_gridlines_btn = document.getElementById("hide-y-gridlines-btn");
+const hide_all_gridlines_btn = document.getElementById("hide-all-gridlines-btn");
+const show_all_gridlines_btn = document.getElementById("show-all-gridlines-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -893,6 +897,29 @@ create_instant_log_btn.onclick = function () {
     warningArray, 
     time_values
   );
+}
+
+// let is_using_x_gridlines = true;
+// let is_using_y_gridlines = true;
+// hide_x_gridlines_btn.onclick = function () {
+//   if (is_using_x_gridlines) {
+//     is_using_x_gridlines = false;
+
+//   }
+// }
+
+hide_all_gridlines_btn.onclick = function () {
+  if (using_gridlines) {
+    using_gridlines = false;
+    gridline_usage = {display: false};
+  }
+}
+
+show_all_gridlines_btn.onclick = function () {
+  if (using_gridlines == false) {
+    using_gridlines = true;
+    gridline_usage = {color: "rgba(136,238,136,1.000)"};
+  }
 }
 
 // manual command console
@@ -1275,7 +1302,10 @@ raiseTempManually.onclick = function () {
   is_actively_curing = true;
   notifyActiveCureStatus();
 
-  set_temp_amount_interface = tempRaiseAmount + temp_values[temp_values.length - 1];
+  set_temp_amount_interface = parseInt(tempRaiseAmount.value) + temp_values[temp_values.length - 1];
+  if (set_temp_amount_interface == NaN) {
+    set_temp_amount_interface = parseInt(tempRaiseAmount.value);
+  }
 
   for (let i = 0; i < parseInt(tempRaiseAmount.value); i++) {
     // switch (true) {
@@ -1363,8 +1393,11 @@ let set_temp_amount_interface = 0;
 
 bringToLevels.onclick = function () {
   if (tempSetAmount.value == null || isConnectedToBoard == false || psiSetAmount.value == null || tempSetAmount.value < 0 || psiSetAmount.value < 0) {
+    console.warn("Conditions have not been met.");
     return false;
   }
+
+  console.log("Bringing to levels...");
 
   is_actively_curing = false;
   if (is_using_modelclave == false) {
@@ -1383,6 +1416,8 @@ bringToLevels.onclick = function () {
   if (parseInt(tempSetAmount.value) < temp_values[temp_values.length - 1] && parseInt(psiSetAmount.value) >= pressure_values[pressure_values.length - 1]) {
     is_actively_curing = false;
     ceaseCuringStatus();
+
+    set_temp_amount_interface = parseInt(tempSetAmount.value);
 
     for (let i = 0; i < temp_and_set_diff; i++) {
       switch (true) {
@@ -1455,6 +1490,8 @@ bringToLevels.onclick = function () {
     is_actively_curing = false;
     ceaseCuringStatus();
 
+    set_temp_amount_interface = parseInt(tempSetAmount.value);
+
     for (let i = 0; i < temp_and_set_diff; i++) {
       switch (true) {
         case (is_using_modelclave):
@@ -1488,6 +1525,8 @@ stopAutoclaveSemi.onclick = function () {
   if (is_using_modelclave == false) {
     usage_mode.innerText = "IDLE";
   }
+
+  set_temp_amount_interface = parseInt(tempSetAmount.value);
 
   let temp_and_set_diff = Math.abs(70 - parseInt(tempSetAmount.value));
   let psi_and_set_diff = Math.abs(14.7 - parseInt(psiSetAmount.value));
@@ -1560,7 +1599,10 @@ const real_psi_change_rate = document.getElementById("real-psi-change-rate");
 let is_using_alternate_display = false;
 
 let using_gridlines = true;
-let gridline_usage = {color : "rgba(136,238,136,1.000)"};
+let gridline_usage = {color: "rgba(136,238,136,1.000)"};
+
+let set_temp_line_data = [];
+let set_psi_line_data = [];
 
 function switch_Displays_Graph () {
   switch (true) {
@@ -1695,6 +1737,13 @@ setInterval(function () {
                 backgroundColor : "rgba(188, 155, 209, 0.8)",
                 borderColor : "rgba(188, 155, 209, 0.8)",
                 data : pressure_values
+              },
+              {
+                fill : false,
+                lineTension : 0,
+                backgroundColor : "rgba(136,238,136,1.000)",
+                borderColor : "rgba(136,238,136,1.000)",
+                data : set_temp_amount_interface
               }
             ]
           },
@@ -1705,7 +1754,7 @@ setInterval(function () {
               },
               title : {
                 display : true,
-                text : "TEMPERATURE OR PRESSURE",
+                text : "GENERAL DISPLAY",
                 color : "rgba(136,238,136,1.000)",
                 font : {
                   family : "Hornet"
@@ -1720,9 +1769,7 @@ setInterval(function () {
                   },
                   color : "rgba(136,238,136,1.000)"
                 },
-                grid : {
-                  color : "rgba(136,238,136,1.000)"
-                },
+                grid : gridline_usage,
                 border : {
                   color : "rgba(136,238,136,1.000)"
                 },
@@ -1742,10 +1789,7 @@ setInterval(function () {
                   },
                   color : "rgba(136,238,136,1.000)"
                 },
-                grid : {
-                  // color : "rgba(136,238,136,1.000)"
-                  gridline_usage
-                },
+                grid : gridline_usage,
                 border : {
                   color : "rgba(136,238,136,1.000)"
                 },

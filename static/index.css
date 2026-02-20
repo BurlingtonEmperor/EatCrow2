@@ -211,6 +211,15 @@ input[type=number] {
   display: none;
 }
 
+#macro-window-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#soft-macro-content {
+  display: none;
+}
+
 /* Classes */
 .warning {
   border: 1px solid red;

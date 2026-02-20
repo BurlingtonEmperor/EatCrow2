@@ -171,6 +171,20 @@ function parseUserSpeech () {
               );
               convertTextToSpeech("Created an instant log.");
               break;
+            case (rest_of_command.includes("open macros")):
+              macro_window.style.display = "block";
+              break;
+            case (rest_of_command.includes("close macros")):
+              macro_window.style.display = "none";
+              break;
+            case (rest_of_command.includes("hide gridlines")):
+            case (rest_of_command.includes("hide grid lines")):
+              hide_all_gridlines_btn.click();
+              break;
+            case (rest_of_command.includes("show gridlines")):
+            case (rest_of_command.includes("show grid lines")):
+              show_all_gridlines_btn.click();
+              break;
             default:
               console.log("Not a valid voice command.");
               convertTextToSpeech("Not a valid voice command.");

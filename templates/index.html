@@ -149,6 +149,12 @@
             <div id="create-instant-log-btn" class="twent button">CREATE INSTANT LOG</div>
           </div>
           <div class="btn-class">
+            <!-- <div id="hide-x-gridlines-btn" class="twenty button">HIDE X GRID LINES</div>
+            <div id="hide-y-gridlines-btn" class="twenty button">HIDE Y GRID LINES</div> -->
+            <div id="hide-all-gridlines-btn" class="twenty button">HIDE GRID LINES</div>
+            <div id="show-all-gridlines-btn" class="twenty button">SHOW GRID LINES</div>
+          </div>
+          <div class="btn-class">
             <p>PRESSURE IS PURPLE</p>
           </div>
         </div>
@@ -196,7 +202,21 @@
         <div class="seventy button text-center" id="close-window-macro-window">
           CLOSE WINDOW  
         </div>
-        <div id="macro-window-content"></div>
+        <div class="seventy button text-center" id="soft-macros-btn">
+          SOFT MACROS
+        </div>
+        <div class="seventy button text-center" id="hard-macros-btn">
+          HARD MACROS
+        </div>
+        <div id="macro-window-content">
+          <div id="macro-default">
+            <p>SOFT MACROS SHOULD BE TREATED AS TEMPORARY. THEY CAN ALSO BE USED WHEN THE INTERFACE IS DISCONNECTED.</p>
+            <p>HARD MACROS CAN BE PERMANENT, BUT CANNOT BE USED WHEN THE INTERFACE IS DISCONNECTED.</p>
+          </div>
+          <div id="soft-macro-content">
+
+          </div>
+        </div>
       </div>
     </div>
 
