@@ -155,6 +155,11 @@
             <div id="hide-all-gridlines-btn" class="twenty button">HIDE GRID LINES</div>
             <div id="show-all-gridlines-btn" class="twenty button">SHOW GRID LINES</div>
           </div>
+          <br/>
+          <div class="btn-class">
+            <div id="hide-small-graphs-btn" class="twenty button">HIDE SMALL GRAPHS</div>
+            <div id="show-small-graphs-btn" class="twenty button">SHOW SMALL GRAPHS</div>
+          </div>
           <div class="btn-class">
             <p>PRESSURE IS PURPLE</p>
           </div>
@@ -203,6 +208,7 @@
         <div class="seventy button text-center" id="close-window-macro-window">
           CLOSE WINDOW  
         </div>
+        <div id="macro_status_msgs"></div>
         <div class="seventy button text-center" id="soft-macros-btn">
           SOFT MACROS
         </div>
@@ -215,11 +221,19 @@
             <p>HARD MACROS CAN BE PERMANENT, BUT CANNOT BE USED WHEN THE INTERFACE IS DISCONNECTED.</p>
           </div>
           <div id="soft-macro-content">
-            <div class="seventy button text-center" id="create-new-soft-macro-btn">CREATE MACRO</div>
-            <div class="seventy button text-center" id="delete-soft-macro-btn">DELETE MACRO</div>
-            <div class="seventy button text-center" id="edit-soft-macro-btn">EDIT MACRO</div>
-            <div class="seventy button text-center" id="select-soft-macro-to-run-btn">SELECT MACRO TO RUN</div>
-          </div>
+            <div id="soft-macro-btns">
+              <div class="seventy button text-center" id="return-soft-macro-btn">RETURN</div>
+              <div class="seventy button text-center" id="create-new-soft-macro-btn">CREATE MACRO</div>
+              <div class="seventy button text-center" id="delete-soft-macro-btn">DELETE MACRO</div>
+              <div class="seventy button text-center" id="edit-soft-macro-btn">EDIT MACRO</div>
+              <div class="seventy button text-center" id="select-soft-macro-to-run-btn">SELECT MACRO TO RUN</div>
+            </div>
+            <br/>
+            <div id="create-macrosoft">MACRO NAME: <input type="text" id="soft-macro-name-to-create" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"/> <a class="button" id="create-soft-macro-for-reals">CREATE</a><a class="button" id="cancel-create-soft-macro">CANCEL</a></div>
+            <div id="soft-macro-editor">
+              
+            </div>
+          </div> 
         </div>
       </div>
     </div>

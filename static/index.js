@@ -687,6 +687,8 @@ const create_instant_log_btn = document.getElementById("create-instant-log-btn")
 // const hide_y_gridlines_btn = document.getElementById("hide-y-gridlines-btn");
 const hide_all_gridlines_btn = document.getElementById("hide-all-gridlines-btn");
 const show_all_gridlines_btn = document.getElementById("show-all-gridlines-btn");
+const hide_small_graphs_btn = document.getElementById("hide-small-graphs-btn");
+const show_small_graphs_btn = document.getElementById("show-small-graphs-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -920,6 +922,14 @@ show_all_gridlines_btn.onclick = function () {
     using_gridlines = true;
     gridline_usage = {color: "rgba(136,238,136,1.000)"};
   }
+}
+
+hide_small_graphs_btn.onclick = function () {
+  hide_small_graphs = true;
+}
+
+show_small_graphs_btn.onclick = function () {
+  hide_small_graphs = false;
 }
 
 // manual command console
@@ -1601,6 +1611,8 @@ let is_using_alternate_display = false;
 let using_gridlines = true;
 let gridline_usage = {color: "rgba(136,238,136,1.000)"};
 
+let hide_small_graphs = false;
+
 let set_temp_line_data = [];
 let set_psi_line_data = [];
 
@@ -1808,7 +1820,6 @@ setInterval(function () {
       }
       break;
   }
-
   
   if (document.getElementById("temp-chart")) {
     document.getElementById("temp-chart").remove();
@@ -1819,6 +1830,19 @@ setInterval(function () {
     document.getElementById("pressure-chart").remove();
   }
   ctx_double.id = "pressure-chart";
+
+  if (hide_small_graphs) {
+    const canvas_elements_1 = chartRate.querySelectorAll("canvas");
+    const canvas_elements_2 = pressureRate.querySelectorAll("canvas");
+
+    canvas_elements_1.forEach(resultant_canvas => {
+      resultant_canvas.remove();
+    });
+    canvas_elements_2.forEach(resultant_canvas => {
+      resultant_canvas.remove();
+    });
+    return false;
+  }
 
   // const crossLinePlugin = {
   //   id: 'crossLinePlugin',

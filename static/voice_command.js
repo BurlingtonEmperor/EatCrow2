@@ -185,6 +185,14 @@ function parseUserSpeech () {
             case (rest_of_command.includes("show grid lines")):
               show_all_gridlines_btn.click();
               break;
+            case (rest_of_command.includes("hide small graphs")):
+            case (rest_of_command.includes("hide small graph")):
+              hide_small_graphs = true;
+              break;
+            case (rest_of_command.includes("show small graphs")):
+            case (rest_of_command.includes("show small graph")):
+              hide_small_graphs = false;
+              break;
             default:
               console.log("Not a valid voice command.");
               convertTextToSpeech("Not a valid voice command.");

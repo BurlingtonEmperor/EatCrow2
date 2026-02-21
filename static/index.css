@@ -216,7 +216,7 @@ input[type=number] {
   overflow-x: hidden;
 }
 
-#soft-macro-content {
+#soft-macro-content, #create-macrosoft, #soft-macro-editor {
   display: none;
 }
 
