@@ -689,6 +689,7 @@ const hide_all_gridlines_btn = document.getElementById("hide-all-gridlines-btn")
 const show_all_gridlines_btn = document.getElementById("show-all-gridlines-btn");
 const hide_small_graphs_btn = document.getElementById("hide-small-graphs-btn");
 const show_small_graphs_btn = document.getElementById("show-small-graphs-btn");
+const delete_all_soft_macros_btn = document.getElementById("delete-all-soft-macros-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -930,6 +931,10 @@ hide_small_graphs_btn.onclick = function () {
 
 show_small_graphs_btn.onclick = function () {
   hide_small_graphs = false;
+}
+
+delete_all_soft_macros_btn.onclick = function () {
+  localStorage.setItem("soft-macros", "[]");
 }
 
 // manual command console
@@ -2401,6 +2406,10 @@ setInterval(function () {
   if (time_values.length > 9 && has_spliced_one == 0) {
     time_values.splice(0, 5);
     has_spliced_one = 1;
+  }
+
+  if (isConnectedToBoard) {
+    clear_console();
   }
 
   passMinutes();

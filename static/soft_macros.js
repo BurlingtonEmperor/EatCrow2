@@ -9,6 +9,24 @@ const close_window_macro_window = document.getElementById("close-window-macro-wi
 const open_macros_btn = document.getElementById("open-macros-btn");
 
 let macro_to_run = "";
+let current_macro_type = 0; 
+let macro_mode = 0;
+let macro_run_cycle = 0;
+
+/*
+Macro Types:
+0 - Soft Macros
+1 - Hard Macros 
+2 - Board Macros
+
+Macro Modes:
+0 - Default
+1 - JavaScript
+
+Macro Run Cycles: (JavaScript)
+0 - Run when called
+1 - Run when interface starts
+*/
 
 close_window_macro_window.onclick = function () {
   macro_window.style.display = "none";
@@ -20,45 +38,85 @@ open_macros_btn.onclick = function () {
 
 const macro_default = document.getElementById("macro-default");
 const macro_status_msgs = document.getElementById("macro_status_msgs");
+const main_macro_btns = document.getElementById("main-macro-btns");
 
 const soft_macro_btns = document.getElementById("soft-macro-btns");
 const soft_macros_btn = document.getElementById("soft-macros-btn");
 const soft_macro_content = document.getElementById("soft-macro-content");
 const return_soft_macro_btn = document.getElementById("return-soft-macro-btn");
 const create_new_soft_macro_btn = document.getElementById("create-new-soft-macro-btn");
+const edit_macro_btn = document.getElementById("edit-soft-macro-btn");
+
+const more_macro_options = document.getElementById("more-macro-options");
 
 const hard_macros_btn = document.getElementById("hard-macros-btn");
+const board_macros_btn = document.getElementById("board-macros-btn");
 
 soft_macros_btn.onclick = function () {
   macro_default.style.display = "none";
-  soft_macros_btn.style.display = "none";
-  hard_macros_btn.style.display = "none";
+//   soft_macros_btn.style.display = "none";
+//   hard_macros_btn.style.display = "none";
+  main_macro_btns.style.display = "none";
 
   soft_macro_content.style.display = "block";
+//   more_macro_options.style.display = "block";
+  current_macro_type = 0;
+}
+
+hard_macros_btn.onclick = function () {
+  macro_default.style.display = "none";
+  main_macro_btns.style.display = "none";
+
+  soft_macro_content.style.display = "block";
+//   more_macro_options.style.display = "block";
+  current_macro_type = 1;
+}
+
+board_macros_btn.onclick = function () {
+  macro_default.style.display = "none";
+  main_macro_btns.style.display = "none";
+
+  soft_macro_content.style.display = "block";
+//   more_macro_options.style.display = "block";
+  current_macro_type = 2;
 }
 
 return_soft_macro_btn.onclick = function () {
   macro_default.style.display = "block";
-  soft_macros_btn.style.display = "block";
-  hard_macros_btn.style.display = "block";
+//   soft_macros_btn.style.display = "block";
+//   hard_macros_btn.style.display = "block";
+  main_macro_btns.style.display = "block";
 
   soft_macro_content.style.display = "none";
+//   more_macro_options.style.display = "none";
+}
+
+edit_macro_btn.onclick = function () {
+  
 }
 
 const create_macrosoft = document.getElementById("create-macrosoft");
 const cancel_create_soft = document.getElementById("cancel-create-soft-macro");
+const macro_name_to_create = document.getElementById("soft-macro-name-to-create");
+
 create_new_soft_macro_btn.onclick = function () {
   create_macrosoft.style.display = "block";
+  more_macro_options.style.display = "block";
   soft_macro_btns.style.display = "none";
 }
 
 cancel_create_soft.onclick = function () {
   create_macrosoft.style.display = "none";
+  more_macro_options.style.display = "none";
   soft_macro_btns.style.display = "block";
+
+  macro_status_msgs.innerText = "";
 }
 
+const js_macro_mode = document.getElementById("js-macro-mode");
+
 function checkIfMacroExists (macro_name) {
-  let current_macro_array = JSON.parse(JSON.stringify(localStorage.getItem("soft-macros")));
+  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
   for (let i = 0; i < current_macro_array.length; i++) {
     if (current_macro_array[i].split("||{}||")[0] == macro_name) {
       return true;
@@ -68,26 +126,45 @@ function checkIfMacroExists (macro_name) {
 }
 
 function createSoftMacro (macro_name, macro_content) {
-  let soft_macro_name_to_create = macro_name
-  let current_macro_array = JSON.parse(JSON.stringify(localStorage.getItem("soft-macros")));
+  let soft_macro_name_to_create = macro_name;
+  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
 
   if (checkIfMacroExists(soft_macro_name_to_create)) {
-    macro_status_msgs.innerText = "A soft macro with the name '" + String(macro_name) + "' already exists.";
+    // macro_status_msgs.innerText = "A soft macro with the name '" + String(macro_name) + "' already exists.";
+    deleteSoftMacro(soft_macro_name_to_create);
+    current_macro_array.push(soft_macro_name_to_create + "||{}||" + macro_content + "||{}||" + macro_mode + "||{}||" + macro_run_cycle);
+    localStorage.setItem("soft-macros", JSON.stringify(current_macro_array));
   }
 
   else {
-    current_macro_array.push(soft_macro_name_to_create + "||{}||" + macro_content);
+    current_macro_array.push(soft_macro_name_to_create + "||{}||" + macro_content + "||{}||" + macro_mode + "||{}||" + macro_run_cycle);
     localStorage.setItem("soft-macros", JSON.stringify(current_macro_array));
   }
 }
 
+let is_reading_js_for_macro = 0;
 function readSoftMacro (macro_name) {
-  let soft_macro_name_to_read = macro_name
+  let soft_macro_name_to_read = macro_name;
   let current_macro_array = JSON.parse(JSON.stringify(localStorage.getItem("soft-macros")));
 
   if (checkIfMacroExists(soft_macro_name_to_read)) {
     for (let i = 0; i < current_macro_array.length; i++) {
       if (current_macro_array[i].split("||{}||")[0] == macro_name) {
+        let read_array_macro = current_macro_array[i].split("||{}||");
+
+        switch (parseInt(read_array_macro[3])) {
+          case 0:
+            js_macro_mode.value = "";
+            is_reading_js_for_macro = 1;
+            break;
+          case 1:
+            js_macro_mode.value = "run-with-interface";
+            is_reading_js_for_macro = 1;
+            break;
+          default:
+            is_reading_js_for_macro = 0;
+            break;
+        }
         return current_macro_array[i].split("||{}||")[1];
       }
     }
@@ -98,6 +175,138 @@ function readSoftMacro (macro_name) {
   }
 }
 
+function deleteSoftMacro (macro_name) {
+  let soft_macro_to_delete = macro_name;
+  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+
+  if (checkIfMacroExists(soft_macro_to_delete)) {
+    if (current_macro_array.length < 2) {
+      localStorage.setItem("soft-macros", "[]");  
+      return false;
+    }
+
+    for (let i = 0; i < current_macro_array.length; i++) {
+      if (current_macro_array[i].split("||{}||")[0] == macro_name) {
+        let saved_alpha = current_macro_array[i];
+        let last_pos = current_macro_array.length - 1;
+        let save_last_pos = current_macro_array[last_pos];
+
+        current_macro_array[last_pos] = saved_alpha;
+        current_macro_array[i] = save_last_pos;
+
+        current_macro_array.pop();
+        localStorage.setItem("soft-macros", JSON.stringify(current_macro_array));
+      }
+    }
+  }
+  
+  else {
+    macro_status_msgs.innerText = "'" + String(macro_name) + "' does not exist as a soft macro.";
+  }
+}
+
+function checkForIllegalChars (content_to_check) {
+  if (content_to_check.includes("||{}||")) {
+    return true;
+  }
+  return false;
+}
+
+const actually_create_macro = document.getElementById("create-soft-macro-for-reals");
+actually_create_macro.onclick = function () {
+  if (macro_name_to_create.value == null) {
+    return false;
+  }
+
+  if (checkIfMacroExists(macro_name_to_create.value.replace(" ", "%20")) && current_macro_type == 0) {
+    macro_status_msgs.innerText = "A soft macro with the name '" + String(macro_name_to_create.value) + "' already exists.";
+    return false;
+  }
+
+  macro_editor.style.display = "block";
+  macro_status_msgs.innerText = "";
+  setTimeout(function () {
+    macro_editor.click();
+  }, 100);
+}
+
 if (localStorage.getItem("soft-macros") == null) {
   localStorage.setItem("soft-macros", "[]");
+}
+
+// macro editor
+const macro_editor = document.getElementById("macro-editor");
+
+const close_window_macro_editor = document.getElementById("close-window-macro-editor");
+const set_mode_to_javascript = document.getElementById("set-mode-to-javascript");
+const set_mode_to_default = document.getElementById("set-mode-to-default");
+
+const js_textbox = document.getElementById("js-textbox");
+const js_textbox_input = document.getElementById("js-textbox-input");
+
+const save_macro_btn = document.getElementById("save-macro");
+
+macro_editor.onclick = function () {
+  macro_editor.style.zIndex = "102";
+  macro_window.style.zIndex = "101";
+}
+
+macro_window.onclick = function () {
+  macro_editor.style.zIndex = "101";
+  macro_window.style.zIndex = "102";
+}
+
+close_window_macro_editor.onclick = function () {
+  macro_editor.style.display = "none";
+}
+
+set_mode_to_javascript.onclick = function () {
+  if (current_macro_type == 2) {
+    macro_status_msgs.innerText = "JAVASCRIPT NOT SUPPORTED ON BOARD MACROS";
+    return false;
+  }
+
+  macro_mode = 1;
+  macro_status_msgs.innerText = "MODE SET TO JAVASCRIPT";
+  js_textbox.style.display = "block";
+}
+
+set_mode_to_default.onclick = function () {
+  macro_mode = 0;
+  macro_status_msgs.innerText = "MODE SET TO DEFAULT";
+}
+
+save_macro_btn.onclick = function () {
+  let spaceRemoverMacroName = macro_name_to_create.value.replace(" ", "%20");
+  if (checkForIllegalChars(spaceRemoverMacroName)) {
+    macro_status_msgs.innerText = "DO NOT INCLUDE '||{}||' IN MACRO NAME";
+    return false;
+  }
+
+  let macro_real_content;
+
+  switch (macro_mode) {
+    case 0:
+      break;
+    case 1:
+      if (js_textbox_input.value.includes("||{}||")) {
+        macro_status_msgs.innerText = "DO NOT INCLUDE '||{}||' IN MACRO CONTENT";
+        return false;
+      }
+      macro_real_content = js_textbox_input.value;
+      break;
+  }
+
+  switch (current_macro_type) {
+    case 0:
+      createSoftMacro(spaceRemoverMacroName, macro_real_content);
+      break;
+  }
+
+  const now = new Date();
+  const hours = now.getHours();         
+  const minutes = now.getMinutes();       
+  const seconds = now.getSeconds();    
+
+  macro_status_msgs.innerText = "MACRO HAS BEEN SAVED AS '" + spaceRemoverMacroName + "' AT " + String(hours) + ":" + String(minutes) + ":" + String(seconds);
 }

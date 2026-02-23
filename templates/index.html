@@ -154,6 +154,7 @@
             <div id="hide-y-gridlines-btn" class="twenty button">HIDE Y GRID LINES</div> -->
             <div id="hide-all-gridlines-btn" class="twenty button">HIDE GRID LINES</div>
             <div id="show-all-gridlines-btn" class="twenty button">SHOW GRID LINES</div>
+            <div id="delete-all-soft-macros-btn" class="twenty button">DELETE ALL SOFT MACROS</div>
           </div>
           <br/>
           <div class="btn-class">
@@ -209,16 +210,26 @@
           CLOSE WINDOW  
         </div>
         <div id="macro_status_msgs"></div>
-        <div class="seventy button text-center" id="soft-macros-btn">
-          SOFT MACROS
-        </div>
-        <div class="seventy button text-center" id="hard-macros-btn">
-          HARD MACROS
+        <div id="main-macro-btns">
+          <div class="seventy button text-center" id="soft-macros-btn">
+            SOFT MACROS
+          </div>
+          <div class="seventy button text-center" id="hard-macros-btn">
+            HARD MACROS
+          </div>
+          <!-- <div class="seventy button text-center" id="javascript-macros-btn">
+            JAVASCRIPT
+          </div> -->
+          <div class="seventy button text-center" id="board-macros-btn">
+            BOARD MACROS
+          </div>
         </div>
         <div id="macro-window-content">
           <div id="macro-default">
             <p>SOFT MACROS SHOULD BE TREATED AS TEMPORARY. THEY CAN ALSO BE USED WHEN THE INTERFACE IS DISCONNECTED.</p>
             <p>HARD MACROS CAN BE PERMANENT, BUT CANNOT BE USED WHEN THE INTERFACE IS DISCONNECTED.</p>
+            <p>JAVASCRIPT MACROS CAN EITHER BE SOFT MACROS OR HARD MACROS, AND CAN BE RUN AT ANY TIME.</p>
+            <p>BOARD MACROS ARE MACROS THAT HAVE BEEN SAVED TO THE BOARD.</p>
           </div>
           <div id="soft-macro-content">
             <div id="soft-macro-btns">
@@ -230,10 +241,35 @@
             </div>
             <br/>
             <div id="create-macrosoft">MACRO NAME: <input type="text" id="soft-macro-name-to-create" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"/> <a class="button" id="create-soft-macro-for-reals">CREATE</a><a class="button" id="cancel-create-soft-macro">CANCEL</a></div>
-            <div id="soft-macro-editor">
-              
+            <br/>
+            <div id="more-macro-options">
+              <!-- <label for="macro-mode">SET TO: </label>
+              <select name="macro-mode" id="macro-mode">
+                <option value="run-when-called">RUN WHEN CALLED</option>
+                <option value="run-with-autoclave">AUTOMATIC AUTOCLAVE MACRO</option>
+              </select>
+              <br/>
+              <br/> -->
+              <label for="js-macro-mode">(JAVASCRIPT ONLY) SET TO: </label>
+              <select name="js-macro-mode" id="js-macro-mode">
+                <option value=""></option>
+                <option value="run-with-interface">RUN WHEN INTERFACE STARTS</option>
+              </select>
             </div>
           </div> 
+        </div>
+      </div>
+      <div id="macro-editor" class="draggable">
+        <div class="btn-class">
+          <div class="twenty button" id="close-window-macro-editor">CLOSE WINDOW</div>
+          <div class="twenty button" id="set-mode-to-javascript">SET MODE TO JAVASCRIPT</div>
+          <div class="twenty button" id="set-mode-to-default">SET MODE TO DEFAULT</div>
+          <div class="twenty button" id="save-macro">SAVE MACRO</div>
+        </div>
+        <div id="js-textbox">
+          <div class="btn-class height-hundred">
+            <textarea id="js-textbox-input" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false"></textarea>
+          </div>
         </div>
       </div>
     </div>

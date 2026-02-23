@@ -193,6 +193,9 @@ function parseUserSpeech () {
             case (rest_of_command.includes("show small graph")):
               hide_small_graphs = false;
               break;
+            case (rest_of_command.includes("clear soft macros")):
+              delete_all_soft_macros_btn.click();
+              break;
             default:
               console.log("Not a valid voice command.");
               convertTextToSpeech("Not a valid voice command.");

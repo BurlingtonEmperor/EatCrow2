@@ -52,6 +52,10 @@ input[type=number] {
   appearance: textfield; 
 }
 
+textarea {
+  resize: none;
+}
+
 /* IDs */
 #container {
   position: absolute;
@@ -209,6 +213,21 @@ input[type=number] {
   background-color: black;
   z-index: 101;
   display: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#macro-editor {
+  width: 45%;
+  height: 45%;
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  border: 1px solid rgb(184, 225, 221);
+  opacity: 0.7;
+  background-color: black;
+  z-index: 102;
+  display: none;
 }
 
 #macro-window-content {
@@ -217,6 +236,30 @@ input[type=number] {
 }
 
 #soft-macro-content, #create-macrosoft, #soft-macro-editor {
+  display: none;
+}
+
+#js-textbox {
+  display: none;
+  width: 100%;
+  height: 80%;
+  overflow-y: auto;
+}
+
+#js-textbox-input {
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  height: 90%;
+  border: 1px solid rgb(184, 225, 221);
+  background-color: #363535;
+  user-select: none;
+  font-family: monospace;
+  color: rgb(184, 222, 176);
+  outline: none;
+}
+
+#more-macro-options {
   display: none;
 }
 
@@ -284,4 +327,8 @@ input[type=number] {
   text-align: center;
   margin: auto;
   justify-content: center;
+}
+
+.height-hundred {
+  height: 100%;
 }
