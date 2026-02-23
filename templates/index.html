@@ -240,7 +240,17 @@
               <div class="seventy button text-center" id="select-soft-macro-to-run-btn">SELECT MACRO TO RUN</div>
             </div>
             <br/>
-            <div id="create-macrosoft">MACRO NAME: <input type="text" id="soft-macro-name-to-create" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"/> <a class="button" id="create-soft-macro-for-reals">CREATE</a><a class="button" id="cancel-create-soft-macro">CANCEL</a></div>
+            <div id="create-macrosoft">MACRO NAME: <input type="text" id="soft-macro-name-to-create" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"/> <a class="button" id="create-soft-macro-for-reals">CREATE</a><a class="button" id="cancel-create-soft-macro">CANCEL/RETURN</a></div>
+            <div id="edit-macrosoft">
+              <label for="edit-macro-select">EDITING: </label>
+              <select name="edit-macro-select" id="edit-macro-select">
+                <option value="">NONE</option>
+              </select>
+              <div></div>
+              <a class="button" id="cancel-edit-macro">CANCEL EDIT/RETURN</a>
+              <a class="button" id="select-edit-btn">EDIT</a>
+              <br/>
+            </div>
             <br/>
             <div id="more-macro-options">
               <!-- <label for="macro-mode">SET TO: </label>
