@@ -46,6 +46,7 @@ const soft_macro_content = document.getElementById("soft-macro-content");
 const return_soft_macro_btn = document.getElementById("return-soft-macro-btn");
 const create_new_soft_macro_btn = document.getElementById("create-new-soft-macro-btn");
 const edit_macro_btn = document.getElementById("edit-soft-macro-btn");
+const delete_macro_btn = document.getElementById("delete-soft-macro-btn");
 
 const more_macro_options = document.getElementById("more-macro-options");
 
@@ -164,7 +165,7 @@ select_edit_macro.onclick = function () {
   if (edit_macro_select.value == "") {
     return false;
   }
-  
+
   switch (current_macro_type) {
     case 0:
       let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
@@ -185,6 +186,53 @@ select_edit_macro.onclick = function () {
   setTimeout(function () {
     macro_editor.click();
   }, 100);
+}
+
+const delete_macro_select = document.getElementById("delete-macro-select");
+const delete_macrosoft = document.getElementById("delete-macrosoft");
+const cancel_delete_macro = document.getElementById("cancel-delete-macro");
+const select_delete_macro = document.getElementById("select-delete-btn");
+
+function populateDeleteOptions_macro () {
+  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+  for (let i = 0; i < current_macro_array.length; i++) {
+    let option_to_create = document.createElement("option");
+    let parsed_item_array = current_macro_array[i].split("||{}||");
+
+    option_to_create.value = parsed_item_array[0];
+    option_to_create.innerText = parsed_item_array[0];
+
+    delete_macro_select.appendChild(option_to_create);
+  }
+}
+
+function clearDeleteOptions_macro () {
+  delete_macro_select.innerHTML = "<option value=''>NONE</option>";
+}
+
+delete_macro_btn.onclick = function () {
+  delete_macrosoft.style.display = "block";
+  more_macro_options.style.display = "block";
+  soft_macro_btns.style.display = "none";
+
+  populateDeleteOptions_macro();
+}
+
+cancel_delete_macro.onclick = function () {
+  delete_macrosoft.style.display = "none";
+  more_macro_options.style.display = "none";
+  soft_macro_btns.style.display = "block";
+
+  clearDeleteOptions_macro();
+}
+
+select_delete_macro.onclick = function () {
+  if (delete_macro_select.value == "") {
+    return false;
+  }
+
+  deleteSoftMacro(delete_macro_select.value);
+  macro_status_msgs.innerText = "DELETED '" + delete_macro_select.value + "'.";
 }
 
 const create_macrosoft = document.getElementById("create-macrosoft");

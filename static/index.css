@@ -259,7 +259,7 @@ textarea {
   outline: none;
 }
 
-#more-macro-options, #edit-macrosoft {
+#more-macro-options, #edit-macrosoft, #delete-macrosoft {
   display: none;
 }
 
