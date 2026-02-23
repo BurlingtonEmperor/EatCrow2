@@ -522,6 +522,10 @@ async function generateWarnings () {
   asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise, emergencyStopCheckPromise, temperatureWarningPromise, pressureWarningPromise, pressureClimbOrStall);
   await Promise.all(asyncChecks);
 
+  if (urgent_warningArray.length === 0) {
+    urgentWarningDiv.innerHTML = "";
+  }
+
   if (warningArray.length === 0) {
     warningDiv.innerHTML = "";
     issueDiv.innerHTML = "<p>NO ISSUES DETECTED</p>";
