@@ -550,6 +550,10 @@ async function generateWarnings () {
 const warningInterval = setInterval(function () {
   generateWarnings();
 
+  if (warningArray.includes("TEMPERATURE") || warningArray.includes("P-CLIMB")) {
+    playAlarm(0);
+  }
+
   switch (false) {
     case (set_temp_amount_interface == 0):
       interfaceSetTemp.innerText = set_temp_amount_interface + " *F";

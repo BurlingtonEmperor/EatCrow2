@@ -196,6 +196,9 @@ function parseUserSpeech () {
             case (rest_of_command.includes("clear soft macros")):
               delete_all_soft_macros_btn.click();
               break;
+            case (rest_of_command.includes("test temperature alarm")):
+              playAlarm(0);
+              break;
             default:
               console.log("Not a valid voice command.");
               convertTextToSpeech("Not a valid voice command.");
