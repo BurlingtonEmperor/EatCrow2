@@ -253,6 +253,12 @@ def create_log_auto():
   except Exception as err:
     return f"File Error: {str(err)}"
 
+# @app.route('/create_macro', methods=['POST'])
+# def create_macro():
+#   signal_to_read = request.get_json()
+#   macro_name = signal_to_read.get("macro_name")
+#   macro_content = signal_to_read.get("macro_content")
+
 @app.route('/exit_system')
 def exit_system():
   func = request.environ.get('werkzeug.server.shutdown')

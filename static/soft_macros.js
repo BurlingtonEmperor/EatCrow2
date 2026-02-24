@@ -47,6 +47,7 @@ const return_soft_macro_btn = document.getElementById("return-soft-macro-btn");
 const create_new_soft_macro_btn = document.getElementById("create-new-soft-macro-btn");
 const edit_macro_btn = document.getElementById("edit-soft-macro-btn");
 const delete_macro_btn = document.getElementById("delete-soft-macro-btn");
+const select_macro_to_run_btn = document.getElementById("select-soft-macro-to-run-btn");
 
 const more_macro_options = document.getElementById("more-macro-options");
 
@@ -236,6 +237,52 @@ select_delete_macro.onclick = function () {
   clearDeleteOptions_macro();
 }
 
+const run_macro_select = document.getElementById("run-macro-select");
+const run_macrosoft = document.getElementById("run-macrosoft");
+const cancel_run_macro = document.getElementById("cancel-run-macro");
+const select_run_macro = document.getElementById("select-run-btn");
+
+function populateRunOptions_macro () {
+  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+  for (let i = 0; i < current_macro_array.length; i++) {
+    let option_to_create = document.createElement("option");
+    let parsed_item_array = current_macro_array[i].split("||{}||");
+
+    option_to_create.value = parsed_item_array[0];
+    option_to_create.innerText = parsed_item_array[0];
+
+    run_macro_select.appendChild(option_to_create);
+  }
+}
+
+function clearRunOptions_macro () {
+  run_macro_select.innerHTML = "<option value=''>NONE</option>";
+}
+
+select_macro_to_run_btn.onclick = function () {
+  run_macrosoft.style.display = "block";
+  soft_macro_btns.style.display = "none";
+
+  populateRunOptions_macro();
+}
+
+cancel_run_macro.onclick = function () {
+  run_macrosoft.style.display = "none";
+  more_macro_options.style.display = "none";
+  soft_macro_btns.style.display = "block";
+
+  clearRunOptions_macro();
+}
+
+select_run_macro.onclick = function () {
+  if (run_macro_select.value == "") {
+    return false;
+  }
+  
+  runSoftMacro(run_macro_select.value);
+  macro_status_msgs.innerText = "RUNNING '" + run_macro_select.value + "'.";
+}
+
 const create_macrosoft = document.getElementById("create-macrosoft");
 const cancel_create_soft = document.getElementById("cancel-create-soft-macro");
 const macro_name_to_create = document.getElementById("soft-macro-name-to-create");
@@ -291,7 +338,7 @@ function createSoftMacro (macro_name, macro_content) {
 let is_reading_js_for_macro = 0;
 function readSoftMacro (macro_name) {
   let soft_macro_name_to_read = macro_name;
-  let current_macro_array = JSON.parse(JSON.stringify(localStorage.getItem("soft-macros")));
+  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
 
   if (checkIfMacroExists(soft_macro_name_to_read)) {
     for (let i = 0; i < current_macro_array.length; i++) {
@@ -312,6 +359,50 @@ function readSoftMacro (macro_name) {
             break;
         }
         return current_macro_array[i].split("||{}||")[1];
+      }
+    }
+  }
+  
+  else {
+    macro_status_msgs.innerText = "'" + String(macro_name) + "' does not exist as a soft macro.";
+  }
+}
+
+function runSoftMacro (macro_name) {
+  let soft_macro_name_to_read = macro_name;
+  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+
+  if (checkIfMacroExists(soft_macro_name_to_read)) {
+    for (let i = 0; i < current_macro_array.length; i++) {
+      if (current_macro_array[i].split("||{}||")[0] == macro_name) {
+        let read_array_macro = current_macro_array[i].split("||{}||");
+
+        // switch (parseInt(read_array_macro[3])) {
+        //   case 0:
+        //     js_macro_mode.value = "";
+        //     is_reading_js_for_macro = 1;
+        //     break;
+        //   case 1:
+        //     js_macro_mode.value = "run-with-interface";
+        //     is_reading_js_for_macro = 1;
+        //     break;
+        //   default:
+        //     is_reading_js_for_macro = 0;
+        //     break;
+        // }
+        // return current_macro_array[i].split("||{}||")[1];
+        switch (parseInt(read_array_macro[2])) {
+          case 0:
+            break;
+          case 1:
+            try {
+              eval(read_array_macro[1]);
+            }
+            catch (error) {
+              console.error(error);
+            };
+            break;
+        }
       }
     }
   }
