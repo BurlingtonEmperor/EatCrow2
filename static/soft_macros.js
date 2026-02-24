@@ -212,7 +212,7 @@ function clearDeleteOptions_macro () {
 
 delete_macro_btn.onclick = function () {
   delete_macrosoft.style.display = "block";
-  more_macro_options.style.display = "block";
+//   more_macro_options.style.display = "block";
   soft_macro_btns.style.display = "none";
 
   populateDeleteOptions_macro();
@@ -233,6 +233,7 @@ select_delete_macro.onclick = function () {
 
   deleteSoftMacro(delete_macro_select.value);
   macro_status_msgs.innerText = "DELETED '" + delete_macro_select.value + "'.";
+  clearDeleteOptions_macro();
 }
 
 const create_macrosoft = document.getElementById("create-macrosoft");
