@@ -1727,7 +1727,9 @@ setInterval(function () {
                 },
                 grid : {
                   display : false
-                }
+                },
+                // min : 0,
+                // max : 600
               },
               x : {
                 ticks : {
@@ -1752,15 +1754,15 @@ setInterval(function () {
               {
                 fill : false,
                 lineTension : 0,
-                backgroundColor : "rgba(136,238,136,1.000)",
-                borderColor : "rgba(136,238,136,1.000)",
+                backgroundColor : "rgba(235, 73, 28, 0.8)",
+                borderColor : "rgba(235, 73, 28, 0.8)",
                 data: temp_values
               },
               {
                 fill : false,
                 lineTension : 0,
-                backgroundColor : "rgba(188, 155, 209, 0.8)",
-                borderColor : "rgba(188, 155, 209, 0.8)",
+                backgroundColor : "rgba(110, 114, 221, 0.8)",
+                borderColor : "rgba(110, 114, 221, 0.8)",
                 data : pressure_values
               },
               {
@@ -1800,12 +1802,37 @@ setInterval(function () {
                 },
                 title : {
                   display : true,
-                  text : "FAREN. OR PSI",
+                  text : "FARENHEIT",
                   font : {
                     family : "Hornet"
                   },
                   color : "rgba(136,238,136,1.000)"
-                }
+                },
+                min : 0,
+                max : 600
+              },
+              y1 : {
+                position: 'right',
+                ticks : {
+                  font : {
+                    family : "Hornet"
+                  },
+                  color : "rgba(136,238,136,1.000)"
+                },
+                grid : gridline_usage,
+                border : {
+                  color : "rgba(136,238,136,1.000)"
+                },
+                title : {
+                  display : true,
+                  text : "PSI",
+                  font : {
+                    family : "Hornet"
+                  },
+                  color : "rgba(136,238,136,1.000)"
+                },
+                min : 0,
+                max : 300
               },
               x : {
                 ticks : {
@@ -2429,6 +2456,8 @@ setTimeout(function () {
   let starter_time_val = 0;
   int_to_clear = setInterval(function () {
     starter_time_val += 0.017;
+    starter_time_val = starter_time_val.toFixed(3);
+    starter_time_val = parseFloat(starter_time_val);
     time_values.push(starter_time_val);
   }, 1000);
 }, 6000);
