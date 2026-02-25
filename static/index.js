@@ -100,7 +100,8 @@ async function generateWarnings () {
   warningArray = [];
   urgent_warningArray = []; 
   /*
-  Warning List:
+  NOTE: THIS IS OUTDATED. Use the README.txt file instead for better documentation.
+  Warning List: 
   <Temperature and Pressure>
   TEMPERATURE - Autoclave temperature is too high
   PRESSURE - Autoclave pressure is too high
@@ -554,8 +555,16 @@ async function generateWarnings () {
 const warningInterval = setInterval(function () {
   generateWarnings();
 
-  if (warningArray.includes("TEMPERATURE") || warningArray.includes("P-CLIMB")) {
+  if (warningArray.includes("TEMPERATURE") || warningArray.includes("T-CLIMB")) {
     playAlarm(0);
+  }
+
+  if (warningArray.includes("PRESSURE") || warningArray.includes("P-CLIMB")) {
+    playAlarm(1);
+  }
+
+  if (urgent_warningArray.length > 1) {
+    playAlarm(2);
   }
 
   switch (false) {

@@ -5,6 +5,12 @@ function playAlarm (alarmNum) {
     default:
       alarmPath = "/static/alarms/temp.wav";
       break;
+    case 1:
+      alarmPath = "/static/alarms/psi.wav";
+      break;
+    case 2:
+      alarmPath = "/static/alarms/caution.wav";
+      break;
   }
 
   // setTimeout(function () {
