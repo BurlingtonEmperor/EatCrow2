@@ -2180,6 +2180,11 @@ const usage_mode = document.getElementById("usage-mode");
 const manualControls = document.getElementById("manual-controls");
 const automaticControls = document.getElementById("automatic-controls");
 const semiManualControls = document.getElementById("semi-manual-controls");
+const realManualControls = document.getElementById("real-manual-controls");
+
+const desired_heater_status = document.getElementById("desired-heater-status");
+const desired_inlet_solenoid_status = document.getElementById("desired-inlet-solenoid-status");
+const desired_outlet_solenoid_status = document.getElementById("desired-outlet-solenoid-status");
 
 let ignore_errors = false;
 let is_using_modelclave = false;
@@ -2188,19 +2193,34 @@ let modal_value = autoclaveMode.value;
 setInterval(function () {
   if (autoclaveMode.value != modal_value) {
     modal_value = autoclaveMode.value;
+    if (modal_value !== "real-manual") {
+      desired_heater_status.innerText = "NONE";
+      desired_inlet_solenoid_status.innerText = "NONE";
+      desired_outlet_solenoid_status.innerText = "NONE";
+    }
+
     switch (modal_value) {
       case "manual":
         automaticControls.style.display = "none";
         semiManualControls.style.display = "none";
+        realManualControls.style.display = "none";
         manualControls.style.display = "block";
         break;
       case "semi-manual":
         automaticControls.style.display = "none";
         semiManualControls.style.display = "block";
+        realManualControls.style.display = "none";
         manualControls.style.display = "none";
         break;
       case "automatic":
         automaticControls.style.display = "flex";
+        semiManualControls.style.display = "none";
+        realManualControls.style.display = "none";
+        manualControls.style.display = "none";
+        break;
+      case "real-manual":
+        realManualControls.style.display = "block";
+        automaticControls.style.display = "none";
         semiManualControls.style.display = "none";
         manualControls.style.display = "none";
         break;

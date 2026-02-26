@@ -57,6 +57,23 @@
             <div class="twenty button" id="stop-autoclave-semi">STOP AUTOCLAVE</div>
           </div>
         </div>
+        <!-- <div id="real-manual-controls" class="draggable window">
+          <div class="btn-class">DESIRED HEATER STATUS: <a id="desired-heater-status"></a></div>
+          <div class="btn-class">
+            <div class="twenty button" id="activate-heater-btn">ACTIVATE HEATER</div>
+            <div class="twenty button" id="deactivate-heater-btn">DEACTIVATE HEATER</div>
+          </div>
+          <div class="btn-class">DESIRED INLET SOLENOID STATUS: <a id="desired-inlet-solenoid-status"></a></div>
+          <div class="btn-class">
+            <div class="twenty button" id="activate-inlet-solenoid-btn">ACTIVATE INLET SOLENOID</div>
+            <div class="twenty button" id="deactivate-inlet-solenoid-btn">DEACTIVATE INLET SOLENOID</div>
+          </div>
+          <div class="btn-class">DESIRED OUTLET SOLENOID STATUS: <a id="desired-outlet-solenoid-status"></a></div>
+          <div class="btn-class">
+            <div class="twenty button" id="activate-outlet-solenoid-btn">ACTIVATE OUTLET SOLENOID</div>
+            <div class="twenty button" id="deactivate-outlet-solenoid-btn">DEACTIVATE OUTLET SOLENOID</div>
+          </div>
+        </div> -->
       </div>
       <div id="subcontainer2"> 
         <div id="repair-back">
@@ -202,7 +219,8 @@
           <div>USAGE: <a id="usage-mode">IDLE</a></div>
           <label for="autoclave-mode">MODE: </label>
           <select name="autoclave-mode" id="autoclave-mode">
-            <option value="manual">MANUAL</option>
+            <option value="manual">INCREMENTAL</option>
+            <option value="real-manual">MANUAL</option>
             <option value="semi-manual">SEMI-MANUAL</option>
             <option value="automatic">AUTOMATIC</option>
            </select>
@@ -303,6 +321,24 @@
           <div class="btn-class height-hundred">
             <textarea id="js-textbox-input" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false"></textarea>
           </div>
+        </div>
+      </div>
+      <div id="real-manual-controls" class="draggable window">
+        <div class="btn-class">DESIRED HEATER STATUS: <a id="desired-heater-status">NONE</a></div>
+        <div class="btn-class">DESIRED INLET SOLENOID STATUS: <a id="desired-inlet-solenoid-status">NONE</a></div>
+        <div class="btn-class">DESIRED OUTLET SOLENOID STATUS: <a id="desired-outlet-solenoid-status">NONE</a></div>
+        <br/>
+        <div class="btn-class">
+          <div class="twenty button" id="activate-heater-btn">ACTIVATE HEATER</div>
+          <div class="twenty button" id="deactivate-heater-btn">DEACTIVATE HEATER</div>
+        </div>
+        <div class="btn-class">
+          <div class="twenty button" id="activate-inlet-solenoid-btn">ACTIVATE INLET SOLENOID</div>
+          <div class="twenty button" id="deactivate-inlet-solenoid-btn">DEACTIVATE INLET SOLENOID</div>
+        </div>
+        <div class="btn-class">
+          <div class="twenty button" id="activate-outlet-solenoid-btn">ACTIVATE OUTLET SOLENOID</div>
+          <div class="twenty button" id="deactivate-outlet-solenoid-btn">DEACTIVATE OUTLET SOLENOID</div>
         </div>
       </div>
     </div>
