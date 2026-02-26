@@ -2228,6 +2228,55 @@ setInterval(function () {
   }
 }, 100);
 
+const activate_heater_btn = document.getElementById("activate-heater-btn");
+const deactivate_heater_btn = document.getElementById("deactivate-heater-btn");
+const activate_inlet_solenoid_btn = document.getElementById("activate-inlet-solenoid-btn");
+const deactivate_inlet_solenoid_btn = document.getElementById("deactivate-inlet-solenoid-btn");
+const activate_outlet_solenoid_btn = document.getElementById("activate-outlet-solenoid-btn");
+const deactivate_outlet_solenoid_btn = document.getElementById("deactivate-outlet-solenoid-btn");
+
+activate_heater_btn.onclick = function () {
+  if (isConnectedToBoard == false) {
+    return false;
+  }
+  desired_heater_status.innerText = "ON";
+}
+
+deactivate_heater_btn.onclick = function () {
+  if (isConnectedToBoard == false) {
+    return false;
+  }
+  desired_heater_status.innerText = "OFF";
+}
+
+activate_inlet_solenoid_btn.onclick = function () {
+  if (isConnectedToBoard == false) {
+    return false;
+  }
+  desired_inlet_solenoid_status.innerText = "ON";
+}
+
+deactivate_inlet_solenoid_btn.onclick = function () {
+  if (isConnectedToBoard == false) {
+    return false;
+  }
+  desired_inlet_solenoid_status.innerText = "OFF";
+}
+
+activate_outlet_solenoid_btn.onclick = function () {
+  if (isConnectedToBoard == false) {
+    return false;
+  }
+  desired_outlet_solenoid_status.innerText = "ON";
+}
+
+deactivate_outlet_solenoid_btn.onclick = function () {
+  if (isConnectedToBoard == false) {
+    return false;
+  }
+  desired_outlet_solenoid_status.innerText = "OFF";
+}
+
 // compatibility
 let can_read_from_others = 0;
 let single_read = false;
