@@ -65,6 +65,24 @@ void loop() {
       case 'c':
         Serial.println("comm");
         break;
+      case '!':
+        digitalWrite(heaterPin, HIGH);
+        break;
+      case '~':
+        digitalWrite(heaterPin, LOW);
+        break;
+      case '@':
+        digitalWrite(inletPin, HIGH);
+        break;
+      case '#':
+        digitalWrite(inletPin, LOW);
+        break;
+      case '$':
+        digitalWrite(outletPin, HIGH);
+        break;
+      case '%':
+        digitalWrite(outletPin, LOW);
+        break;
     }
   }
 

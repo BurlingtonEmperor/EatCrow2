@@ -180,6 +180,7 @@
           <div class="btn-class">
             <div id="hide-small-graphs-btn" class="twenty button">HIDE SMALL GRAPHS</div>
             <div id="show-small-graphs-btn" class="twenty button">SHOW SMALL GRAPHS</div>
+            <div id=""></div>
           </div>
           <div class="btn-class">
             <p>PRESSURE IS PURPLE</p>
@@ -226,7 +227,7 @@
            </select>
         </div>
       </div>
-      <div id="macro-window" class="draggable">
+      <div id="macro-window" class="draggable window">
         <div class="seventy button text-center" id="close-window-macro-window">
           CLOSE WINDOW  
         </div>
@@ -310,7 +311,7 @@
           </div> 
         </div>
       </div>
-      <div id="macro-editor" class="draggable">
+      <div id="macro-editor" class="draggable window">
         <div class="btn-class">
           <div class="twenty button" id="close-window-macro-editor">CLOSE WINDOW</div>
           <div class="twenty button" id="set-mode-to-javascript">SET MODE TO JAVASCRIPT</div>
@@ -355,5 +356,6 @@
     <script src="{{ url_for('static', filename='part_wreckage_seeker.js' )}}"></script>
     <script src="{{ url_for('static', filename='soft_macros.js' )}}"></script>
     <script src="{{ url_for('static', filename='alarms.js')}}"></script>
+    <script src="{{ url_for('static', filename='windows.js')}}"></script>
   </body>
 </html>

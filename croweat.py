@@ -113,9 +113,9 @@ def findIfFileExists (fileDIR):
     case _:
       newFilePath = current_dir + "\\" + fileDIR;
       if (os.path.exists(newFilePath)):
-        return (fileDIR + " exists.");
+        return True
       else:
-        return (fileDIR + " does not exist.");
+        return False
 
 def saveMacro (macroLines, macroName): #should be in the form of a list to be kosher.
   if (findIfFileExists(macroName + ".pkl").includes("exists.")):

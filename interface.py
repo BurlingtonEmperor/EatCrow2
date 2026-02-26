@@ -253,11 +253,16 @@ def create_log_auto():
   except Exception as err:
     return f"File Error: {str(err)}"
 
-# @app.route('/create_macro', methods=['POST'])
-# def create_macro():
-#   signal_to_read = request.get_json()
-#   macro_name = signal_to_read.get("macro_name")
-#   macro_content = signal_to_read.get("macro_content")
+@app.route('/create_macro', methods=['POST'])
+def create_macro():
+  signal_to_read = request.get_json()
+
+  macro_name = signal_to_read.get("macro_name")
+  macro_content = signal_to_read.get("macro_content")
+  macro_mode = signal_to_read.get("macro_mode")
+  macro_run_cycle = signal_to_read.get("macro_run_cycle")
+
+  # if (findIfFileExists("/macros/" + str(macro_name) + ".txt")):
 
 @app.route('/exit_system')
 def exit_system():

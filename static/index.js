@@ -2484,10 +2484,21 @@ let rate_of_change_temp_board = 0;
 let real_temp_change_rate_board = 0;
 let real_psi_change_rate_board = 0;
 
+let zoom_minutes = 0;
 function passMinutes () {
   if (isConnectedToBoard) {
-    minutes_passed += 1;
-    time_values.push(minutes_passed);
+    switch (zoom_minutes) {
+      case 0:
+        minutes_passed += 1;
+        time_values.push(minutes_passed);
+        break
+      case 1:
+        minutes_passed += 0.5;
+        time_values.push(minutes_passed);
+        minutes_passed += 0.5;
+        time_values.push(minutes_passed);
+        break;
+    }
 
     if (temp_values.length > 2) {
       rate_of_change_temp = (temp_values[temp_values.length - 1] - temp_values[0]) / (time_values[time_values.length - 1] - time_values[0]);
