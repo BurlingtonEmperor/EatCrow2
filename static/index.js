@@ -2240,6 +2240,7 @@ activate_heater_btn.onclick = function () {
     return false;
   }
   desired_heater_status.innerText = "ON";
+  send_signal_to_board("!");
 }
 
 deactivate_heater_btn.onclick = function () {
@@ -2247,6 +2248,7 @@ deactivate_heater_btn.onclick = function () {
     return false;
   }
   desired_heater_status.innerText = "OFF";
+  send_signal_to_board("~");
 }
 
 activate_inlet_solenoid_btn.onclick = function () {
@@ -2254,6 +2256,7 @@ activate_inlet_solenoid_btn.onclick = function () {
     return false;
   }
   desired_inlet_solenoid_status.innerText = "ON";
+  send_signal_to_board("@");
 }
 
 deactivate_inlet_solenoid_btn.onclick = function () {
@@ -2261,6 +2264,7 @@ deactivate_inlet_solenoid_btn.onclick = function () {
     return false;
   }
   desired_inlet_solenoid_status.innerText = "OFF";
+  send_signal_to_board("#");
 }
 
 activate_outlet_solenoid_btn.onclick = function () {
@@ -2268,6 +2272,7 @@ activate_outlet_solenoid_btn.onclick = function () {
     return false;
   }
   desired_outlet_solenoid_status.innerText = "ON";
+  send_signal_to_board("$");
 }
 
 deactivate_outlet_solenoid_btn.onclick = function () {
@@ -2275,6 +2280,7 @@ deactivate_outlet_solenoid_btn.onclick = function () {
     return false;
   }
   desired_outlet_solenoid_status.innerText = "OFF";
+  send_signal_to_board("%");
 }
 
 // compatibility
