@@ -202,6 +202,21 @@ function parseUserSpeech () {
             case (rest_of_command.includes("test pressure alarm")):
               playAlarm(1);
               break;
+            case (rest_of_command.includes("zoom graph 2 times")):
+            case (rest_of_command.includes("zoom graph two times")):
+              zoom_minutes = 1;
+              break;
+            case (rest_of_command.includes("zoom graph 4 times")):
+            case (rest_of_command.includes("zoom graph four times")):
+              zoom_minutes = 2;
+              break;
+            case (rest_of_command.includes("reset graph zoom")):
+            case (rest_of_command.includes("zoom graph 1 times")):
+            case (rest_of_command.includes("zoom graph 1 time")):
+            case (rest_of_command.includes("zoom graph one times")):
+            case (rest_of_command.includes("zoom graph one time")):
+              zoom_minutes = 0;
+              break;
             default:
               console.log("Not a valid voice command.");
               convertTextToSpeech("Not a valid voice command.");

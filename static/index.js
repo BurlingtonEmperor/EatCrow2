@@ -662,6 +662,7 @@ const subcontainer_5 = document.getElementById("subcontainer5");
 
 const command_list_1 = document.getElementById("command-list-1");
 const command_list_2 = document.getElementById("command-list-2");
+const command_list_3 = document.getElementById("command-list-3");
 
 // buttons
 const autoclaveRepairBtn = document.getElementById("autoclave-repair-btn");
@@ -707,6 +708,11 @@ const show_all_gridlines_btn = document.getElementById("show-all-gridlines-btn")
 const hide_small_graphs_btn = document.getElementById("hide-small-graphs-btn");
 const show_small_graphs_btn = document.getElementById("show-small-graphs-btn");
 const delete_all_soft_macros_btn = document.getElementById("delete-all-soft-macros-btn");
+const cmd_list_3_btn = document.getElementById("cmd-list-3-btn");
+const close_cmd_list_3_btn = document.getElementById("close-command-list-3");
+const zoom_2x_btn = document.getElementById("zoom-2x-btn");
+const zoom_4x_btn = document.getElementById("zoom-4x-btn");
+const reset_graph_zoom_btn = document.getElementById("reset-graph-zoom-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -952,6 +958,27 @@ show_small_graphs_btn.onclick = function () {
 
 delete_all_soft_macros_btn.onclick = function () {
   localStorage.setItem("soft-macros", "[]");
+}
+
+reset_graph_zoom_btn.onclick = function () {
+  zoom_minutes = 0;
+}
+
+zoom_2x_btn.onclick = function () {
+  zoom_minutes = 1;
+}
+
+zoom_4x_btn.onclick = function () {
+  zoom_minutes = 2;
+}
+
+cmd_list_3_btn.onclick = function () {
+  command_list_3.style.display = "block";
+  command_list_3.click();
+}
+
+close_cmd_list_3_btn.onclick = function () {
+  command_list_3.style.display = "none";
 }
 
 // manual command console
@@ -1653,6 +1680,7 @@ function switch_Displays_Graph () {
   }
 }
 
+const graph_zoom_status = document.getElementById("graph-zoom-status");
 setInterval(function () {
   const ctx = document.createElement('canvas');
   const ctx_double = document.createElement('canvas');
@@ -2170,6 +2198,18 @@ setInterval(function () {
   }
 
   checkFor_other();
+
+  switch (zoom_minutes) {
+    case 0:
+      graph_zoom_status.innerText = "1x";
+      break;
+    case 1:
+      graph_zoom_status.innerText = "2x";
+      break;
+    case 2:
+      graph_zoom_status.innerText = "4x";
+      break;
+  }
 }, 1000);
 Chart.defaults.animation = false;
 
@@ -2503,6 +2543,12 @@ function passMinutes () {
         time_values.push(minutes_passed);
         minutes_passed += 0.5;
         time_values.push(minutes_passed);
+        break;
+      case 2:
+        for (let i = 0; i < 4; i++) {
+          minutes_passed += 0.25;
+          time_values.push(minutes_passed);
+        }
         break;
     }
 

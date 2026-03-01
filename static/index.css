@@ -271,6 +271,16 @@ textarea {
   position: fixed;
 }
 
+#command-list-3 {
+  right: 0px;
+  top: 0px;
+  position: fixed;
+  width: 30%;
+  display: none;
+  height: 40%;
+  overflow-y: auto;
+}
+
 /* Classes */
 .warning {
   border: 1px solid red;

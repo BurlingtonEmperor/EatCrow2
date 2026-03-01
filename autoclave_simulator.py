@@ -1,3 +1,6 @@
+# this is old and doesn't really need to be here, 
+# but it's been ingrained into eatcrow.py, so I can't just get rid of it.
+
 autoclave_sim_active = 1;
 
 # 2-3 celsius per min increase is NOT ALLOWED!
