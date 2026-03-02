@@ -95,6 +95,7 @@ const autoclave_diagram = document.getElementById("autoclave-diagram");
 const autoclave_status = document.getElementById("autoclave-status");
 const autoclave_plot = document.getElementById("autoclave-plot");
 const interfaceSetTemp = document.getElementById("html-interface-set-temp");
+const interfaceSetPSI = document.getElementById("html-interface-set-psi");
 
 async function generateWarnings () {
   warningArray = [];
@@ -570,6 +571,12 @@ const warningInterval = setInterval(function () {
   switch (false) {
     case (set_temp_amount_interface == 0):
       interfaceSetTemp.innerText = set_temp_amount_interface + " *F";
+      break;
+  }
+
+  switch (false) {
+    case (set_psi_amount_interface == 0):
+      interfaceSetPSI.innerText = set_psi_amount_interface + " PSI"
       break;
   }
 
@@ -1362,7 +1369,7 @@ raiseTempManually.onclick = function () {
   notifyActiveCureStatus();
 
   set_temp_amount_interface = parseInt(tempRaiseAmount.value) + temp_values[temp_values.length - 1];
-  if (set_temp_amount_interface == NaN) {
+  if (set_temp_amount_interface == NaN || temp_values.length < 1) {
     set_temp_amount_interface = parseInt(tempRaiseAmount.value);
   }
 
@@ -1386,6 +1393,11 @@ decreaseTempManually.onclick = function () {
   is_actively_curing = false;
   ceaseCuringStatus();
 
+  set_temp_amount_interface = temp_values[temp_values.length - 1] - parseInt(tempRaiseAmount.value);
+  if (set_temp_amount_interface == NaN || temp_values.length < 1) {
+    set_temp_amount_interface = 0;
+  }
+
   for (let i = 0; i < parseInt(tempRaiseAmount.value); i++) {
     switch (true) {
       case (is_using_modelclave):
@@ -1405,6 +1417,11 @@ raisePSIManually.onclick = function () {
 
   is_actively_curing = true;
   notifyActiveCureStatus();
+
+  set_psi_amount_interface = parseInt(psiRaiseAmount.value) + pressure_values[pressure_values.length - 1];
+  if (set_psi_amount_interface == NaN || pressure_values.length < 1) {
+    set_psi_amount_interface = parseInt(psiRaiseAmount.value);
+  }
 
   for (let i = 0; i < parseInt(psiRaiseAmount.value); i++) {
     switch (true) {
@@ -1430,6 +1447,11 @@ decreasePSIManually.onclick = function () {
   is_actively_curing = false;
   ceaseCuringStatus();
 
+  set_psi_amount_interface =  pressure_values[pressure_values.length - 1] - parseInt(psiRaiseAmount.value);
+  if (set_psi_amount_interface == NaN || pressure_values.length < 1) {
+    set_psi_amount_interface = 0;
+  }
+
   for (let i = 0; i < parseInt(psiRaiseAmount.value); i++) {
     switch (true) {
       case (is_using_modelclave):
@@ -1449,6 +1471,7 @@ const tempSetAmount = document.getElementById("temp-set-amount");
 const psiSetAmount = document.getElementById("psi-set-amount");
 
 let set_temp_amount_interface = 0;
+let set_psi_amount_interface = 0;
 
 bringToLevels.onclick = function () {
   if (tempSetAmount.value == null || isConnectedToBoard == false || psiSetAmount.value == null || tempSetAmount.value < 0 || psiSetAmount.value < 0) {
@@ -1477,6 +1500,7 @@ bringToLevels.onclick = function () {
     ceaseCuringStatus();
 
     set_temp_amount_interface = parseInt(tempSetAmount.value);
+    set_psi_amount_interface = parseInt(psiSetAmount.value);
 
     for (let i = 0; i < temp_and_set_diff; i++) {
       switch (true) {
@@ -1506,6 +1530,7 @@ bringToLevels.onclick = function () {
     notifyActiveCureStatus();
 
     set_temp_amount_interface = parseInt(tempSetAmount.value);
+    set_psi_amount_interface = parseInt(psiSetAmount.value);
 
     for (let i = 0; i < temp_and_set_diff; i++) {
       send_signal_to_board(0);
@@ -1528,6 +1553,7 @@ bringToLevels.onclick = function () {
     notifyActiveCureStatus();
 
     set_temp_amount_interface = parseInt(tempSetAmount.value);
+    set_psi_amount_interface = parseInt(psiSetAmount.value);
     
     for (let i = 0; i < temp_and_set_diff; i++) {
       send_signal_to_board(0);
@@ -1550,6 +1576,7 @@ bringToLevels.onclick = function () {
     ceaseCuringStatus();
 
     set_temp_amount_interface = parseInt(tempSetAmount.value);
+    set_psi_amount_interface = parseInt(psiSetAmount.value);
 
     for (let i = 0; i < temp_and_set_diff; i++) {
       switch (true) {
@@ -1586,6 +1613,7 @@ stopAutoclaveSemi.onclick = function () {
   }
 
   set_temp_amount_interface = parseInt(tempSetAmount.value);
+  set_psi_amount_interface = parseInt(psiSetAmount.value);
 
   let temp_and_set_diff = Math.abs(70 - parseInt(tempSetAmount.value));
   let psi_and_set_diff = Math.abs(14.7 - parseInt(psiSetAmount.value));
