@@ -1,6 +1,16 @@
 int isHeaterOn = 0;
 int read_mode = 0;
 
+extern int __heap_start, *__brkval;
+
+unsigned long previousMillis = 0; 
+const long interval = 1000;  
+
+int getFreeRam() {
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
+
 void setup() {
   Serial.begin(9600); 
 }
@@ -66,5 +76,14 @@ void loop() {
         }
         break;
     }
+  }
+
+  unsigned long currentMillis = millis(); 
+
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+
+    Serial.print("FREE SRAM: ");
+    Serial.println(getFreeRam());
   }
 }

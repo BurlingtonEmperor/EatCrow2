@@ -283,6 +283,7 @@ async function generateWarnings () {
                       console.log(data);
                       getTemp_fromModel(data);
                       getPSI_fromModel(data);
+                      getBoardSRAM(data);
                       // checkFor_other();
                       resolve();
                   }
@@ -386,6 +387,7 @@ async function generateWarnings () {
                       console.log(data);
                       getTemp_fromModel(data);
                       getPSI_fromModel(data);
+                      getBoardSRAM(data);
                       resolve();
                   }
                 }
@@ -1315,6 +1317,7 @@ function read_from_board () {
               console.log(data);
               getTemp_fromModel(data);
               getPSI_fromModel(data);
+              getBoardSRAM(data);
           }
         }
         break;
@@ -2394,6 +2397,7 @@ function checkFor_other () {
                 console.log(data);
                 getTemp_fromModel(data);
                 getPSI_fromModel(data);
+                getBoardSRAM(data);
 
                 if (single_read && isConnectedToBoard) {
                   switch (true) {
@@ -2550,6 +2554,15 @@ function getPSI_fromModel (data_log) {
     pressure_values.push(psi_comp_check);
     psi_gauge2.innerText = psi_comp_check + " PSI";
   }  
+}
+
+const board_sram_status = document.getElementById("board-sram-status");
+function getBoardSRAM (data_log) {
+  switch (true) {
+    case(String(data_log).includes("FREE SRAM: ")):
+      board_sram_status.innerText = String(data_log).split("FREE SRAM: ")[1].replace(" ", "") + " BYTES FREE";
+      break;
+  }
 }
 
 let minutes_passed = 0;

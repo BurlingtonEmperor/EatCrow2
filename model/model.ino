@@ -9,7 +9,17 @@ int setTemp = 70;
 
 int tempCeiling = 120;
 
-int sumArray(int arr[], int size) {
+extern int __heap_start, *__brkval;
+
+unsigned long previousMillis = 0; 
+const long interval = 1000;  
+
+int getFreeRam() {
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
+
+int sumArray (int arr[], int size) {
   int s = 0;
   for (int i = 0; i < size; i++) {
     s += arr[i];
@@ -32,7 +42,6 @@ int pressureData[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 int sample = 0;
 
 void loop() {
-
   if (Serial.available() > 0) {
     char incomingByte = Serial.read(); 
     switch (incomingByte) {
@@ -152,6 +161,13 @@ void loop() {
     Serial.println();
   }
   
+  unsigned long currentMillis = millis(); 
 
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+
+    Serial.print("FREE SRAM: ");
+    Serial.println(getFreeRam());
+  }
   // delay(50);
 }
