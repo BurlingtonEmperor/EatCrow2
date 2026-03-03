@@ -1,3 +1,8 @@
+// The below code and comments were not developed by me. 
+// They were developed by Adrian Brink, who was probably the 
+// old Autoclave team's programmer.
+// I just put this here because I found it to be interesting.
+
 #include "max6675.h"
 
 //test code for verifying flow and heating conditions of an autoclave

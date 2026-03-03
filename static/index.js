@@ -179,7 +179,7 @@ async function generateWarnings () {
     
     else {
       navigator.getBattery().then(function (battery) {
-        device_battery_percent.innerText = (battery.level * 100) + "%";
+        device_battery_percent.innerText = (battery.level * 100).toFixed(2) + "%";
         // if (!battery.charging) {
         //   warningArray.push("POWER");
         //   device_battery_percent.style.color = "yellow";
@@ -196,7 +196,7 @@ async function generateWarnings () {
         }
 
         else {
-          device_battery_percent.style.color = "rgb(136, 238, 136);";
+          device_battery_percent.style.color = "rgb(136, 238, 136)";
         }
 
         if (!battery.charging) {
