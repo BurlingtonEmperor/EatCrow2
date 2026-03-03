@@ -1369,7 +1369,7 @@ function send_msg_to_board (msgString) {
       "Content-Type" : "application/json"
     },
     body : JSON.stringify({
-      message : String(msgString),
+      message : String(String(msgString) + "\n"),
       baud_rater : parseInt(localStorage.getItem("baud_rate")),
       board_porter : String(localStorage.getItem("board_port"))
     })

@@ -37,7 +37,7 @@ void loop() {
             break;
         }
         Serial.println("Read mode switched");
-        break;
+        return;
     }
 
     switch (read_mode) {
