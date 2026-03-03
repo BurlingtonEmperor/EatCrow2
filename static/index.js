@@ -647,7 +647,7 @@ function checkETEMP () {
           return false;
         }
         farenheitTemp = (parseInt(data) * 1.8) + 32;
-        external_temp_status.innerText = String(data) + " * C" + " || " + farenheitTemp + " * F";
+        external_temp_status.innerText = String(data) + " * C" + " || " + String(farenheitTemp.toFixed(2)) + " * F";
         break;
     }
   })
