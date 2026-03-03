@@ -722,6 +722,7 @@ const close_cmd_list_3_btn = document.getElementById("close-command-list-3");
 const zoom_2x_btn = document.getElementById("zoom-2x-btn");
 const zoom_4x_btn = document.getElementById("zoom-4x-btn");
 const reset_graph_zoom_btn = document.getElementById("reset-graph-zoom-btn");
+const reboot_system_btn = document.getElementById("reboot-system-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -988,6 +989,17 @@ cmd_list_3_btn.onclick = function () {
 
 close_cmd_list_3_btn.onclick = function () {
   command_list_3.style.display = "none";
+}
+
+reboot_system_btn.onclick = function () {
+  fetch ("/restart_server")
+  .then(response => response.text())
+  .then(data => {
+    // do nothing
+  })
+  .catch(error => {
+    console.error(error);
+  });
 }
 
 // manual command console

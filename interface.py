@@ -271,6 +271,10 @@ def exit_system():
     os.kill(os.getpid(), signal.SIGINT)
   func()
 
+@app.route('/restart_server')
+def restart_server():
+  os.execv(sys.executable, ['python'] + sys.argv)
+
 def open_browser():
   checkWhichPlatform();
   webbrowser.open_new(URL);
