@@ -1,10 +1,12 @@
 int isHeaterOn = 0;
-int read_mode = 0;
+int read_mode = 1;
 
 extern int __heap_start, *__brkval;
 
 unsigned long previousMillis = 0; 
 const long interval = 1000;  
+
+int temp_to_set = 0;
 
 int getFreeRam() {
   int v;
@@ -16,22 +18,26 @@ void setup() {
 }
 
 void loop() {
-  // Serial.print("running");
   if (Serial.available() > 0) {
     char incomingByte = Serial.read(); 
     Serial.print("Incoming signal: ");
 
-    // if (incomingByte == '0') {
-    //   Serial.println("raising temperature"); // raising temperature    
-    // }
-
-    // if (incomingByte == '1') {
-    //   Serial.println("raising pressure"); // raising pressure      
-    // }
-
-    // if (incomingByte == '2') {
-    //   Serial.println("lowering temperature"); //
-    // }
+    switch (incomingByte) {
+      case 's':
+        Serial.println("emergency_stop");
+        break;
+      case '*':
+        switch (read_mode) {
+          case 1:
+            read_mode = 0;
+            break;
+          case 0:
+            read_mode = 1;
+            break;
+        }
+        Serial.println("Read mode switched");
+        break;
+    }
 
     switch (read_mode) {
       case 0:
@@ -60,18 +66,23 @@ void loop() {
           case '7':
             Serial.println("psi_tank_off");
             break;
-          case '8':
-            Serial.println("emergency_stop");
-            break;
-          case 's':
-            while(true);
-            break;
-          case 't':
-            Serial.println("TEMP CEILING");
+        }
+        break;
+      
+      case 1:
+        String msg_data = Serial.readStringUntil('\n'); 
+        // char first_msg_char = msg_data[0];
+        
+        String msg_release = msg_data.substring(1);
+        
+        switch (incomingByte) {
+          case '+': // set temp to
+            float temp_read_plus = msg_release.toFloat();
+            temp_to_set = temp_read_plus;
+            Serial.println("Setting temperature...");
             break;
           default:
-            Serial.print("Received unknown character: ");
-            Serial.println(incomingByte);
+            Serial.println("invalid msg char");
             break;
         }
         break;

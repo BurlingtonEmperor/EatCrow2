@@ -231,6 +231,19 @@ def read_signal_from_board():
   except:
     return "nothing"
 
+@app.route('/send_string_to_board', methods=['POST'])
+def send_string_to_board():
+  signal_to_send = request.get_json()
+  curr_port = signal_to_send.get("board_porter")
+  curr_rate = signal_to_send.get("baud_rater")
+
+  message_string = signal_to_send.get("message")
+  
+  board = connect_to_board_precheck(curr_port, curr_rate)
+  board.write(message_string.encode('utf-8'))
+  
+  return "sent"
+
 @app.route('/create_log_auto', methods=['POST'])
 def create_log_auto():
   signal_to_read = request.get_json()

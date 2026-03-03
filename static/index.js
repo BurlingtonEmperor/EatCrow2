@@ -1,6 +1,7 @@
 let warningArray = [];
 let urgent_warningArray = [];
 let isConnectedToBoard = false;
+let write_mode = 0;
 
 const warningDiv = document.getElementById("warnings");
 const issueDiv = document.getElementById("issues");
@@ -1204,6 +1205,21 @@ reroute_bint.onclick = function () {
   }
 }
 
+const reroute_write_method = document.getElementById("reroute-write-method");
+const reroute_write_method_text = document.getElementById("reroute-write-method-text");
+reroute_write_method.onclick = function () {
+  switch (write_mode) {
+    case 0:
+      write_mode = 1;
+      reroute_write_method_text.innerText = "WRITE METHOD [WM_2]";
+      break;
+    default:
+      write_mode = 0;
+      reroute_write_method_text.innerText = "WRITE METHOD [WM_1]";
+      break
+  }
+}
+
 const reroute_vendor_id = document.getElementById("reroute-vendid");
 reroute_vendor_id.onclick = function () {
   resetManualReroute("VENDOR ID");
@@ -1341,6 +1357,27 @@ function read_from_board () {
       console.error(error);
     }
     urgent_warningArray.push("REBOOT SYSTEM");
+  });
+}
+
+function send_msg_to_board (msgString) {
+  fetch ("/send_string_to_board", {
+    method : "POST",
+    headers : {
+      "Content-Type" : "application/json"
+    },
+    body : JSON.stringify({
+      message : String(msgString),
+      baud_rater : parseInt(localStorage.getItem("baud_rate")),
+      board_porter : String(localStorage.getItem("board_port"))
+    })
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log(data);
+  })
+  .catch(error => {
+    console.error(error);
   });
 }
 
