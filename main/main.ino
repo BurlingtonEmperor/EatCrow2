@@ -6,7 +6,8 @@ extern int __heap_start, *__brkval;
 unsigned long previousMillis = 0; 
 const long interval = 1000;  
 
-int temp_to_set = 0;
+float temp_to_set = 0;
+float psi_to_set = 0;
 
 int getFreeRam() {
   int v;
@@ -80,6 +81,11 @@ void loop() {
             float temp_read_plus = msg_release.toFloat();
             temp_to_set = temp_read_plus;
             Serial.println("Setting temperature...");
+            break;
+          case '-':
+            float psi_read_plus = msg_release.toFloat();
+            psi_to_set = psi_read_plus;
+            Serial.println("Setting pressure...");
             break;
           default:
             Serial.println("invalid msg char");

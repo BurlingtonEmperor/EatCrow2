@@ -1212,10 +1212,12 @@ reroute_write_method.onclick = function () {
     case 0:
       write_mode = 1;
       reroute_write_method_text.innerText = "WRITE METHOD [WM_2]";
+      send_signal_to_board("*");
       break;
     default:
       write_mode = 0;
       reroute_write_method_text.innerText = "WRITE METHOD [WM_1]";
+      send_signal_to_board("*");
       break
   }
 }
@@ -1425,6 +1427,12 @@ raiseTempManually.onclick = function () {
     set_temp_amount_interface = parseInt(tempRaiseAmount.value);
   }
 
+  switch (write_mode) {
+    case 0:
+      send_msg_to_board("+" + String(set_temp_amount_interface));
+      return false;
+  }
+
   for (let i = 0; i < parseInt(tempRaiseAmount.value); i++) {
     // switch (true) {
     //   case (is_using_modelclave):
@@ -1450,6 +1458,12 @@ decreaseTempManually.onclick = function () {
     set_temp_amount_interface = 0;
   }
 
+  switch (write_mode) {
+    case 0:
+      send_msg_to_board("+" + String(set_temp_amount_interface));
+      return false;
+  }
+
   for (let i = 0; i < parseInt(tempRaiseAmount.value); i++) {
     switch (true) {
       case (is_using_modelclave):
@@ -1473,6 +1487,12 @@ raisePSIManually.onclick = function () {
   set_psi_amount_interface = parseInt(psiRaiseAmount.value) + pressure_values[pressure_values.length - 1];
   if (set_psi_amount_interface == NaN || pressure_values.length < 1) {
     set_psi_amount_interface = parseInt(psiRaiseAmount.value);
+  }
+
+  switch (write_mode) {
+    case 0:
+      send_msg_to_board("-" + String(set_psi_amount_interface));
+      return false;
   }
 
   for (let i = 0; i < parseInt(psiRaiseAmount.value); i++) {
@@ -1502,6 +1522,12 @@ decreasePSIManually.onclick = function () {
   set_psi_amount_interface =  pressure_values[pressure_values.length - 1] - parseInt(psiRaiseAmount.value);
   if (set_psi_amount_interface == NaN || pressure_values.length < 1) {
     set_psi_amount_interface = 0;
+  }
+
+  switch (write_mode) {
+    case 0:
+      send_msg_to_board("-" + String(set_psi_amount_interface));
+      return false;
   }
 
   for (let i = 0; i < parseInt(psiRaiseAmount.value); i++) {
@@ -1554,6 +1580,13 @@ bringToLevels.onclick = function () {
     set_temp_amount_interface = parseInt(tempSetAmount.value);
     set_psi_amount_interface = parseInt(psiSetAmount.value);
 
+    switch (write_mode) {
+      case 0:
+        send_msg_to_board("+" + String(set_temp_amount_interface));
+        send_msg_to_board("-" + String(set_psi_amount_interface));
+        return false;
+    }
+
     for (let i = 0; i < temp_and_set_diff; i++) {
       switch (true) {
         case (is_using_modelclave):
@@ -1584,6 +1617,13 @@ bringToLevels.onclick = function () {
     set_temp_amount_interface = parseInt(tempSetAmount.value);
     set_psi_amount_interface = parseInt(psiSetAmount.value);
 
+    switch (write_mode) {
+      case 0:
+        send_msg_to_board("+" + String(set_temp_amount_interface));
+        send_msg_to_board("-" + String(set_psi_amount_interface));
+        return false;
+    }
+
     for (let i = 0; i < temp_and_set_diff; i++) {
       send_signal_to_board(0);
     }
@@ -1606,6 +1646,13 @@ bringToLevels.onclick = function () {
 
     set_temp_amount_interface = parseInt(tempSetAmount.value);
     set_psi_amount_interface = parseInt(psiSetAmount.value);
+
+    switch (write_mode) {
+      case 0:
+        send_msg_to_board("+" + String(set_temp_amount_interface));
+        send_msg_to_board("-" + String(set_psi_amount_interface));
+        return false;
+    }
     
     for (let i = 0; i < temp_and_set_diff; i++) {
       send_signal_to_board(0);
@@ -1629,6 +1676,13 @@ bringToLevels.onclick = function () {
 
     set_temp_amount_interface = parseInt(tempSetAmount.value);
     set_psi_amount_interface = parseInt(psiSetAmount.value);
+
+    switch (write_mode) {
+      case 0:
+        send_msg_to_board("+" + String(set_temp_amount_interface));
+        send_msg_to_board("-" + String(set_psi_amount_interface));
+        return false;
+    }
 
     for (let i = 0; i < temp_and_set_diff; i++) {
       switch (true) {
@@ -1666,6 +1720,13 @@ stopAutoclaveSemi.onclick = function () {
 
   set_temp_amount_interface = parseInt(tempSetAmount.value);
   set_psi_amount_interface = parseInt(psiSetAmount.value);
+
+  switch (write_mode) {
+    case 0:
+      send_msg_to_board("+70");
+      send_msg_to_board("-14.7");
+      return false;
+  }
 
   let temp_and_set_diff = Math.abs(70 - parseInt(tempSetAmount.value));
   let psi_and_set_diff = Math.abs(14.7 - parseInt(psiSetAmount.value));
