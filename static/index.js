@@ -1363,24 +1363,26 @@ function read_from_board () {
 }
 
 function send_msg_to_board (msgString) {
-  fetch ("/send_string_to_board", {
-    method : "POST",
-    headers : {
-      "Content-Type" : "application/json"
-    },
-    body : JSON.stringify({
-      message : String(String(msgString) + "\n"),
-      baud_rater : parseInt(localStorage.getItem("baud_rate")),
-      board_porter : String(localStorage.getItem("board_port"))
+  setTimeout(function () {
+    fetch ("/send_string_to_board", {
+      method : "POST",
+      headers : {
+        "Content-Type" : "application/json"
+      },
+      body : JSON.stringify({
+        message : String(String(msgString) + "\n"),
+        baud_rater : parseInt(localStorage.getItem("baud_rate")),
+        board_porter : String(localStorage.getItem("board_port"))
+      })
     })
-  })
-  .then(response => response.text())
-  .then(data => {
-    console.log(data);
-  })
-  .catch(error => {
-    console.error(error);
-  });
+    .then(response => response.text())
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }, 1000);
 }
 
 emergency_stop_btn.onclick = function () {
@@ -1491,7 +1493,7 @@ raisePSIManually.onclick = function () {
 
   switch (write_mode) {
     case 0:
-      send_msg_to_board("-" + String(set_psi_amount_interface));
+      send_msg_to_board("p" + String(set_psi_amount_interface));
       return false;
   }
 
@@ -1526,7 +1528,7 @@ decreasePSIManually.onclick = function () {
 
   switch (write_mode) {
     case 0:
-      send_msg_to_board("-" + String(set_psi_amount_interface));
+      send_msg_to_board("p" + String(set_psi_amount_interface));
       return false;
   }
 
@@ -1583,7 +1585,7 @@ bringToLevels.onclick = function () {
     switch (write_mode) {
       case 0:
         send_msg_to_board("+" + String(set_temp_amount_interface));
-        send_msg_to_board("-" + String(set_psi_amount_interface));
+        send_msg_to_board("p" + String(set_psi_amount_interface));
         return false;
     }
 
@@ -1620,7 +1622,7 @@ bringToLevels.onclick = function () {
     switch (write_mode) {
       case 0:
         send_msg_to_board("+" + String(set_temp_amount_interface));
-        send_msg_to_board("-" + String(set_psi_amount_interface));
+        send_msg_to_board("p" + String(set_psi_amount_interface));
         return false;
     }
 
@@ -1650,7 +1652,7 @@ bringToLevels.onclick = function () {
     switch (write_mode) {
       case 0:
         send_msg_to_board("+" + String(set_temp_amount_interface));
-        send_msg_to_board("-" + String(set_psi_amount_interface));
+        send_msg_to_board("p" + String(set_psi_amount_interface));
         return false;
     }
     
@@ -1680,7 +1682,7 @@ bringToLevels.onclick = function () {
     switch (write_mode) {
       case 0:
         send_msg_to_board("+" + String(set_temp_amount_interface));
-        send_msg_to_board("-" + String(set_psi_amount_interface));
+        send_msg_to_board("p" + String(set_psi_amount_interface));
         return false;
     }
 
@@ -1724,7 +1726,7 @@ stopAutoclaveSemi.onclick = function () {
   switch (write_mode) {
     case 0:
       send_msg_to_board("+70");
-      send_msg_to_board("-14.7");
+      send_msg_to_board("p14.7");
       return false;
   }
 

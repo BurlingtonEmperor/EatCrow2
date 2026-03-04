@@ -114,21 +114,20 @@ void loop() {
         break;
 
       case 1:
-        float controls_value = Serial.parseFloat();
-        Serial.println(controls_value);
-        
-        switch (incomingByte) {
-          case '+': // set temp to
+        if (incomingByte == '+' || incomingByte == 'p') {
+          float controls_value = Serial.parseFloat(); 
+      
+          if (incomingByte == '+') {
             setTemp = controls_value;
             Serial.println("Setting temperature...");
-            break;
-          case '-': // set psi to
+          }
+          if (incomingByte == 'p') {
             setPressure = controls_value;
             Serial.println("Setting pressure...");
-            break;
-          default:
-            Serial.println("invalid msg char");
-            break;
+          }
+      
+          Serial.print("Updated. Next in buffer: ");
+          Serial.println(Serial.available()); 
         }
         break;
     }
