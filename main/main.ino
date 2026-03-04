@@ -16,6 +16,7 @@ int getFreeRam() {
 
 void setup() {
   Serial.begin(9600); 
+  Serial.setTimeout(50);
 }
 
 void loop() {
@@ -93,15 +94,28 @@ void loop() {
       
           if (incomingByte == '+') {
             temp_to_set = controls_value;
-            Serial.println("Setting temperature...");
+            Serial.println("Setting temperature to ");
+            Serial.print(controls_value);
+            Serial.print("\n");
           }
           if (incomingByte == 'p') {
             psi_to_set = controls_value;
-            Serial.println("Setting pressure...");
+            Serial.println("Setting pressure to ");
+            Serial.print(controls_value);
+            Serial.print("\n");
           }
       
           Serial.print("Updated. Next in buffer: ");
           Serial.println(Serial.available()); 
+        }
+
+        else if (incomingByte != '\n' && incomingByte != '\r') {
+          Serial.println("Invalid Mode 1 command");
+        }
+
+        else {
+          Serial.println("Unknown character: ");
+          Serial.println(incomingByte);
         }
         break;
     }

@@ -230,6 +230,8 @@ def read_signal_from_board():
       return "nothing"
   except:
     return "nothing"
+  
+  return "Newline. Ignore."
 
 @app.route('/send_string_to_board', methods=['POST'])
 def send_string_to_board():
@@ -241,7 +243,7 @@ def send_string_to_board():
   
   board = connect_to_board_precheck(curr_port, curr_rate)
   board.write(message_string.encode('utf-8'))
-  
+
   return "sent"
 
 @app.route('/create_log_auto', methods=['POST'])

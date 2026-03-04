@@ -293,11 +293,17 @@ async function generateWarnings () {
             }
           })
           .catch(error => {
-            warningArray.push("PRGM_ERR");
-            if (ignore_errors == false) {
-              console.error(error);
+            if (is_actively_curing && String(error).includes("TypeError: The view function for 'read_signal_from_board' did not return a valid response. The function either returned None or ended without a return statement.")) {
+              // do nothing
             }
-            urgent_warningArray.push("REBOOT SYSTEM");
+
+            else {
+              warningArray.push("PRGM_ERR");
+              urgent_warningArray.push("REBOOT SYSTEM");
+              if (ignore_errors == false) {
+                console.error(error);
+              }
+            }
             resolve();
           });
         }
