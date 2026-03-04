@@ -71,20 +71,23 @@ void loop() {
         break;
       
       case 1:
-        String msg_data = Serial.readStringUntil('\n'); 
-        // char first_msg_char = msg_data[0];
+        // String msg_data = Serial.readStringUntil('\n'); 
+        // Serial.println(msg_data);
+        // // char first_msg_char = msg_data[0];
         
-        String msg_release = msg_data.substring(1);
+        // String msg_release = msg_data.substring(1);
+        // Serial.println(msg_release);
+
+        float controls_value = Serial.parseFloat();
+        Serial.println(controls_value);
         
         switch (incomingByte) {
           case '+': // set temp to
-            float temp_read_plus = msg_release.toFloat();
-            temp_to_set = temp_read_plus;
+            temp_to_set = controls_value;
             Serial.println("Setting temperature...");
             break;
           case '-':
-            float psi_read_plus = msg_release.toFloat();
-            psi_to_set = psi_read_plus;
+            psi_to_set = controls_value;
             Serial.println("Setting pressure...");
             break;
           default:
