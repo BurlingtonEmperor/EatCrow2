@@ -14,6 +14,8 @@ extern int __heap_start, *__brkval;
 unsigned long previousMillis = 0; 
 const long interval = 1000;  
 
+int read_mode = 1;
+
 int getFreeRam() {
   int v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
@@ -45,26 +47,6 @@ void loop() {
   if (Serial.available() > 0) {
     char incomingByte = Serial.read(); 
     switch (incomingByte) {
-      case '0': // raise temperature
-        setTemp += 1;
-        break;
-      case '1': // raise psi
-        setPressure += 1;
-        break;
-      case '2': // raise temp and psi
-        setTemp += 1;
-        setPressure += 1;
-        break;
-      case '3': // decrease temperature
-        setTemp -= 1;
-        break;
-      case '4': // decrease psi
-        setPressure -= 1;
-        break;
-      case '5': // decrease temp and psi
-        setTemp -= 1;
-        setPressure -= 1;
-        break;
       case 's':
         digitalWrite(heaterPin, LOW);
         digitalWrite(inletPin, LOW);
@@ -91,6 +73,63 @@ void loop() {
         break;
       case '%':
         digitalWrite(outletPin, LOW);
+        break;
+      case '*':
+        switch (read_mode) {
+          case 1:
+            read_mode = 0;
+            break;
+          case 0:
+            read_mode = 1;
+            break;
+        }
+        Serial.println("Read mode switched");
+        return;
+    }
+    
+    switch (read_mode) {
+      case 0:
+        switch (incomingByte) {
+          case '0': // raise temperature
+            setTemp += 1;
+            break;
+          case '1': // raise psi
+            setPressure += 1;
+            break;
+          case '2': // raise temp and psi
+            setTemp += 1;
+            setPressure += 1;
+            break;
+          case '3': // decrease temperature
+            setTemp -= 1;
+            break;
+          case '4': // decrease psi
+            setPressure -= 1;
+            break;
+          case '5': // decrease temp and psi
+            setTemp -= 1;
+            setPressure -= 1;
+            break;
+        }
+        break;
+
+      case 1:
+        float controls_value = Serial.parseFloat();
+        Serial.println(controls_value);
+        
+        switch (incomingByte) {
+          case '+': // set temp to
+            setTemp = controls_value;
+            Serial.println("Setting temperature...");
+            break;
+          case '-': // set psi to
+            setPressure = controls_value;
+            Serial.println("Setting pressure...");
+            break;
+          default:
+            Serial.println("invalid msg char");
+            break;
+        }
         break;
     }
   }
