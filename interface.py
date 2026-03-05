@@ -290,6 +290,16 @@ def exit_system():
 def restart_server():
   os.execv(sys.executable, ['python'] + sys.argv)
 
+@app.route('/hard_reboot')
+def hard_reboot():
+  p = Popen("RUNME.bat")
+  stdout, stderr = p.communicate()
+
+  func = request.environ.get('werkzeug.server.shutdown')
+  if func is None:
+    os.kill(os.getpid(), signal.SIGINT)
+  func()
+
 def open_browser():
   checkWhichPlatform();
   webbrowser.open_new(URL);

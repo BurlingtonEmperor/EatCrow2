@@ -129,6 +129,15 @@ void loop() {
           Serial.print("Updated. Next in buffer: ");
           Serial.println(Serial.available()); 
         }
+        
+        else if (incomingByte != '\n' && incomingByte != '\r') {
+          Serial.println("Invalid Mode 1 command");
+        }
+
+        else {
+          Serial.println("Unknown character: ");
+          Serial.println(incomingByte);
+        }
         break;
     }
   }
