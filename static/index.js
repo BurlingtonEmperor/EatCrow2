@@ -739,6 +739,7 @@ const zoom_4x_btn = document.getElementById("zoom-4x-btn");
 const reset_graph_zoom_btn = document.getElementById("reset-graph-zoom-btn");
 const reboot_system_btn = document.getElementById("reboot-system-btn");
 const hard_reboot_btn = document.getElementById("hard-reboot-btn");
+const reboot_learning_systems = document.getElementById("reboot-learning-system");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -1028,6 +1029,11 @@ hard_reboot_btn.onclick = function () {
   .catch(error => {
     console.error(error);
   });
+}
+
+reboot_learning_systems.onclick = function () {
+  localStorage.setItem("warnings_catalogue", "temperature:0;pressure:0;p-climb:0;t-climb:0;p-stall:0;t-stall:0;vacuum:0");
+  localStorage.setItem("fully_func", "0");
 }
 
 // manual command console

@@ -20,7 +20,7 @@ function check_for_session_existence () {
     case (session_to_check == null):
     case (session_to_check == undefined):
     case (session_to_check.replace(" ", "") == ""):
-      localStorage.setItem("warnings_catalogue", "temp:0;psi:0;p-climb:0;t-climb:0;p-stall:0;t-stall:0;vacuum:0");
+      localStorage.setItem("warnings_catalogue", "temperature:0;pressure:0;p-climb:0;t-climb:0;p-stall:0;t-stall:0;vacuum:0");
       break;
   }
 }
@@ -85,10 +85,13 @@ function insert_to_session (what_value_to_find, value_what) {
 
 function check_for_faulty_parts () {
   let warning_list_snapshot = warningArray;
-  if (String(warning_list_snapshot) == last_warning_session_marker || is_actively_curing == false) {
+  // if (String(warning_list_snapshot) == last_warning_session_marker || is_actively_curing == false) {
+  //   return false;
+  // }
+  // last_warning_session_marker = warning_list_snapshot;
+  if (is_actively_curing == false) {
     return false;
   }
-  last_warning_session_marker = warning_list_snapshot;
 
   if (warning_list_snapshot.length < 1 || (!warning_list_snapshot.includes("TEMPERATURE") && !warning_list_snapshot.includes("PRESSURE") && !warning_list_snapshot.includes("T-CLIMB") && !warning_list_snapshot.includes("P-CLIMB") && !warning_list_snapshot.includes("T-STALL") && !warning_list_snapshot.includes("P-STALL") && !warning_list_snapshot.includes("VACUUM"))) {
     if (localStorage.getItem("fully_func") == null) {
@@ -107,9 +110,22 @@ function check_for_faulty_parts () {
   for (let i = 0; i < warning_list_snapshot.length; i++) {
     let taken_sesh_cosh = String(take_from_session(String(warning_list_snapshot[i])));
     if (taken_sesh_cosh !== "not_found") {
-      let curr_warn_val = taken_sesh_cosh.split(":");
-      curr_warn_val = parseInt(curr_warn_val[0]);
-      curr_warn_val += 1;
+      // let curr_warn_val = taken_sesh_cosh.split(":");
+      // curr_warn_val = parseInt(curr_warn_val[1]);
+      // console.log(curr_warn_val);
+      // curr_warn_val += 2;
+      let curr_warn_val2 = 0;
+      let hopefully_this_works = String(localStorage.getItem("warnings_catalogue")).split(";");
+      // console.log(hopefully_this_works);
+      for (let x = 0; x < hopefully_this_works.length; x++) {
+        // console.log(hopefully_this_works[x]);
+        // console.log(warning_list_snapshot[i].toLowerCase());
+        if (hopefully_this_works[x].split(":")[0] == warning_list_snapshot[i].toLowerCase()) {
+          curr_warn_val2 = parseInt(hopefully_this_works[x].split(":")[1]) + 2;
+          console.log(curr_warn_val2);
+        }
+      }
+      insert_to_session(warning_list_snapshot[i], curr_warn_val2);
     }
   }
 
@@ -146,6 +162,65 @@ function check_for_faulty_parts () {
       }
     }
   }
+
+  potential_faulty_parts.innerText = "";
+
+  if (iz_bat.length < 1) {
+    potential_faulty_parts.innerText = "NONE";
+  }
+  else {
+    for (let i = 0; i < iz_bat.length; i++) {
+      potential_faulty_parts.innerText += iz_bat[i];
+    }
+  }
 }
 
 check_for_session_existence();
+
+function check_faulty_once () {
+  let curr_full_func = parseInt(String(localStorage.getItem("fully_func")));
+  let iz_bat = [];
+
+  let error_token_check = String(localStorage.getItem("warnings_catalogue"));
+  let error_token_check_arr = error_token_check.split(";");
+  for (let i = 0; i < error_token_check_arr.length; i++) {
+    let error_token_check_taken_val = error_token_check_arr[i].split(":");
+    error_token_check_taken_val = parseInt(error_token_check_taken_val[1]);
+
+    if (error_token_check_taken_val > curr_full_func) {
+      switch (i) {
+        case 0:
+          iz_bat.push("HEATER || ");
+          break;
+        case 1:
+          iz_bat.push("SOLENOIDS OR TANK || ");
+          break;
+        case 2:
+          iz_bat.push("INLET SOLENOIDS || ");
+          break;
+        case 3:
+        case 5:
+          iz_bat.push("VOLTAGE OR HEATER || ");
+          break;
+        case 4:
+          iz_bat.push("OUTLET SOLENOIDS || ");
+          break;
+        case 6:
+          iz_bat.push("VACUUM BAG || ");
+          break;
+      }
+    }
+  }
+
+  potential_faulty_parts.innerText = "";
+
+  if (iz_bat.length < 1) {
+    potential_faulty_parts.innerText = "NONE";
+  }
+  else {
+    for (let i = 0; i < iz_bat.length; i++) {
+      potential_faulty_parts.innerText += iz_bat[i];
+    }
+  }
+}
+check_faulty_once();
