@@ -11,6 +11,12 @@ function playAlarm (alarmNum) {
     case 2:
       alarmPath = "/static/alarms/caution.wav";
       break;
+    case 3:
+      alarmPath = "/static/alarms/vacuuum.wav";
+      break;
+    case 4:
+      alarmPath = "/static/alarms/voiceinput4.wav";
+      break;
   }
 
   // setTimeout(function () {

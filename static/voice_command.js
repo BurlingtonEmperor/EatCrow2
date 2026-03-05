@@ -202,6 +202,9 @@ function parseUserSpeech () {
             case (rest_of_command.includes("test pressure alarm")):
               playAlarm(1);
               break;
+            case (rest_of_command.includes("test master alarm")):
+              playAlarm(2);
+              break;
             case (rest_of_command.includes("zoom graph 2 times")):
             case (rest_of_command.includes("zoom graph two times")):
               zoom_minutes = 1;

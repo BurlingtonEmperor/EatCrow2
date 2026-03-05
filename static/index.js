@@ -530,7 +530,15 @@ async function generateWarnings () {
     }
   });
 
-  asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise, emergencyStopCheckPromise, temperatureWarningPromise, pressureWarningPromise, pressureClimbOrStall);
+  const ml_algoWarningPromise = new Promise((resolve) => {
+    if (potential_faulty_parts.innerText !== "NONE") {
+      warningArray.push("PATTERN");
+      urgent_warningArray.push("CHECK REPAIR PANEL");
+    }
+    resolve();
+  });
+
+  asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise, emergencyStopCheckPromise, temperatureWarningPromise, pressureWarningPromise, pressureClimbOrStall, ml_algoWarningPromise);
   await Promise.all(asyncChecks);
 
   if (urgent_warningArray.length === 0) {
@@ -877,6 +885,7 @@ cmd_list_1_btn.onclick = function () {
 }
 
 enable_voice_commands_btn.onclick = function () {
+  playAlarm(4);
   if (continue_parsing_speech == false) {
     continue_parsing_speech = true;
     parseUserSpeech();
