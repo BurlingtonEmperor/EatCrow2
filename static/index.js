@@ -730,6 +730,7 @@ const zoom_2x_btn = document.getElementById("zoom-2x-btn");
 const zoom_4x_btn = document.getElementById("zoom-4x-btn");
 const reset_graph_zoom_btn = document.getElementById("reset-graph-zoom-btn");
 const reboot_system_btn = document.getElementById("reboot-system-btn");
+const hard_reboot_btn = document.getElementById("hard-reboot-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -1000,6 +1001,17 @@ close_cmd_list_3_btn.onclick = function () {
 
 reboot_system_btn.onclick = function () {
   fetch ("/restart_server")
+  .then(response => response.text())
+  .then(data => {
+    // do nothing
+  })
+  .catch(error => {
+    console.error(error);
+  });
+}
+
+hard_reboot_btn.onclick = function () {
+  fetch ("/hard_reboot")
   .then(response => response.text())
   .then(data => {
     // do nothing
