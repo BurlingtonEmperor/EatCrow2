@@ -18,7 +18,7 @@ import serial;
 from meteostat import Point, Daily;
 from datetime import datetime;
 from geo_city_locator import get_nearest_city;
-from subprocess import Popen;
+from subprocess import Popen, CREATE_NEW_CONSOLE;
 from nava import play, stop;
 
 import pandas as pd;
@@ -186,7 +186,7 @@ def get_coord():
 
 @app.route('/open_eatcrow')
 def open_eatcrow():
-  p = Popen("EATCROW.bat")
+  p = subprocess.Popen(['EATCROW.bat'], creationflags=subprocess.CREATE_NEW_CONSOLE)
   stdout, stderr = p.communicate()
   return "opened"
 
@@ -292,7 +292,7 @@ def restart_server():
 
 @app.route('/hard_reboot')
 def hard_reboot():
-  p = Popen("RUNME.bat")
+  p = subprocess.Popen(['HARD_REBOOT.bat'], creationflags=subprocess.CREATE_NEW_CONSOLE)
   stdout, stderr = p.communicate()
 
   func = request.environ.get('werkzeug.server.shutdown')
