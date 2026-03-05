@@ -1034,6 +1034,7 @@ hard_reboot_btn.onclick = function () {
 reboot_learning_systems.onclick = function () {
   localStorage.setItem("warnings_catalogue", "temperature:0;pressure:0;p-climb:0;t-climb:0;p-stall:0;t-stall:0;vacuum:0");
   localStorage.setItem("fully_func", "0");
+  console.log("Learning algorithms have been reset.");
 }
 
 // manual command console
