@@ -153,6 +153,10 @@ function parseUserSpeech () {
             case (rest_of_command.includes("open pod bay door")):
               convertTextToSpeech("I'm sorry Dave, I'm afraid I can't do that.");
               break;
+            case (rest_of_command.includes("execute order 66")):
+            case (rest_of_command.includes("execute order sixty six")):
+              convertTextToSpeech("Yes, Lord Sidious.");
+              break;
             case (rest_of_command.includes("save power")):
               batteryETEMP_int = 20000;
               batteryMSTATUS_int = 20000;
@@ -201,6 +205,9 @@ function parseUserSpeech () {
               break;
             case (rest_of_command.includes("test pressure alarm")):
               playAlarm(1);
+              break;
+            case (rest_of_command.includes("test vacuum alarm")):
+              playAlarm(3);
               break;
             case (rest_of_command.includes("test master alarm")):
               playAlarm(2);

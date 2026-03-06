@@ -60,6 +60,7 @@ PRGM_ERR - Board program may be faulty or corrupted
 
 <Autoclave>
 MAINTENANCE - Autoclave maintenance recommended
+PATTERN - Broken parts have been detected.
 
 <Board and Circuits>
 BOARD - Board connection not found

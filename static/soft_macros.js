@@ -131,6 +131,8 @@ cancel_edit_macro.onclick = function () {
   clearEditOptions_macro();
   js_macro_mode.value = "";
   js_textbox_input.value = "";
+
+  macro_designer_window.style.display = "none";
 }
 
 let macro_select_value = "";
@@ -302,6 +304,8 @@ cancel_create_soft.onclick = function () {
   js_macro_mode.value = "";
   macro_name_to_create.value = "";
   js_textbox_input.value = "";
+
+  macro_designer_window.style.display = "none";
 }
 
 const js_macro_mode = document.getElementById("js-macro-mode");
@@ -502,6 +506,10 @@ const set_mode_to_default = document.getElementById("set-mode-to-default");
 const js_textbox = document.getElementById("js-textbox");
 const js_textbox_input = document.getElementById("js-textbox-input");
 
+const default_textbox = document.getElementById("default-textbox");
+const default_textbox_input = document.getElementById("default-textbox-input");
+const macro_designer_window = document.getElementById("macro-designer-window");
+
 const save_macro_btn = document.getElementById("save-macro");
 
 macro_editor.onclick = function () {
@@ -516,9 +524,11 @@ macro_window.onclick = function () {
 
 close_window_macro_editor.onclick = function () {
   macro_editor.style.display = "none";
+  macro_designer_window.style.display = "none";
 }
 
 set_mode_to_javascript.onclick = function () {
+  default_textbox.style.display = "none";
   if (current_macro_type == 2) {
     macro_status_msgs.innerText = "JAVASCRIPT NOT SUPPORTED ON BOARD MACROS";
     return false;
@@ -527,11 +537,21 @@ set_mode_to_javascript.onclick = function () {
   macro_mode = 1;
   macro_status_msgs.innerText = "MODE SET TO JAVASCRIPT";
   js_textbox.style.display = "block";
+
+  macro_designer_window.style.display = "none";
 }
 
 set_mode_to_default.onclick = function () {
+  js_textbox.style.display = "none";
+
   macro_mode = 0;
-  macro_status_msgs.innerText = "MODE SET TO DEFAULT";
+  macro_status_msgs.innerText = "MODE SET TO DEFAULT (RAIDER_RASH)";
+  default_textbox.style.display = "block";
+
+  macro_designer_window.style.display = "block";
+  setTimeout(function () {
+    macro_designer_window.click();
+  }, 100);
 }
 
 save_macro_btn.onclick = function () {

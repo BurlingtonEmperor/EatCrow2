@@ -240,14 +240,14 @@ textarea {
   display: none;
 }
 
-#js-textbox {
+#js-textbox, #default-textbox {
   display: none;
   width: 100%;
   height: 80%;
   overflow-y: auto;
 }
 
-#js-textbox-input {
+#js-textbox-input, #default-textbox-input {
   margin-left: auto;
   margin-right: auto;
   width: 90%;
@@ -271,7 +271,7 @@ textarea {
   position: fixed;
 }
 
-#command-list-3 {
+#command-list-3, #macro-designer-window {
   right: 0px;
   top: 0px;
   position: fixed;
