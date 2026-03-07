@@ -535,6 +535,13 @@ async function generateWarnings () { // this probably causes a memory leak from 
       warningArray.push("PATTERN");
       urgent_warningArray.push("CHECK REPAIR PANEL");
     }
+     
+    switch (true) {
+      case (board_communication_functional == false):
+        warningArray.push("COMMS");
+        urgent_warningArray.push("NO BOARD COMMUNICATION, TRY REBOOTING");
+        break;
+    }
     resolve();
   });
 
@@ -1306,6 +1313,11 @@ let emergency_stopped = false;
 const modelclave_heat_limit = 120;
 const modelclave_pressure_limit = 60;
 
+let board_communication_functional = true;
+function check_for_boardCommunication () {
+  
+}
+
 function send_signal_to_board (boardSignal) {
   fetch ("/send_signal_to_board", {
     method : "POST",
@@ -1321,6 +1333,7 @@ function send_signal_to_board (boardSignal) {
   .then(response => response.text())
   .then(data => {
     if (data == "sent") {
+      board_communication_functional = true;
       console.log(String(boardSignal) + " was sent to the board.");
       switch (String(boardSignal)) {
         case "4":
@@ -1339,6 +1352,10 @@ function send_signal_to_board (boardSignal) {
 
     else {
       console.warn("Data has not been sent to the board.");  
+
+      if (isConnectedToBoard) {
+        board_communication_functional = false;
+      }
     }
   })
   .catch(error => {
@@ -1417,7 +1434,16 @@ function send_msg_to_board (msgString) {
     })
     .then(response => response.text())
     .then(data => {
-      console.log(data);
+      if (data == "sent") {
+        board_communication_functional = true;
+        console.log("Msg was sent to the board.");
+      }
+
+      else {
+        if (isConnectedToBoard) {
+          board_communication_functional = false;
+        }
+      }
     })
     .catch(error => {
       console.error(error);
