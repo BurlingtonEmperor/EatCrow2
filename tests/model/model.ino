@@ -1,4 +1,5 @@
-// Not written by me. Original Modelclave code written by Jack Troy. 
+// Not written by me. Original Modelclave code written by Jack Troy 
+// (Autoclave Team Lead as of 2025-2026) for his senior controls project. 
 
 int tempPin = A0;
 int pressurePin = A1;

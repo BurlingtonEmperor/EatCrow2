@@ -1242,6 +1242,12 @@ reroute_bint.onclick = function () {
 const reroute_write_method = document.getElementById("reroute-write-method");
 const reroute_write_method_text = document.getElementById("reroute-write-method-text");
 reroute_write_method.onclick = function () {
+  if (safetyTimeProtocol) {
+    return false;
+  }
+
+  checkForSafety();
+
   switch (write_mode) {
     case 0:
       write_mode = 1;
@@ -1452,15 +1458,19 @@ function ceaseCuringStatus () {
 
 let safetyTimeProtocol = false;
 const rate_limit_status = document.getElementById("rate-limit-status");
+const write_method_status = document.getElementById("write-method-status");
 function checkForSafety () {
   safetyTimeProtocol = true;
   rate_limit_status.innerText = "WAIT";
   rate_limit_status.style.color = "yellow";
 
+  write_method_status.innerText = "RATE LIMIT: WAIT";
+
   setTimeout(function () {
     safetyTimeProtocol = false;
 
     rate_limit_status.innerText = "READY";
+    write_method_status.innerText = "RATE LIMIT: READY";
     rate_limit_status.style.color = "rgb(136, 238, 136)";
   }, 15000);
 }

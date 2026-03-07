@@ -1,3 +1,7 @@
+/*
+Raider Aerospace Society Hash File (RAIDER RASH)
+*/
+
 const allowed_raider_rash_commands = ["CALL", "RUN", "LOG", "WAIT", "SET", "STOP", "", "\n", "COMMENT"];
 let raise_raider_rash_error = 0;
 

@@ -1,3 +1,9 @@
+/*
+This pattern detection algorithm is very simple. Warnings while curing are treated as more important than full functionality,
+so if there are more types of a certain warning than full functionality, it suggests that a 
+part associated with the warning's contents is faulty/broken.
+*/
+
 const potential_faulty_parts = document.getElementById("potential-faulty-parts");
 
 // let faulty_session_temp = 0;
