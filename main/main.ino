@@ -72,23 +72,6 @@ void loop() {
         break;
       
       case 1:
-        // float controls_value = Serial.parseFloat();
-        // Serial.println(controls_value);
-        
-        // switch (incomingByte) {
-        //   case '+': // set temp to
-        //     temp_to_set = controls_value;
-        //     Serial.println("Setting temperature...");
-        //     break;
-        //   case 'p': // set psi to
-        //     psi_to_set = controls_value;
-        //     Serial.println("Setting pressure...");
-        //     break;
-        //   default:
-        //     Serial.println("invalid msg char");
-        //     break;
-        // }
-
         if (incomingByte == '+' || incomingByte == 'p') {
           float controls_value = Serial.parseFloat(); 
       

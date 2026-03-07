@@ -32,7 +32,7 @@ int pressureData[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 int sample = 0;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   pinMode(heaterPin, OUTPUT);
   pinMode(inletPin, OUTPUT);
   pinMode(outletPin, OUTPUT);
