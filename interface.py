@@ -278,6 +278,13 @@ def create_macro():
   macro_run_cycle = signal_to_read.get("macro_run_cycle")
 
   # if (findIfFileExists("/macros/" + str(macro_name) + ".txt")):
+  #   try:
+  #     with open("/macros/" + str(macro_name) + ".txt", w) as f:
+  #       for line in macro_content:
+  #         f.write(line + "\n")
+  #       return "Created macro as " + str(macro_name)
+  #   except Exception as err:
+  #     return f"File Error: {str(err)}" 
 
 @app.route('/exit_system')
 def exit_system():

@@ -1,4 +1,4 @@
-const allowed_raider_rash_commands = ["CALL", "RUN", "LOG", "WAIT", "SET", "STOP", "", "\n"];
+const allowed_raider_rash_commands = ["CALL", "RUN", "LOG", "WAIT", "SET", "STOP", "", "\n", "COMMENT"];
 let raise_raider_rash_error = 0;
 
 function check_if_commandIsValid (command_text) {
@@ -23,12 +23,27 @@ function check_if_commandParametersAreValid (command_text, command_line) {
       return String(command1[1]);
     case "CALL":
       switch (String(command1[1].toUpperCase())) {
-        case "MACRO":
-          
+        case "SOFT_MACRO":
+          if (!checkIfMacroExists(String(command1[2]))) {
+            raise_raider_rash_error = 1;
+            return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" CALLS A NON-EXISTENT SOFT MACRO';
+          }
+          break;
+        case "HARD_MACRO":
+          break;
+        case "CURING_PROCESS":
+        case "BOARD_MACRO":
           break;
         default:
           raise_raider_rash_error = 1;
           return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" CALLS AN INVALID TYPE';
+      }
+      break;
+    case "WAIT":
+      switch (true) {
+        case (parseFloat(command1[1]) == NaN):
+          raise_raider_rash_error = 1;
+          return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '"; ' + '"' + String(command1[1]) + '" IS NOT A VALID NUMBER';
       }
       break;
   }
@@ -48,10 +63,11 @@ function parse_RAIDER_RASH (unparsed_text) {
         return 'SYNTAX IS IMPURE: COMMAND ' + String(i + 1) + ' "' + split_semicolon_text[i] + '" IS NOT A VALID COMMAND';
     }
 
+    let potential_error = check_if_commandParametersAreValid(unparsed_text, i);
+
     switch (raise_raider_rash_error) {
       case 1:
-        return check_if_commandParametersAreValid(unparsed_text, i);
-        break;
+        return potential_error;
     }
   }
 }

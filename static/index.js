@@ -3,7 +3,7 @@ let urgent_warningArray = [];
 let isConnectedToBoard = false;
 let write_mode = 0;
 
-const warningDiv = document.getElementById("warnings");
+const warningDiv = document.getElementById("warnings"); // do all these DOM manipulations cause a memory leak? Yes. But it's far too late to change it now
 const issueDiv = document.getElementById("issues");
 const urgentWarningDiv = document.getElementById("urgent-warnings");
 
@@ -27,7 +27,7 @@ vend_id.innerText = localStorage.getItem("vendor_id");
 const baudRate = localStorage.getItem("baud_rate");
 function checkForBaudRate () {
   if (baudRate == null || baudRate == "" || baudRate == undefined) {
-    localStorage.setItem("baud_rate", "9600");
+    localStorage.setItem("baud_rate", "9600"); // feel free to switch to 115200, but it does iffy things
   }
 }
 const baud_rate = document.getElementById("baud_rate");
@@ -98,7 +98,7 @@ const autoclave_plot = document.getElementById("autoclave-plot");
 const interfaceSetTemp = document.getElementById("html-interface-set-temp");
 const interfaceSetPSI = document.getElementById("html-interface-set-psi");
 
-async function generateWarnings () {
+async function generateWarnings () { // this probably causes a memory leak from all the DOM usage. too bad.
   warningArray = [];
   urgent_warningArray = []; 
   /*
@@ -725,7 +725,7 @@ const shrink_graph_btn = document.getElementById("shrink-graph-btn");
 const fullscreen_btn = document.getElementById("fullscreen-btn");
 const quit_btn = document.getElementById("quit-btn");
 const create_instant_log_btn = document.getElementById("create-instant-log-btn");
-// const hide_x_gridlines_btn = document.getElementById("hide-x-gridlines-btn");
+// const hide_x_gridlines_btn = document.getElementById("hide-x-gridlines-btn"); <-- I was going to finish these, but got lazy and decided not to.
 // const hide_y_gridlines_btn = document.getElementById("hide-y-gridlines-btn");
 const hide_all_gridlines_btn = document.getElementById("hide-all-gridlines-btn");
 const show_all_gridlines_btn = document.getElementById("show-all-gridlines-btn");
@@ -1024,7 +1024,7 @@ hard_reboot_btn.onclick = function () {
   fetch ("/hard_reboot")
   .then(response => response.text())
   .then(data => {
-    // do nothing
+    // do nothing <-- inefficient way to do things but it works
   })
   .catch(error => {
     console.error(error);
@@ -1450,10 +1450,31 @@ function ceaseCuringStatus () {
   }
 }
 
+let safetyTimeProtocol = false;
+const rate_limit_status = document.getElementById("rate-limit-status");
+function checkForSafety () {
+  safetyTimeProtocol = true;
+  rate_limit_status.innerText = "WAIT";
+  rate_limit_status.style.color = "yellow";
+
+  setTimeout(function () {
+    safetyTimeProtocol = false;
+
+    rate_limit_status.innerText = "READY";
+    rate_limit_status.style.color = "rgb(136, 238, 136)";
+  }, 15000);
+}
+
 raiseTempManually.onclick = function () {
-  if (tempRaiseAmount.value == null || isConnectedToBoard == false) {
+  if (tempRaiseAmount.value == null || isConnectedToBoard == false || safetyTimeProtocol) {
     return false;
   }
+
+  // safetyTimeProtocol = true;
+  // setTimeout(function () {
+  //   safetyTimeProtocol = false;
+  // }, 15000);
+  checkForSafety(); // yeah this is a bad way to limit requests but i'm too lazy to do much else
 
   is_actively_curing = true;
   notifyActiveCureStatus();
@@ -1482,9 +1503,11 @@ raiseTempManually.onclick = function () {
 }
 
 decreaseTempManually.onclick = function () {
-  if (tempRaiseAmount.value == null || isConnectedToBoard == false) {
+  if (tempRaiseAmount.value == null || isConnectedToBoard == false || safetyTimeProtocol) {
     return false;
   }
+
+  checkForSafety();
 
   is_actively_curing = false;
   ceaseCuringStatus();
@@ -1513,9 +1536,11 @@ decreaseTempManually.onclick = function () {
 }
 
 raisePSIManually.onclick = function () {
-  if (psiRaiseAmount.value == null || isConnectedToBoard == false) {
+  if (psiRaiseAmount.value == null || isConnectedToBoard == false || safetyTimeProtocol) {
     return false;
   }
+
+  checkForSafety();
 
   is_actively_curing = true;
   notifyActiveCureStatus();
@@ -1548,9 +1573,11 @@ raisePSIManually.onclick = function () {
 }
 
 decreasePSIManually.onclick = function () {
-  if (psiRaiseAmount.value == null || isConnectedToBoard == false) {
+  if (psiRaiseAmount.value == null || isConnectedToBoard == false || safetyTimeProtocol) {
     return false;
   }
+
+  checkForSafety();
 
   is_actively_curing = false;
   ceaseCuringStatus();
@@ -1588,10 +1615,12 @@ let set_temp_amount_interface = 0;
 let set_psi_amount_interface = 0;
 
 bringToLevels.onclick = function () {
-  if (tempSetAmount.value == null || isConnectedToBoard == false || psiSetAmount.value == null || tempSetAmount.value < 0 || psiSetAmount.value < 0) {
+  if (tempSetAmount.value == null || isConnectedToBoard == false || psiSetAmount.value == null || tempSetAmount.value < 0 || psiSetAmount.value < 0 || safetyTimeProtocol) {
     console.warn("Conditions have not been met.");
     return false;
   }
+
+  checkForSafety();
 
   console.log("Bringing to levels...");
 
@@ -1745,9 +1774,11 @@ bringToLevels.onclick = function () {
 }
 
 stopAutoclaveSemi.onclick = function () {
-  if (isConnectedToBoard == false) {
+  if (isConnectedToBoard == false || safetyTimeProtocol) {
     return false;
   }
+
+  checkForSafety();
 
   is_actively_curing = false;
   if (is_using_modelclave == false) {
@@ -2453,49 +2484,61 @@ const activate_outlet_solenoid_btn = document.getElementById("activate-outlet-so
 const deactivate_outlet_solenoid_btn = document.getElementById("deactivate-outlet-solenoid-btn");
 
 activate_heater_btn.onclick = function () {
-  if (isConnectedToBoard == false) {
+  if (isConnectedToBoard == false || safetyTimeProtocol) {
     return false;
   }
+
+  checkForSafety();
   desired_heater_status.innerText = "ON";
   send_signal_to_board("!");
 }
 
 deactivate_heater_btn.onclick = function () {
-  if (isConnectedToBoard == false) {
+  if (isConnectedToBoard == false || safetyTimeProtocol) {
     return false;
   }
+
+  checkForSafety();
   desired_heater_status.innerText = "OFF";
   send_signal_to_board("~");
 }
 
 activate_inlet_solenoid_btn.onclick = function () {
-  if (isConnectedToBoard == false) {
+  if (isConnectedToBoard == false || safetyTimeProtocol) {
     return false;
   }
+
+  checkForSafety();
   desired_inlet_solenoid_status.innerText = "ON";
   send_signal_to_board("@");
 }
 
 deactivate_inlet_solenoid_btn.onclick = function () {
-  if (isConnectedToBoard == false) {
+  if (isConnectedToBoard == false || safetyTimeProtocol) {
     return false;
   }
+
+  checkForSafety();
   desired_inlet_solenoid_status.innerText = "OFF";
   send_signal_to_board("#");
 }
 
 activate_outlet_solenoid_btn.onclick = function () {
-  if (isConnectedToBoard == false) {
+  if (isConnectedToBoard == false || safetyTimeProtocol) {
     return false;
   }
+
+  checkForSafety();
   desired_outlet_solenoid_status.innerText = "ON";
   send_signal_to_board("$");
 }
 
 deactivate_outlet_solenoid_btn.onclick = function () {
-  if (isConnectedToBoard == false) {
+  if (isConnectedToBoard == false || safetyTimeProtocol) {
     return false;
   }
+
+  checkForSafety();
   desired_outlet_solenoid_status.innerText = "OFF";
   send_signal_to_board("%");
 }

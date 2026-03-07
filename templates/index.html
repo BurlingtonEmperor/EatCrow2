@@ -205,6 +205,7 @@
         <div>OUTLET SOLENOID: <a id="pressure-tank-status2">NO DATA</a></div>
         <div>TEMP: <a id="temp_gauge2">NO DATA</a></div>
         <div>PSI: <a id="psi_gauge2">NO DATA</a></div>
+        <div>RATE LIMIT: <a id="rate-limit-status">READY</a></div>
       </div>
       <div id="chart-rate">
         <div>BOARD SET TEMP: <a id="board-set-temp">NONE</a></div>
@@ -363,13 +364,16 @@
         <div class="seventy button text-center" id="reboot-learning-system">RESET LEARNING ALGORITHMS</div>
       </div>
       <div id="macro-designer-window" class="draggable window">
-        <div class="seventy button text-center" id="call-macro-btn">ADD A "CALL MACRO" COMMAND</div>
+        <div class="seventy button text-center" id="call-soft_macro-btn">ADD A "CALL SOFT_MACRO" COMMAND</div>
+        <div class="seventy button text-center" id="call-hard_macro-btn">ADD A "CALL HARD_MACRO" COMMAND</div>
+        <div class="seventy button text-center" id="call-curing_process-btn">ADD A "CALL CURING_PROCESS" COMMAND</div>
         <div class="seventy button text-center" id="run-js-btn">ADD A "RUN JAVASCRIPT" COMMAND</div>
         <div class="seventy button text-center" id="run-cpp-btn">ADD A "RUN C++" COMMAND</div>
         <div class="seventy button text-center" id="macro-log-btn">ADD A "LOG" COMMAND</div>
         <div class="seventy button text-center" id="macro-wait-btn">ADD A "WAIT X SECONDS" COMMAND</div>
         <div class="seventy button text-center" id="macro-set-temp-btn">ADD A "SET TEMPERATURE TO X" COMMAND</div>
         <div class="seventy button text-center" id="macro-set-psi-btn">ADD A "SET PRESSURE TO X" COMMAND</div>
+        <div class="seventy button text-center" id="macro-comment-btn">ADD A COMMENT</div>
         <div class="seventy button text-center" id="macro-stop-btn">ADD A "STOP" COMMAND</div>
       </div>
     </div>

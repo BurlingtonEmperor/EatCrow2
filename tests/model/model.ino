@@ -1,3 +1,5 @@
+// Not written by me. Original Modelclave code written by Jack Troy. 
+
 int tempPin = A0;
 int pressurePin = A1;
 int setPressure = 20;

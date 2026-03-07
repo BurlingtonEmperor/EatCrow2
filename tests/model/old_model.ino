@@ -7,6 +7,8 @@ int outletPin = 9;
 float setPressure = 14.7;
 float setTemp = 70;
 
+int tempCeiling = 120;
+
 extern int __heap_start, *__brkval;
 
 unsigned long previousMillis = 0; 
@@ -27,39 +29,34 @@ int sumArray (int arr[], int size) {
   return s;
 }
 
-int tempData[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int pressureData[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int sample = 0;
-
 void setup() {
   Serial.begin(115200);
   pinMode(heaterPin, OUTPUT);
   pinMode(inletPin, OUTPUT);
   pinMode(outletPin, OUTPUT);
-
   digitalWrite(heaterPin, LOW);
   digitalWrite(inletPin, LOW);
   digitalWrite(outletPin, LOW);
   Serial.setTimeout(50);
 }
 
-void loop () {
+int tempData[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int pressureData[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int sample = 0;
+
+void loop() {
   unsigned long currentMillis = millis(); 
 
   if (Serial.available() > 0) {
     char incomingByte = Serial.read(); 
-    if (incomingByte == '\n' || incomingByte == '\r') {
-      return;
-    }
-
-    Serial.println("Incoming signal: ");
+    Serial.print("Incoming signal: ");
 
     switch (incomingByte) {
       case 's':
         digitalWrite(heaterPin, LOW);
         digitalWrite(inletPin, LOW);
         Serial.println("Emergency stop.");
-        while(1);
+        while(true);
         break;
       case 'c':
         Serial.println("comm");
@@ -92,9 +89,9 @@ void loop () {
             break;
         }
         Serial.println("Read mode switched");
-        break;
+        return;
     }
-
+    
     switch (read_mode) {
       case 0:
         switch (incomingByte) {
@@ -123,7 +120,6 @@ void loop () {
 
       case 1:
         if (incomingByte == '+' || incomingByte == 'p') {
-          delay(10);
           float controls_value = Serial.parseFloat(); 
       
           if (incomingByte == '+') {
@@ -151,64 +147,88 @@ void loop () {
     }
   }
 
+  // tempData[sample] = analogRead(tempPin);
+  // pressureData[sample] = analogRead(pressurePin);
+  // sample = sample + 1;
+
   if (sample < 20) { 
     tempData[sample] = analogRead(tempPin);
     pressureData[sample] = analogRead(pressurePin);
     sample++;
   }
-  
-  if (currentMillis - previousMillis >= interval) {
-    if (sample > 0) {
-      int rawVT = sumArray(tempData, sample)/sample;
-      int rawVP = sumArray(pressureData, sample)/sample;
 
-      float voltageT = rawVT * (5.0 / 1023.0);   // Convert to volts
-      float temperatureC = (voltageT - 0.5) * 100.0;   // TMP36 formula
-      float temperatureF = temperatureC * 9.0 / 5.0 + 32.0;
+  if (sample >= 15 || currentMillis - previousMillis >= interval) {
+    int rawVT = sumArray(tempData, sample)/sample;
+    int rawVP = sumArray(pressureData, sample)/sample;
 
-      float voltageP = rawVP * (5.0 / 1023.0);   // Convert to volts
-      float pressure = (voltageP - 0.43)/4*100 + 14.7;
-      Serial.print("Pressure: ");
-      Serial.print(pressure);
-      Serial.println(" psi");
+    float voltageT = rawVT * (5.0 / 1023.0);   // Convert to volts
+    float temperatureC = (voltageT - 0.5) * 100.0;   // TMP36 formula
+    float temperatureF = temperatureC * 9.0 / 5.0 + 32.0;
 
-      Serial.print("Temp: ");
-      Serial.print(temperatureC);
-      Serial.print(" °C   (");
-      Serial.print(temperatureF);
-      Serial.println(" °F)");
+    float voltageP = rawVP * (5.0 / 1023.0);   // Convert to volts
+    float pressure = (voltageP - 0.43)/4*100 + 14.7;
+    Serial.print("Pressure: ");
+    Serial.print(pressure);
+    Serial.println(" psi");
 
-      Serial.println("Desired States:");
-      if (temperatureF < setTemp) {
-        Serial.print("Heater: ON, ");
-        digitalWrite(heaterPin, HIGH);
-      }  else {
-        Serial.print("Heater: OFF, ");
-        digitalWrite(heaterPin, LOW);
-      }
-
-      if (pressure + 2 < setPressure) {
-        Serial.print("Inlet Solenoid: ON, ");
-        digitalWrite(inletPin, HIGH);
-      } else {
-        Serial.print("Inlet Solenoid: OFF, ");
-        digitalWrite(inletPin, LOW);
-      }
-
-      if (pressure - 2 > setPressure) {
-        Serial.println("Outlet Solenoid: ON, ");
-        digitalWrite(outletPin, HIGH);
-      } else {
-        Serial.println("Outlet Solenoid: OFF, ");
-        digitalWrite(outletPin, LOW);
-      }
-
-      Serial.println();
-      Serial.print("FREE SRAM: ");
-      Serial.println(getFreeRam());
-    }
-      
-    previousMillis = currentMillis;
+    Serial.print("Temp: ");
+    Serial.print(temperatureC);
+    Serial.print(" °C   (");
+    Serial.print(temperatureF);
+    Serial.println(" °F)");
     sample = 0;
+
+    // switch (true) {
+    //   case (temperatureF >= tempCeiling):
+    //     break;
+    // }
+
+    if (temperatureF >= tempCeiling) {
+      Serial.println("TEMP CEILING");
+    }
+
+    Serial.println("Desired States:");
+    if (temperatureF < setTemp) {
+      Serial.print("Heater: ON, ");
+      digitalWrite(heaterPin, HIGH);
+    }
+    else {
+      Serial.print("Heater: OFF, ");
+      digitalWrite(heaterPin, LOW);
+    }
+
+    if (pressure + 2 < setPressure) {
+      Serial.print("Inlet Solenoid: ON, ");
+      digitalWrite(inletPin, HIGH);
+    }
+    else {
+      Serial.print("Inlet Solenoid: OFF, ");
+      digitalWrite(inletPin, LOW);
+    }
+
+    if (pressure - 2 > setPressure) {
+      Serial.println("Outlet Solenoid: ON, ");
+      digitalWrite(outletPin, HIGH);
+    }
+    else {
+      Serial.println("Outlet Solenoid: OFF, ");
+      digitalWrite(outletPin, LOW);
+      
+    }
+
+    Serial.println();
+    previousMillis = currentMillis;
+
+    Serial.print("FREE SRAM: ");
+    Serial.println(getFreeRam());
   }
+  
+
+  // if (currentMillis - previousMillis >= interval) {
+  //   previousMillis = currentMillis;
+
+  //   Serial.print("FREE SRAM: ");
+  //   Serial.println(getFreeRam());
+  // }
+  // delay(50);
 }

@@ -177,7 +177,7 @@ function check_for_faulty_parts () {
 
 check_for_session_existence();
 
-function check_faulty_once () {
+function check_faulty_once () { // yes I know it's bad to repeat this but I don't really care.
   let curr_full_func = parseInt(String(localStorage.getItem("fully_func")));
   let iz_bat = [];
 
