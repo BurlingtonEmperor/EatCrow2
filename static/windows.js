@@ -10,3 +10,22 @@ window_elements.forEach(window_element => {
     window_element.style.zIndex = String(min_window_zIndex + 1);
   });
 });
+
+let createdWindows = 0;
+function createNotificationWindow (notificationText) { // unfinished, DO NOT USE
+  createdWindows++;
+  const notificationWindow = document.createElement("div");
+
+  notificationWindow.classList.add("window");
+  notificationWindow.classList.add("notification-window");
+  notificationWindow.classList.add("draggable");
+
+  notificationWindow.innerHTML = "<div class='twenty button btn-class close-notification-window'>CLOSE WINDOW</div><br/><div class='text-center'>" + notificationText + "</div>";
+  notificationWindow.id = "notification-window" + createdWindows;
+
+  notificationWindow.style.left = "50%";
+  notificationWindow.style.top = "50%";
+  notificationWindow.style.position = "fixed";
+  
+  document.body.appendChild(notificationWindow);
+}

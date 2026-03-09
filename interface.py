@@ -274,17 +274,23 @@ def create_macro():
 
   macro_name = signal_to_read.get("macro_name")
   macro_content = signal_to_read.get("macro_content")
-  macro_mode = signal_to_read.get("macro_mode")
-  macro_run_cycle = signal_to_read.get("macro_run_cycle")
 
-  # if (findIfFileExists("/macros/" + str(macro_name) + ".txt")):
-  #   try:
-  #     with open("/macros/" + str(macro_name) + ".txt", w) as f:
-  #       for line in macro_content:
-  #         f.write(line + "\n")
-  #       return "Created macro as " + str(macro_name)
-  #   except Exception as err:
-  #     return f"File Error: {str(err)}" 
+  try:
+    with open("/macros/macros.txt", w) as f:
+      for line in macro_content:
+        f.write(line + "\n")
+      return "Created macro as " + str(macro_name)
+  except Exception as err:
+    return "File error: " + str(err)
+
+@app.route('/get_macro')
+def get_macro():
+  try:
+    with open("/macros/macros.txt", r) as f:
+      content = f.read()
+    return content
+  except Exception as err:
+    return "File error: " + str(err)
 
 @app.route('/exit_system')
 def exit_system():
@@ -306,6 +312,23 @@ def hard_reboot():
   if func is None:
     os.kill(os.getpid(), signal.SIGINT)
   func()
+
+@app.route('/reboot_port', methods=['POST'])
+def reboot_port():
+  signal_to_read = request.get_json()
+  port_name = signal_to_read.get("port_name")
+
+  try:
+    ser = serial.Serial(port_name, 115200)
+    ser.setDTR(False)
+    ser.setRTS(False)
+    time.sleep(0.1)
+    ser.setDTR(True)
+    ser.setRTS(True)
+    ser.close()
+    return "reset"
+  except serial.SerialException as e:
+    return "error"
 
 def open_browser():
   checkWhichPlatform();

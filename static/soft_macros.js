@@ -320,6 +320,38 @@ function checkIfMacroExists (macro_name) {
   return false;
 }
 
+function getContentsOfAllHardMacros () {
+  fetch("/get_macro")
+  .then(response => response.text())
+  .then(data => {
+    const firstElements = str.slice(0, 11); 
+    switch (true) {
+      case (firstElements.includes("File error:")):
+        console.error(data);
+        macro_status_msgs.innerText = "FILE ERROR WHEN RETRIEVING MACROS";
+        return "error";
+      default:
+        let current_macro_array = JSON.parse(data);
+        return current_macro_array;
+    }
+  })
+  .catch(error => {
+    console.error(error);
+    macro_status_msgs.innerText = "COMMUNICATION WITH THE SERVER IS FAULTY";
+    return "error";
+  });
+}
+
+function checkIfHardMacroExists (macro_name) {
+  const hard_macro_contents = getContentsOfAllHardMacros();
+  for (let i = 0; i < hard_macro_contents.length; i++) {
+    if (hard_macro_contents[i].split("||{}||")[0] == macro_name) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function createSoftMacro (macro_name, macro_content) {
   let soft_macro_name_to_create = macro_name;
   let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
@@ -337,6 +369,11 @@ function createSoftMacro (macro_name, macro_content) {
     current_macro_array.push(soft_macro_name_to_create + "||{}||" + macro_content + "||{}||" + macro_mode + "||{}||" + macro_run_cycle);
     localStorage.setItem("soft-macros", JSON.stringify(current_macro_array));
   }
+}
+
+function createHardMacro (macro_name, macro_content) {
+  let hard_macro_name_to_create = macro_name;
+
 }
 
 let is_reading_js_for_macro = 0;
@@ -447,6 +484,13 @@ function deleteSoftMacro (macro_name) {
   else {
     macro_status_msgs.innerText = "'" + String(macro_name) + "' does not exist as a soft macro.";
   }
+}
+
+function deleteHardMacro (macro_name) {
+  let hard_macro_to_delete = macro_name;
+  let current_macro_array = getContentsOfAllHardMacros();
+
+  if (checkIfHardMacroExists(hard_macro_to_delete)) {}
 }
 
 function checkForIllegalChars (content_to_check) {

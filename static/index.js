@@ -540,6 +540,10 @@ async function generateWarnings () { // this probably causes a memory leak from 
       case (board_communication_functional == false):
         warningArray.push("COMMS");
         urgent_warningArray.push("NO BOARD COMMUNICATION, TRY REBOOTING");
+        if (is_using_modelclave == false) {
+          usage_mode.innerText = "IDLE";
+        }
+        is_actively_curing = false;
         break;
     }
     resolve();
@@ -747,6 +751,7 @@ const reset_graph_zoom_btn = document.getElementById("reset-graph-zoom-btn");
 const reboot_system_btn = document.getElementById("reboot-system-btn");
 const hard_reboot_btn = document.getElementById("hard-reboot-btn");
 const reboot_learning_systems = document.getElementById("reboot-learning-system");
+const reboot_port_btn = document.getElementById("reboot-port-btn");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -1032,6 +1037,27 @@ hard_reboot_btn.onclick = function () {
   .then(response => response.text())
   .then(data => {
     // do nothing <-- inefficient way to do things but it works
+  })
+  .catch(error => {
+    console.error(error);
+  });
+}
+
+reboot_port_btn.onclick = function () {
+  fetch ("/reboot_port", {
+    method : "POST",
+    headers : {
+      "Content-Type" : "application/json"
+    },
+    body : {
+      port_name : String(localStorage.getItem("board_port"))
+    }
+  })
+  .then(response => response.text())
+  .then(data => {
+    if (data == "error") {
+      console.error("Port reboot failed");
+    }
   })
   .catch(error => {
     console.error(error);
