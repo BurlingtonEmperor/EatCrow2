@@ -420,6 +420,11 @@ function readSoftMacro (macro_name) {
   }
 }
 
+function readHardMacro (macro_name) {
+  const hard_macro_name_to_read = macro_name;
+  
+}
+
 function runSoftMacro (macro_name) {
   let soft_macro_name_to_read = macro_name;
   let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));

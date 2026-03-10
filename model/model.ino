@@ -10,9 +10,10 @@ float setTemp = 70;
 extern int __heap_start, *__brkval;
 
 unsigned long previousMillis = 0; 
-const long interval = 1000;  
+const long interval = 5000; // interval is set to 5s because otherwise the Serial buffer clogs up
 
 int read_mode = 1;
+int has_gotten_sram = 0;
 
 int getFreeRam() {
   int v;
@@ -204,8 +205,17 @@ void loop () {
       }
 
       Serial.println();
-      Serial.print("FREE SRAM: ");
-      Serial.println(getFreeRam());
+    //   Serial.print("FREE SRAM: ");
+    //   Serial.println(getFreeRam());
+    }
+
+    switch (has_gotten_sram) {
+      case 0:
+        has_gotten_sram = 1;
+
+        Serial.print("FREE SRAM: ");
+        Serial.println(getFreeRam());
+        break;
     }
       
     previousMillis = currentMillis;
