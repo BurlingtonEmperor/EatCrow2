@@ -1049,9 +1049,9 @@ reboot_port_btn.onclick = function () {
     headers : {
       "Content-Type" : "application/json"
     },
-    body : {
+    body : JSON.stringify({
       port_name : String(localStorage.getItem("board_port"))
-    }
+    })
   })
   .then(response => response.text())
   .then(data => {

@@ -1,5 +1,6 @@
 /*
-Raider Aerospace Society Hash File (RAIDER RASH)
+Raider Aerospace Society Hash File 
+Original name was Raider Rash, but it's going to have be called StarForge instead. I can't take the old name seriously.
 */
 
 const allowed_raider_rash_commands = ["CALL", "RUN", "LOG", "WAIT", "SET", "STOP", "", "\n", "COMMENT"];

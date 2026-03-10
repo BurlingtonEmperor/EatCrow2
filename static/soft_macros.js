@@ -490,7 +490,57 @@ function deleteHardMacro (macro_name) {
   let hard_macro_to_delete = macro_name;
   let current_macro_array = getContentsOfAllHardMacros();
 
-  if (checkIfHardMacroExists(hard_macro_to_delete)) {}
+  if (checkIfHardMacroExists(hard_macro_to_delete)) {
+    if (current_macro_array.length < 2) {
+      fetch ("/create_macro", {
+        method : "POST",
+        headers : {
+          "Content-Type" : "application/json"
+        },
+        body : JSON.stringify({
+          macro_name : "DELETE",
+          macro_content : "[]"
+        })
+      })
+      .catch(error => {
+        macro_status_msgs.innerText = "UNABLE TO COMMUNICATE WITH SERVER";
+        console.error(error);
+      });
+
+      return false;
+    }
+
+    for (let i = 0; i < current_macro_array.length; i++) {
+      if (current_macro_array[i].split("||{}||")[0] == macro_name) {
+        let saved_alpha = current_macro_array[i];
+        let last_pos = current_macro_array.length - 1;
+        let save_last_pos = current_macro_array[last_pos];
+
+        current_macro_array[last_pos] = saved_alpha;
+        current_macro_array[i] = save_last_pos;
+
+        current_macro_array.pop();
+        fetch ("/create_macro", {
+          method : "POST",
+          headers : {
+            "Content-Type" : "application/json"
+          },
+          body : JSON.stringify({
+            macro_name : "DELETE",
+            macro_content : current_macro_array
+          })
+        })
+        .catch(error => {
+          macro_status_msgs.innerText = "UNABLE TO COMMUNICATE WITH SERVER";
+          console.error(error);
+        });
+      }
+    }
+  }
+
+  else {
+    macro_status_msgs.innerText = "'" + String(macro_name) + "' does not exist as a hard macro.";
+  }
 }
 
 function checkForIllegalChars (content_to_check) {
@@ -556,7 +606,7 @@ const macro_designer_window = document.getElementById("macro-designer-window");
 
 const save_macro_btn = document.getElementById("save-macro");
 
-macro_editor.onclick = function () {
+macro_editor.onclick = function () { // these no longer need to be here because of windows.js, but it works fine either way
   macro_editor.style.zIndex = "102";
   macro_window.style.zIndex = "101";
 }
