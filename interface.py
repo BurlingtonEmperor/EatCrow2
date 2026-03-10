@@ -276,9 +276,10 @@ def create_macro():
   macro_content = signal_to_read.get("macro_content")
 
   try:
-    with open("/macros/macros.txt", w) as f:
-      for line in macro_content:
-        f.write(line + "\n")
+    with open(str(os.path.dirname(os.path.realpath(__file__))) + "/macros/macros.txt", "w") as f:
+      f.write(macro_content)
+      # for line in macro_content:
+      #   f.write(line + "\n")
       return "Created macro as " + str(macro_name)
   except Exception as err:
     return "File error: " + str(err)
@@ -286,7 +287,7 @@ def create_macro():
 @app.route('/get_macro')
 def get_macro():
   try:
-    with open("/macros/macros.txt", r) as f:
+    with open(str(os.path.dirname(os.path.realpath(__file__))) + "/macros/macros.txt", "r") as f:
       content = f.read()
     return content
   except Exception as err:
