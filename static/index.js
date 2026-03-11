@@ -1527,7 +1527,7 @@ function checkForSafety () {
   rate_limit_status.style.color = "yellow";
 
   write_method_status.innerText = "RATE LIMIT: WAIT";
-  
+
   board_comm_status.innerText = "WAIT";
   board_comm_status.style.color = "yellow";
 
@@ -1806,7 +1806,7 @@ bringToLevels.onclick = function () {
         return false;
     }
     
-    for (let i = 0; i < temp_and_set_diff; i++) {
+    for (let i = 0; i < temp_and_set_diff; i++) { // this is write mode 2. not very efficient
       send_signal_to_board(0);
     }
 

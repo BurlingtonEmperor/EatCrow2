@@ -420,9 +420,37 @@ function readSoftMacro (macro_name) {
   }
 }
 
-function readHardMacro (macro_name) {
+async function readHardMacro (macro_name) {
   const hard_macro_name_to_read = macro_name;
-  
+  let current_macro_array = await getContentsOfAllHardMacros();
+  let check_exist_hard_macro = await checkIfHardMacroExists(hard_macro_name_to_read);
+
+  if (check_exist_hard_macro) {
+    for (let i = 0; i < current_macro_array.length; i++) {
+      if (current_macro_array[i].split("||{}||")[0] == macro_name) {
+        let read_array_macro = current_macro_array[i].split("||{}||");
+
+        switch (parseInt(read_array_macro[3])) {
+          case 0:
+            js_macro_mode.value = "";
+            is_reading_js_for_macro = 1;
+            break;
+          case 1:
+            js_macro_mode.value = "run-with-interface";
+            is_reading_js_for_macro = 1;
+            break;
+          default:
+            is_reading_js_for_macro = 0;
+            break;
+        }
+        return current_macro_array[i].split("||{}||")[1];
+      }
+    }
+  }
+
+  else {
+    macro_status_msgs.innerText = "'" + String(macro_name) + "' does not exist as a hard macro.";
+  }
 }
 
 function runSoftMacro (macro_name) {
