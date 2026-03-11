@@ -10,7 +10,7 @@ float setTemp = 70;
 extern int __heap_start, *__brkval;
 
 unsigned long previousMillis = 0; 
-const long interval = 5000; // interval is set to 5s because otherwise the Serial buffer clogs up
+const long interval = 10000; // interval is set to 10s because otherwise the Serial buffer clogs up
 
 int read_mode = 1;
 int has_gotten_sram = 0;
@@ -93,6 +93,9 @@ void loop () {
             break;
         }
         Serial.println("Read mode switched");
+        break;
+      case 'z':
+        has_gotten_sram = 0;
         break;
     }
 

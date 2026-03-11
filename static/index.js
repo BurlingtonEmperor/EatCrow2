@@ -285,6 +285,7 @@ async function generateWarnings () { // this probably causes a memory leak from 
                       getTemp_fromModel(data);
                       getPSI_fromModel(data);
                       getBoardSRAM(data);
+                      checkForGoodComms(data);
                       // checkFor_other();
                       resolve();
                   }
@@ -395,6 +396,7 @@ async function generateWarnings () { // this probably causes a memory leak from 
                       getTemp_fromModel(data);
                       getPSI_fromModel(data);
                       getBoardSRAM(data);
+                      checkForGoodComms(data);
                       resolve();
                   }
                 }
@@ -1431,6 +1433,7 @@ function read_from_board () {
               getTemp_fromModel(data);
               getPSI_fromModel(data);
               getBoardSRAM(data);
+              checkForGoodComms(data);
           }
         }
         break;
@@ -1509,17 +1512,39 @@ function ceaseCuringStatus () {
 }
 
 let safetyTimeProtocol = false;
+
+let has_sent_signal = 0; // check to see if the board is actually recieving signals properly. if not, the Serial buffer is probably clogged
+let has_passed_time_limit = 0;
+let has_recieved_confirmation =  0;
+
 const rate_limit_status = document.getElementById("rate-limit-status");
 const write_method_status = document.getElementById("write-method-status");
+const board_comm_status = document.getElementById("board-comm-status");
 function checkForSafety () {
   safetyTimeProtocol = true;
+  has_sent_signal = 1;
   rate_limit_status.innerText = "WAIT";
   rate_limit_status.style.color = "yellow";
 
   write_method_status.innerText = "RATE LIMIT: WAIT";
+  
+  board_comm_status.innerText = "WAIT";
+  board_comm_status.style.color = "yellow";
 
   setTimeout(function () {
     safetyTimeProtocol = false;
+    has_passed_time_limit = 1;
+    if (has_sent_signal == 1 && has_passed_time_limit == 1 && has_recieved_confirmation == 0) {
+      board_comm_status.innerText = "FAULTY";
+      board_comm_status.style.color = "red";
+    } else {
+      board_comm_status.innerText = "OK";
+      board_comm_status.style.color = "rgb(136, 238, 136)";
+    }
+
+    has_sent_signal = 0;
+    has_passed_time_limit = 0;
+    has_recieved_confirmation = 0;
 
     rate_limit_status.innerText = "READY";
     write_method_status.innerText = "RATE LIMIT: READY";
@@ -2649,6 +2674,7 @@ function checkFor_other () {
                 getTemp_fromModel(data);
                 getPSI_fromModel(data);
                 getBoardSRAM(data);
+                checkForGoodComms(data);
 
                 if (single_read && isConnectedToBoard) {
                   switch (true) {
@@ -2812,6 +2838,14 @@ function getBoardSRAM (data_log) {
   switch (true) {
     case(String(data_log).includes("FREE SRAM: ")):
       board_sram_status.innerText = String(data_log).split("FREE SRAM: ")[1].replace(" ", "") + " BYTES FREE";
+      break;
+  }
+}
+
+function checkForGoodComms (data_log) {
+  switch (true) {
+    case (String(data_log).includes("Incoming signal:")):
+      has_recieved_confirmation = 1;
       break;
   }
 }
