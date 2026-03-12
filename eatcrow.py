@@ -1,3 +1,9 @@
+"""
+This is essentially EatCrow 1.0 (or EatCrow1). I really don't have a reason to keep this here, but 
+because interface.py uses a couple of its functions I can't simply get rid of it. Also, EatCrow 1.0
+is the Scripting Console (found on Command Panel 1). I never really finished EatCrow1.0
+"""
+
 import sys
 import os
 import webbrowser

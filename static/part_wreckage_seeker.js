@@ -128,7 +128,7 @@ function check_for_faulty_parts () {
         // console.log(warning_list_snapshot[i].toLowerCase());
         if (hopefully_this_works[x].split(":")[0] == warning_list_snapshot[i].toLowerCase()) {
           curr_warn_val2 = parseInt(hopefully_this_works[x].split(":")[1]) + 2;
-          console.log(curr_warn_val2);
+          // console.log(curr_warn_val2);
         }
       }
       insert_to_session(warning_list_snapshot[i], curr_warn_val2);
