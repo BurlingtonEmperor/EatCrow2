@@ -45,8 +45,9 @@ async function getContentsOfAllHardMacros () {
   });
 }
 
+let is_hard_macro_cache_empty = 0;
 async function checkHardMacroCache () {
-  return fetch ("/get_macro") // yes these fetch requests are redundant but I need to do this ASAP
+  return fetch ("/get_macro") // yes these fetch requests are redundant but I need to get this done ASAP
   .then(response => response.text())
   .then(data => {
     let check_two = data;
@@ -74,6 +75,7 @@ async function checkHardMacroCache () {
         });
       } else {
         localStorage.setItem("hard_macro_cache", check_two);
+        is_hard_macro_cache_empty = 1;
         return "Updated hard macro cache, " + String(data) + ", " + String(localStorage.getItem("hard_macro_cache"));
       }
     }
@@ -85,6 +87,86 @@ async function checkHardMacroCache () {
   });
 }
 
-async function updateHardMacros () {
+function checkIfHardMacroExists (macro_name) {
+  let current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
+  for (let i = 0; i < current_macro_array.length; i++) {
+    if (current_macro_array[i].split("||{}||")[0] == macro_name) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function deleteHardMacro (macro_name) { // NOTE: this doesn't *actually* delete a hard macro. What this does is delete it from the cache, so that
+  let hard_macro_to_delete = macro_name; // later on the update function sees that macros.txt needs to be more like the cache when needed.
+  let current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
+
+  if (checkIfMacroExists(hard_macro_to_delete)) {
+    if (current_macro_array.length < 2) {
+      localStorage.setItem("hard_macro_cache", "[]");  
+      return false;
+    }
+
+    for (let i = 0; i < current_macro_array.length; i++) {
+      if (current_macro_array[i].split("||{}||")[0] == macro_name) {
+        let saved_alpha = current_macro_array[i];
+        let last_pos = current_macro_array.length - 1;
+        let save_last_pos = current_macro_array[last_pos];
+
+        current_macro_array[last_pos] = saved_alpha;
+        current_macro_array[i] = save_last_pos;
+
+        current_macro_array.pop();
+        localStorage.setItem("hard_macro_cache", JSON.stringify(current_macro_array));
+      }
+    }
+  }
   
+  else {
+    macro_status_msgs.innerText = "'" + String(macro_name) + "' does not exist as a hard macro.";
+  }
+}
+
+function createNewHardMacro (macro_name, macro_content) {
+  let hard_macro_name_to_create = macro_name;
+  let current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache")); 
+
+  is_hard_macro_cache_empty = 0; // this lets the updater know that the permanent file needs to be more like the cache
+
+  if (checkIfHardMacroExists(hard_macro_name_to_create)) { 
+    deleteHardMacro(hard_macro_name_to_create);
+    current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache")); // no idea why I put this here, either!
+    current_macro_array.push(hard_macro_name_to_create + "||{}||" + macro_content + "||{}||" + macro_mode + "||{}||" + macro_run_cycle);
+    localStorage.setItem("hard_macro_cache", JSON.stringify(current_macro_array));
+  }
+
+  else {
+    current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache")); // no idea why I put this here.
+    current_macro_array.push(hard_macro_name_to_create + "||{}||" + macro_content + "||{}||" + macro_mode + "||{}||" + macro_run_cycle);
+    localStorage.setItem("hard_macro_cache", JSON.stringify(current_macro_array));
+  }
+}
+
+async function updateHardMacros () { // this will happen every 1 minute and will create macros from the cache IF the cache isn't empty
+  switch (is_hard_macro_cache_empty) {
+    case 0:
+      fetch ("/create_macro", {
+        method : "POST",
+        headers : {
+          "Content-Type" : "application/json"
+        },
+        body : JSON.stringify({
+          macro_name : "CREATE",
+          macro_content : localStorage.getItem("hard_macro_cache")
+        })
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+      break;
+  }
 }

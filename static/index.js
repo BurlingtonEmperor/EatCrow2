@@ -2921,8 +2921,9 @@ setInterval(function () {
     clear_console();
   }
 
-  passMinutes();
+  passMinutes(); 
   check_for_faulty_parts();
+  updateHardMacros(); // next time I am using sockets but this time I don't care
 }, 60000);
 
 let int_to_clear;
