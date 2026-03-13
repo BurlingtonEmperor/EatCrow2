@@ -15,6 +15,7 @@ function console_help () {
   console.log('is_using_modelclave = [true or false]; - uses modelclave for alternate program if true');
   console.log('speech_command_pointer = [speech command pointer]; - switches speech command pointer');
   console.log('continue_parsing_speech = [true or false]; - if true, continues to parse speech commands');
+  console.log("NOTE: Better to use this console when you're NOT connected to the autoclave!");
 }
 
 function console_clear () {

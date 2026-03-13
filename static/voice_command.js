@@ -9,9 +9,12 @@ let is_actively_listening = false;
 // let stutter_prevent_count = 0;
 // let stutter_word_storage = "";
 
+let custom_voice_commands = []; // this is where custom voice commands will go (WIP)
+let custom_voice_macros = []; // and this is where the macros to execute based on those commands will go
+
 const audioCtx_dalek = new (window.AudioContext || window.webkitAudioContext)();
 
-async function speakDalek (dalek_text) {
+async function speakDalek (dalek_text) { // doesn't work but maybe does on some browsers.
   const oscillator = audioCtx_dalek.createOscillator();
   const modulator = audioCtx_dalek.createGain();
   

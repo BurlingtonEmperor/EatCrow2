@@ -11,8 +11,15 @@ let last_maintained = localStorage.getItem("last_maintained");
 const issue_resolve_msg = document.getElementById("issue-resolve-msg");
 const device_battery_percent = document.getElementById("device-battery-percent");
 
-const temp_ceiling = 300;
-const psi_ceiling = 100;
+// these values can be changed to fit your own autoclave.
+let temp_ceiling = 300;
+let psi_ceiling = 100;
+
+let temp_max_rate = 2.49; // Anything above this rate will trigger a T-CLIMB warning. (For RAS's autoclave, the temperature should be rising by around 2deg *F for safety)
+let temp_min_rate = 1.51; // Anything below this rate will trigger a T-STALL warning. (The (RAS) autoclave is curing unusually slow if this is the case)
+
+let psi_max_rate = 0.17; // Anything above this rate will trigger a P-CLIMB warning. (For RAS's autoclave, the psi should be rising by around 0.17 PSI for safety)
+let psi_min_rate = 0.08; // Anything below this rate will trigger a P-STALL warning. (This rate is very, very slow. Something has gone wrong if this is the case!)
 
 // start precheck
 const vendorID = localStorage.getItem("vendor_id");
@@ -447,14 +454,14 @@ async function generateWarnings () { // this probably causes a memory leak from 
     //     break;
     // }
     
-    if (rate_of_change_temp_board > 2.49 || real_temp_change_rate_board > 2.49) {
+    if (rate_of_change_temp_board > temp_max_rate || real_temp_change_rate_board > temp_max_rate) {
       warningArray.push("T-CLIMB");
       urgent_warningArray.push("RAPID TEMPERATURE CLIMB");
       temp_gauge.style.color = "red";
       resolve();
     }
     
-    else if (((rate_of_change_temp_board < 1.51 && is_actively_curing) || (real_temp_change_rate_board < 1.51 && is_actively_curing)) && time_values.length > 19) {
+    else if (((rate_of_change_temp_board < temp_min_rate && is_actively_curing) || (real_temp_change_rate_board < temp_min_rate && is_actively_curing)) && time_values.length > 19) {
       warningArray.push("T-STALL");
       temp_gauge.style.color = "yellow";
       resolve();
@@ -467,14 +474,14 @@ async function generateWarnings () { // this probably causes a memory leak from 
   });
 
   const pressureClimbOrStall = new Promise((resolve) => {
-    if (psi_change_r > 0.17 || real_psi_change_rate_board > 0.17) {
+    if (psi_change_r > psi_max_rate || real_psi_change_rate_board > psi_max_rate) {
       warningArray.push("P-CLIMB");
       urgent_warningArray.push("RAPID PRESSURE CLIMB");
       psi_gauge.style.color = "red";
       resolve();
     }
 
-    else if (((psi_change_r < 0.08 && is_actively_curing) || (real_psi_change_rate_board < 0.08 && is_actively_curing)) && time_values.length > 19) {
+    else if (((psi_change_r < psi_min_rate && is_actively_curing) || (real_psi_change_rate_board < psi_min_rate && is_actively_curing)) && time_values.length > 19) {
       warningArray.push("P-STALL");
       temp_gauge.style.color = "yellow";
       resolve();
@@ -610,7 +617,7 @@ const warningInterval = setInterval(function () {
       break;
   }
 
-  check_for_faulty_parts();
+  // check_for_faulty_parts(); This causes too much memory to be used, switching to 1min interval instead
 }, 1000);
 
 const timeDOM = document.getElementById("clock");
@@ -2857,20 +2864,20 @@ let real_temp_change_rate_board = 0;
 let real_psi_change_rate_board = 0;
 
 let zoom_minutes = 0;
-function passMinutes () {
+function passMinutes () { // pushes minutes based on zoom settings to the graphs
   if (isConnectedToBoard) {
     switch (zoom_minutes) {
-      case 0:
+      case 0: // default zoom
         minutes_passed += 1;
         time_values.push(minutes_passed);
         break
-      case 1:
+      case 1: // 2x zoom
         minutes_passed += 0.5;
         time_values.push(minutes_passed);
         minutes_passed += 0.5;
         time_values.push(minutes_passed);
         break;
-      case 2:
+      case 2: // 4x zoom
         for (let i = 0; i < 4; i++) {
           minutes_passed += 0.25;
           time_values.push(minutes_passed);
@@ -2915,11 +2922,11 @@ setInterval(function () {
   }
 
   passMinutes();
-  // check_for_faulty_parts();
+  check_for_faulty_parts();
 }, 60000);
 
 let int_to_clear;
-setTimeout(function () {
+setTimeout(function () { // makes it so that the graphs don't remain blank for all eternity
   let starter_time_val = 0;
   int_to_clear = setInterval(function () {
     starter_time_val += 0.017;

@@ -320,46 +320,46 @@ function checkIfMacroExists (macro_name) {
   return false;
 }
 
-function getContentsOfAllHardMacros () {
-  return fetch("/get_macro")
-  .then(response => response.text())
-  .then(data => {
-    const firstElements = String(data).slice(0, 11); 
-    switch (true) {
-      case (firstElements.includes("File error:")):
-        console.error(data);
-        macro_status_msgs.innerText = "FILE ERROR WHEN RETRIEVING MACROS";
-        return "error";
-      // default:
-      //   let current_macro_array = JSON.parse(data);
-      //   console.log(current_macro_array);
-      //   return current_macro_array;
-    }
+// function getContentsOfAllHardMacros () {
+//   return fetch("/get_macro")
+//   .then(response => response.text())
+//   .then(data => {
+//     const firstElements = String(data).slice(0, 11); 
+//     switch (true) {
+//       case (firstElements.includes("File error:")):
+//         console.error(data);
+//         macro_status_msgs.innerText = "FILE ERROR WHEN RETRIEVING MACROS";
+//         return "error";
+//       // default:
+//       //   let current_macro_array = JSON.parse(data);
+//       //   console.log(current_macro_array);
+//       //   return current_macro_array;
+//     }
 
-    return JSON.parse(data);
-  })
-  .catch(error => {
-    console.error(error);
-    macro_status_msgs.innerText = "COMMUNICATION WITH THE SERVER IS FAULTY";
-    return "error";
-  });
-}
+//     return JSON.parse(data);
+//   })
+//   .catch(error => {
+//     console.error(error);
+//     macro_status_msgs.innerText = "COMMUNICATION WITH THE SERVER IS FAULTY";
+//     return "error";
+//   });
+// }
 
-async function checkIfHardMacroExists (macro_name) {
-  const hard_macro_contents = await getContentsOfAllHardMacros();
-  if (hard_macro_contents === "error") return false;
+// async function checkIfHardMacroExists (macro_name) {
+//   const hard_macro_contents = await getContentsOfAllHardMacros();
+//   if (hard_macro_contents === "error") return false;
 
-  for (let i = 0; i < hard_macro_contents.length; i++) {
-    if (hard_macro_contents[i].split("||{}||")[0] == macro_name) {
-      return true;
-    }
-  }
-  return false;
-}
+//   for (let i = 0; i < hard_macro_contents.length; i++) {
+//     if (hard_macro_contents[i].split("||{}||")[0] == macro_name) {
+//       return true;
+//     }
+//   }
+//   return false;
+// }
 
 function createSoftMacro (macro_name, macro_content) {
   let soft_macro_name_to_create = macro_name;
-  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros")); 
 
   if (checkIfMacroExists(soft_macro_name_to_create)) {
     // macro_status_msgs.innerText = "A soft macro with the name '" + String(macro_name) + "' already exists.";
@@ -370,22 +370,67 @@ function createSoftMacro (macro_name, macro_content) {
   }
 
   else {
-    current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+    current_macro_array = JSON.parse(localStorage.getItem("soft-macros")); // no idea why I put this here.
     current_macro_array.push(soft_macro_name_to_create + "||{}||" + macro_content + "||{}||" + macro_mode + "||{}||" + macro_run_cycle);
     localStorage.setItem("soft-macros", JSON.stringify(current_macro_array));
   }
 }
 
-async function createHardMacro (macro_name, macro_content) {
-  let hard_macro_name_to_create = macro_name;
-  let current_macro_array = await getContentsOfAllHardMacros();
-  const does_hard_macro_exist = await checkIfHardMacroExists(hard_macro_name_to_create);
+// async function createHardMacro (macro_names, macro_contents) {
+//   let hard_macro_name_to_create = macro_names;
+//   let current_macro_array = await getContentsOfAllHardMacros();
+//   const does_hard_macro_exist = await checkIfHardMacroExists(hard_macro_name_to_create);
 
-  if (does_hard_macro_exist) {
-    deleteHardMacro(hard_macro_name_to_create);
-    current_macro_array = JSON.parse();
-  }
-}
+//   if (does_hard_macro_exist) {
+//     await deleteHardMacro(hard_macro_name_to_create);
+//     current_macro_array = await getContentsOfAllHardMacros();
+//     current_macro_array.push(hard_macro_name_to_create + "||{}||" + macro_contents + "||{}||" + macro_mode + "||{}||" + macro_run_cycle);
+//     return fetch ("/create_macro", {
+//       method : "POST",
+//       headers : {
+//        "Content-Type" : "application/json" 
+//       },
+//       body : JSON.stringify({
+//         macro_name : hard_macro_name_to_create,
+//         macro_content : JSON.stringify(current_macro_array)
+//       })
+//     })
+//     .then(response => response.text())
+//     .then(data => {
+//       console.log(data);
+//       return data;
+//     })
+//     .catch(error => {
+//       console.log(error);
+//       return error;
+//     });
+//   }
+
+//   else {
+//     current_macro_array = await getContentsOfAllHardMacros();
+//     current_macro_array = JSON.parse(current_macro_array);
+//     current_macro_array.push(hard_macro_name_to_create + "||{}||" + macro_contents + "||{}||" + macro_mode + "||{}||" + macro_run_cycle);
+//     return fetch ("/create_macro", {
+//       method : "POST",
+//       headers : {
+//        "Content-Type" : "application/json" 
+//       },
+//       body : JSON.stringify({
+//         macro_name : hard_macro_name_to_create,
+//         macro_content : JSON.stringify(current_macro_array)
+//       })
+//     })
+//     .then(response => response.text())
+//     .then(data => {
+//       console.log(data);
+//       return data;
+//     })
+//     .catch(error => {
+//       console.log(error);
+//       return error;
+//     });
+//   }
+// }
 
 let is_reading_js_for_macro = 0;
 function readSoftMacro (macro_name) {
@@ -420,38 +465,38 @@ function readSoftMacro (macro_name) {
   }
 }
 
-async function readHardMacro (macro_name) {
-  const hard_macro_name_to_read = macro_name;
-  let current_macro_array = await getContentsOfAllHardMacros();
-  let check_exist_hard_macro = await checkIfHardMacroExists(hard_macro_name_to_read);
+// async function readHardMacro (macro_name) {
+//   const hard_macro_name_to_read = macro_name;
+//   let current_macro_array = await getContentsOfAllHardMacros();
+//   let check_exist_hard_macro = await checkIfHardMacroExists(hard_macro_name_to_read);
 
-  if (check_exist_hard_macro) {
-    for (let i = 0; i < current_macro_array.length; i++) {
-      if (current_macro_array[i].split("||{}||")[0] == macro_name) {
-        let read_array_macro = current_macro_array[i].split("||{}||");
+//   if (check_exist_hard_macro) {
+//     for (let i = 0; i < current_macro_array.length; i++) {
+//       if (current_macro_array[i].split("||{}||")[0] == macro_name) {
+//         let read_array_macro = current_macro_array[i].split("||{}||");
 
-        switch (parseInt(read_array_macro[3])) {
-          case 0:
-            js_macro_mode.value = "";
-            is_reading_js_for_macro = 1;
-            break;
-          case 1:
-            js_macro_mode.value = "run-with-interface";
-            is_reading_js_for_macro = 1;
-            break;
-          default:
-            is_reading_js_for_macro = 0;
-            break;
-        }
-        return current_macro_array[i].split("||{}||")[1];
-      }
-    }
-  }
+//         switch (parseInt(read_array_macro[3])) {
+//           case 0:
+//             js_macro_mode.value = "";
+//             is_reading_js_for_macro = 1;
+//             break;
+//           case 1:
+//             js_macro_mode.value = "run-with-interface";
+//             is_reading_js_for_macro = 1;
+//             break;
+//           default:
+//             is_reading_js_for_macro = 0;
+//             break;
+//         }
+//         return current_macro_array[i].split("||{}||")[1];
+//       }
+//     }
+//   }
 
-  else {
-    macro_status_msgs.innerText = "'" + String(macro_name) + "' does not exist as a hard macro.";
-  }
-}
+//   else {
+//     macro_status_msgs.innerText = "'" + String(macro_name) + "' does not exist as a hard macro.";
+//   }
+// }
 
 function runSoftMacro (macro_name) {
   let soft_macro_name_to_read = macro_name;
@@ -530,70 +575,70 @@ function deleteSoftMacro (macro_name) {
   }
 }
 
-async function deleteHardMacro (macro_name) {
-  let hard_macro_to_delete = macro_name;
-  let current_macro_array = await getContentsOfAllHardMacros();
+// async function deleteHardMacro (macro_name) {
+//   let hard_macro_to_delete = macro_name;
+//   let current_macro_array = await getContentsOfAllHardMacros();
 
-  if (checkIfHardMacroExists(hard_macro_to_delete)) {
-    if (current_macro_array.length < 2) {
-      return fetch ("/create_macro", {
-        method : "POST",
-        headers : {
-          "Content-Type" : "application/json"
-        },
-        body : JSON.stringify({
-          macro_name : "DELETE",
-          macro_content : "[]"
-        })
-      })
-      .then(response => response.text())
-      .then(data => {
-        console.log(data);
-        return false;
-      })
-      .catch(error => {
-        macro_status_msgs.innerText = "UNABLE TO COMMUNICATE WITH SERVER";
-        console.error(error);
-      });
-    }
+//   if (checkIfHardMacroExists(hard_macro_to_delete)) {
+//     if (current_macro_array.length < 2) {
+//       return fetch ("/create_macro", {
+//         method : "POST",
+//         headers : {
+//           "Content-Type" : "application/json"
+//         },
+//         body : JSON.stringify({
+//           macro_name : "DELETE",
+//           macro_content : "[]"
+//         })
+//       })
+//       .then(response => response.text())
+//       .then(data => {
+//         console.log(data);
+//         return false;
+//       })
+//       .catch(error => {
+//         macro_status_msgs.innerText = "UNABLE TO COMMUNICATE WITH SERVER";
+//         console.error(error);
+//       });
+//     }
 
-    for (let i = 0; i < current_macro_array.length; i++) {
-      if (current_macro_array[i].split("||{}||")[0] == macro_name) {
-        let saved_alpha = current_macro_array[i];
-        let last_pos = current_macro_array.length - 1;
-        let save_last_pos = current_macro_array[last_pos];
+//     for (let i = 0; i < current_macro_array.length; i++) {
+//       if (current_macro_array[i].split("||{}||")[0] == macro_name) {
+//         let saved_alpha = current_macro_array[i];
+//         let last_pos = current_macro_array.length - 1;
+//         let save_last_pos = current_macro_array[last_pos];
 
-        current_macro_array[last_pos] = saved_alpha;
-        current_macro_array[i] = save_last_pos;
+//         current_macro_array[last_pos] = saved_alpha;
+//         current_macro_array[i] = save_last_pos;
 
-        current_macro_array.pop();
-        return fetch ("/create_macro", {
-          method : "POST",
-          headers : {
-            "Content-Type" : "application/json"
-          },
-          body : JSON.stringify({
-            macro_name : "DELETE",
-            macro_content : current_macro_array
-          })
-        })
-        .then(response => response.text())
-        .then(data => {
-          console.log(data);
-          return true;
-        })
-        .catch(error => {
-          macro_status_msgs.innerText = "UNABLE TO COMMUNICATE WITH SERVER";
-          console.error(error);
-        });
-      }
-    }
-  }
+//         current_macro_array.pop();
+//         return fetch ("/create_macro", {
+//           method : "POST",
+//           headers : {
+//             "Content-Type" : "application/json"
+//           },
+//           body : JSON.stringify({
+//             macro_name : "DELETE",
+//             macro_content : current_macro_array
+//           })
+//         })
+//         .then(response => response.text())
+//         .then(data => {
+//           console.log(data);
+//           return true;
+//         })
+//         .catch(error => {
+//           macro_status_msgs.innerText = "UNABLE TO COMMUNICATE WITH SERVER";
+//           console.error(error);
+//         });
+//       }
+//     }
+//   }
 
-  else {
-    macro_status_msgs.innerText = "'" + String(macro_name) + "' does not exist as a hard macro.";
-  }
-}
+//   else {
+//     macro_status_msgs.innerText = "'" + String(macro_name) + "' does not exist as a hard macro.";
+//   }
+// }
 
 function checkForIllegalChars (content_to_check) {
   if (content_to_check.includes("||{}||")) {
