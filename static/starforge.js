@@ -35,6 +35,10 @@ function check_if_commandParametersAreValid (command_text, command_line) {
           }
           break;
         case "HARD_MACRO":
+          if (!checkIfHardMacroExists(String(command1[2]))) {
+            raise_raider_rash_error = 1;
+            return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" CALLS A NON-EXISTENT HARD MACRO';
+          }
           break;
         case "CURING_PROCESS":
         case "BOARD_MACRO":

@@ -164,6 +164,7 @@ async function updateHardMacros () { // this will happen every 1 minute and will
       .then(response => response.text())
       .then(data => {
         console.log(data);
+        is_hard_macro_cache_empty = 1;
       })
       .catch(error => {
         console.error(error);
