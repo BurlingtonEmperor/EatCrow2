@@ -1,1 +1,1 @@
-["RAS_Standard||{}||console.log(\"Running RAS_Standard macro...\");\nhide_small_graphs = true;\nautoclavePlot.style.width = \"600px\";||{}||1||{}||1"]
+["RAS_Standard||{}||console.log(\"Running RAS_Standard macro...\");\nhide_small_graphs = true;\nautoclavePlot.style.width = \"600px\";\nswitch_displays_btn.click();||{}||1||{}||1"]
