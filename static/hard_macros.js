@@ -101,7 +101,8 @@ function deleteHardMacro (macro_name) { // NOTE: this doesn't *actually* delete 
   let hard_macro_to_delete = macro_name; // later on the update function sees that macros.txt needs to be more like the cache when needed.
   let current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
 
-  if (checkIfMacroExists(hard_macro_to_delete)) {
+  if (checkIfHardMacroExists(hard_macro_to_delete)) {
+    is_hard_macro_cache_empty = 0;
     if (current_macro_array.length < 2) {
       localStorage.setItem("hard_macro_cache", "[]");  
       return false;
@@ -168,5 +169,35 @@ async function updateHardMacros () { // this will happen every 1 minute and will
         console.error(error);
       });
       break;
+  }
+}
+
+function runHardMacro (macro_name) {
+  let hard_macro_name_to_read = macro_name;
+  let current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
+
+  if (checkIfHardMacroExists(hard_macro_name_to_read)) {
+    for (let i = 0; i < current_macro_array.length; i++) {
+      if (current_macro_array[i].split("||{}||")[0] == macro_name) {
+        let read_array_macro = current_macro_array[i].split("||{}||");
+
+        switch (parseInt(read_array_macro[2])) {
+          case 0:
+            break;
+          case 1:
+            try {
+              eval(read_array_macro[1]);
+            }
+            catch (error) {
+              console.error(error);
+            };
+            break;
+        }
+      }
+    }
+  }
+  
+  else {
+    macro_status_msgs.innerText = "'" + String(macro_name) + "' does not exist as a hard macro.";
   }
 }

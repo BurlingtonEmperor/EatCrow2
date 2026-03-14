@@ -1,4 +1,8 @@
 // macro window
+/*
+General macro command buttons are linked to this file even though it's called "soft_macros.js"
+-- wasn't really thinking too hard
+*/
 
 $(function () {
   $(".draggable").draggable();
@@ -99,7 +103,16 @@ const cancel_edit_macro = document.getElementById("cancel-edit-macro");
 const select_edit_macro = document.getElementById("select-edit-btn");
 
 function populateEditOptions_macro () {
-  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+  let current_macro_array;
+  switch (current_macro_type) {
+    case 0:
+      current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+      break;
+    case 1:
+      current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
+      break;
+  }
+
   for (let i = 0; i < current_macro_array.length; i++) {
     let option_to_create = document.createElement("option");
     let parsed_item_array = current_macro_array[i].split("||{}||");
@@ -140,7 +153,15 @@ edit_macro_select.onclick = function () {
   if (edit_macro_select.value !== macro_select_value) {
     macro_select_value = edit_macro_select.value;
     // console.log("test");
-    let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+    let current_macro_array;
+    switch (current_macro_type) {
+      case 0:
+        current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+        break;
+      case 1:
+        current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
+        break;
+    }
 
     for (let i = 0; i < current_macro_array.length; i++) {
       let split_parse_macro = current_macro_array[i].split("||{}||");
@@ -169,20 +190,26 @@ select_edit_macro.onclick = function () {
     return false;
   }
 
+  let current_macro_array;
+
   switch (current_macro_type) {
     case 0:
-      let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
-      for (let i = 0; i < current_macro_array.length; i++) {
-        let parsed_item_array = current_macro_array[i].split("||{}||");
-        if (parsed_item_array[0] == edit_macro_select.value) {
-          if (parsed_item_array[2] == 1) {
-            set_mode_to_javascript.click();
-            js_textbox_input.value = parsed_item_array[1];
-          }
-          macro_name_to_create.value = parsed_item_array[0];
-        }
-      }
+      current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
       break;
+    case 1:
+      current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
+      break;
+  }
+
+  for (let i = 0; i < current_macro_array.length; i++) {
+    let parsed_item_array = current_macro_array[i].split("||{}||");
+    if (parsed_item_array[0] == edit_macro_select.value) {
+      if (parsed_item_array[2] == 1) {
+        set_mode_to_javascript.click();
+        js_textbox_input.value = parsed_item_array[1];
+      }
+      macro_name_to_create.value = parsed_item_array[0];
+    }
   }
 
   macro_editor.style.display = "block";
@@ -197,7 +224,16 @@ const cancel_delete_macro = document.getElementById("cancel-delete-macro");
 const select_delete_macro = document.getElementById("select-delete-btn");
 
 function populateDeleteOptions_macro () {
-  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+  let current_macro_array;
+  switch (current_macro_type) {
+    case 0:
+      current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+      break;
+    case 1:
+      current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
+      break;
+  }
+
   for (let i = 0; i < current_macro_array.length; i++) {
     let option_to_create = document.createElement("option");
     let parsed_item_array = current_macro_array[i].split("||{}||");
@@ -234,7 +270,14 @@ select_delete_macro.onclick = function () {
     return false;
   }
 
-  deleteSoftMacro(delete_macro_select.value);
+  switch (current_macro_type) {
+    case 0:
+      deleteSoftMacro(delete_macro_select.value);
+      break;
+    case 1:
+      deleteHardMacro(delete_macro_select.value);
+      break;
+  }
   macro_status_msgs.innerText = "DELETED '" + delete_macro_select.value + "'.";
   clearDeleteOptions_macro();
 }
@@ -245,7 +288,16 @@ const cancel_run_macro = document.getElementById("cancel-run-macro");
 const select_run_macro = document.getElementById("select-run-btn");
 
 function populateRunOptions_macro () {
-  let current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+  let current_macro_array;
+  switch (current_macro_type) {
+    case 0:
+      current_macro_array = JSON.parse(localStorage.getItem("soft-macros"));
+      break;
+    case 1:
+      current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
+      break;
+  }
+
   for (let i = 0; i < current_macro_array.length; i++) {
     let option_to_create = document.createElement("option");
     let parsed_item_array = current_macro_array[i].split("||{}||");
@@ -281,7 +333,14 @@ select_run_macro.onclick = function () {
     return false;
   }
   
-  runSoftMacro(run_macro_select.value);
+  switch (current_macro_type) {
+    case 0:
+      runSoftMacro(run_macro_select.value);
+      break;
+    case 1:
+      runHardMacro(run_macro_select.value);
+      break;
+  }
   macro_status_msgs.innerText = "RUNNING '" + run_macro_select.value + "'.";
 }
 
@@ -653,9 +712,18 @@ actually_create_macro.onclick = function () {
     return false;
   }
 
-  if (checkIfMacroExists(macro_name_to_create.value.replace(" ", "%20")) && current_macro_type == 0) {
-    macro_status_msgs.innerText = "A soft macro with the name '" + String(macro_name_to_create.value) + "' already exists.";
-    return false;
+  switch (current_macro_type) {
+    case 0:
+      if (checkIfMacroExists(macro_name_to_create.value.replace(" ", "%20"))) {
+        macro_status_msgs.innerText = "A soft macro with the name '" + String(macro_name_to_create.value) + "' already exists.";
+        return false;
+      }
+      break;
+    case 1:
+      if (checkIfHardMacroExists(macro_name_to_create.value.replace(" ", "%20"))) {
+        macro_status_msgs.innerText = "A hard macro with the name '" + String(macro_name_to_create.value) + "' already exists.";
+      }
+      break;
   }
 
   macro_editor.style.display = "block";
@@ -783,6 +851,9 @@ save_macro_btn.onclick = function () {
   switch (current_macro_type) {
     case 0:
       createSoftMacro(spaceRemoverMacroName, macro_real_content);
+      break;
+    case 1:
+      createNewHardMacro(spaceRemoverMacroName, macro_real_content);
       break;
   }
 
