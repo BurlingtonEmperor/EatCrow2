@@ -753,6 +753,14 @@ else {
       eval(parsed_item_array[1]);
     }
   }
+
+  current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
+  for (let i = 0; i < current_macro_array.length; i++) {
+    let parsed_item_array = current_macro_array[i].split("||{}||");
+    if (parseInt(parsed_item_array[3]) == 1 && parseInt(parsed_item_array[2]) == 1) {
+      eval(parsed_item_array[1]);
+    }
+  }
 }
 
 // macro editor
