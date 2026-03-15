@@ -49,15 +49,16 @@ function createStarForgeVariable (possible_variable, var_value) { // this hurts 
 function changeStarForgeVariable (possible_variable, var_value) {
   let this_instance_of_possible_variable = possible_variable;
   switch (false) {
-    case (checkVariables(this_instance_of_possible_variable)):
+    // case (checkVariables(this_instance_of_possible_variable)):
+    case (checkIfStarForgeVariableExists(this_instance_of_possible_variable)):
       return false;
   }
 
-  let starforge_possible_var_name = String(possible_variable).slice(2);
+  // let starforge_possible_var_name = String(possible_variable).slice(2);
 
   for (let i = 0; i < starforge_global_variables.length; i++) {
     switch (true) {
-      case (starforge_possible_var_name == starforge_global_variables[i][0]):
+      case (this_instance_of_possible_variable == starforge_global_variables[i][0]):
         starforge_global_variables[i][1] = var_value;
         return true;
     }
