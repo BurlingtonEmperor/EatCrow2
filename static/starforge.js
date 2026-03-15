@@ -93,25 +93,42 @@ function check_if_commandIsValid (command_text) {
 function check_if_commandParametersAreValid (command_text, command_line) {
   let command1 = command_text.split(" ");
   let first_word_of_command = String(command1[0]).toUpperCase();
+
+  let logging_string = String(command1[1]);
+  let logging_variable = checkVariables(logging_string);
+
+  let macro_string = String(command1[2]);
+  let macro_variable = checkVariables(macro_string);
+
+  let firstTwoChars = String(logging_string).slice(0, 2);
+  let is_null_var = 0;
+
+  if (firstTwoChars == "_v") {
+    switch (false) {
+      case (logging_variable):
+        // raise_raider_rash_error = 1;
+        is_null_var = 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" CALLS A NON-EXISTENT VARIABLE "' + String(logging_string) + '"';
+      default:
+        logging_string = logging_variable;
+        break;
+    }
+
+    // switch (false) {
+    //   case (macro_variable):
+    //     raise_raider_rash_error = 1;
+    //     return '';
+    // }
+  }
   
   switch (first_word_of_command) {
     case "LOG":
-      let logging_string = String(command1[1]);
-      let logging_variable = checkVariables(logging_string);
-
-      let firstTwoChars = String(logging_string).slice(0, 2);
-
-      if (firstTwoChars == "_v") {
-        switch (false) {
-          case (logging_variable):
-            raise_raider_rash_error = 1;
-            return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" CALLS A NON-EXISTENT VARIABLE "' + String(logging_string) + '"';
-          default:
-            logging_string = logging_variable;
-            break;
-        }
+      switch (is_null_var) {
+        case 0:
+          break;
+        default:
+          raise_raider_rash_error = 1;
+          return is_null_var;
       }
-
       return 'console.log("' + logging_string + '")';
     case "CALL":
       switch (String(command1[1].toUpperCase())) {

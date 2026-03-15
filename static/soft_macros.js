@@ -286,6 +286,7 @@ const run_macro_select = document.getElementById("run-macro-select");
 const run_macrosoft = document.getElementById("run-macrosoft");
 const cancel_run_macro = document.getElementById("cancel-run-macro");
 const select_run_macro = document.getElementById("select-run-btn");
+const run_macro_as_curing_p = document.getElementById("select-run-process-btn");
 
 function populateRunOptions_macro () {
   let current_macro_array;
@@ -342,6 +343,15 @@ select_run_macro.onclick = function () {
       break;
   }
   macro_status_msgs.innerText = "RUNNING '" + run_macro_select.value + "'.";
+}
+
+run_macro_as_curing_p.onclick = function () {
+  if (run_macro_select.value == "") {
+    return false;
+  }
+
+  setAsCuringProcess(String(run_macro_select.value), String(current_macro_type));
+  macro_status_msgs.innerText = "SET '" + String(run_macro_select.value) + "' AS CURING PROCESS";
 }
 
 const create_macrosoft = document.getElementById("create-macrosoft");

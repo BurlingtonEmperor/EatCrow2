@@ -1938,6 +1938,70 @@ stopAutoclaveSemi.onclick = function () {
   }
 }
 
+// localStorage.getItem("default-cure-process"); <-- This is where the cure process macro name will be stored, as well as it's type (ie. soft macro, hard macro, board macro)
+function setAsCuringProcess (macro_name, macro_type) {
+  let macro_push_array = [];
+  macro_push_array.push(macro_name);
+  macro_push_array.push(macro_type);
+
+  localStorage.setItem("default-cure-process", JSON.stringify(macro_push_array));
+}
+
+// function runAsCuringProcess () {}
+
+const start_autoclave_btn = document.getElementById("start-autoclave-btn");
+const stop_autoclave_btn = document.getElementById("stop-autoclave-btn");
+
+start_autoclave_btn.onclick = function () {
+  if (localStorage.getItem("default-cure-process") == null || localStorage.getItem("default-cure-process") == '' || safetyTimeProtocol) {
+    return false;
+  }
+
+  let default_curings_array = JSON.parse(localStorage.getItem("default-cure-process"));
+  let macro_curings_name = String(default_curings_array[0]);
+  let macro_curings_type = parseInt(default_curings_array[1]);
+
+  // console.log(default_curings_array);
+  // console.log(macro_curings_type);
+
+  switch (macro_curings_type) {
+    case 0:
+      switch (true) {
+        case (checkIfMacroExists(macro_curings_name)):
+          checkForSafety();
+          runSoftMacro(macro_curings_name);
+          break;
+        default:
+          return false;
+      }
+      break;
+    case 1:
+      switch (true) {
+        case (checkIfHardMacroExists(macro_curings_name)):
+          checkForSafety();
+          runHardMacro(macro_curings_name);
+          break;
+        default:
+          return false;
+      }
+      break;
+    default:
+      return false;
+  }
+}
+
+stop_autoclave_btn.onclick = function () {
+  if (safetyTimeProtocol || isConnectedToBoard == false) {
+    return false;
+  }
+
+  checkForSafety();
+
+  send_signal_to_board("~");
+  send_signal_to_board("#");
+  send_signal_to_board("%");
+}
+
 // charts
 let time_values = [];
 
