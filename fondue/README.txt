@@ -1,0 +1,1 @@
+Fondue is a lightweight library built by Raider Aerospace Society to send whole files to an Arduino using binary.
