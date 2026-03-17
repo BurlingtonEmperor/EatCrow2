@@ -94,6 +94,10 @@ void loop () {
         }
         Serial.println("Read mode switched");
         break;
+      case 'o': // override to set read_mode to 1;
+      case 'k':
+        read_mode = 1;
+        break;
       case 'z':
         has_gotten_sram = 0;
         break;
@@ -130,11 +134,11 @@ void loop () {
           delay(10);
           float controls_value = Serial.parseFloat(); 
       
-          if (incomingByte == '+') {
+          if (incomingByte == '+' || incomingByte == 'o') {
             setTemp = controls_value;
             Serial.println("Setting temperature...");
           }
-          if (incomingByte == 'p') {
+          if (incomingByte == 'p' || incomingByte == 'k') {
             setPressure = controls_value;
             Serial.println("Setting pressure...");
           }

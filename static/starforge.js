@@ -7,7 +7,11 @@ is best for people who don't know how to navigate JavaScript or just want to mak
 The syntax is very similar to COBOL to the point where it can be considered a subset of COBOL. Thus, it can also be called RAS COBOL.
 */
 
-const allowed_raider_rash_commands = ["CALL", "RUN", "LOG", "WAIT", "SET", "STOP", "", "\n", "COMMENT", "VAR", "CHANGE_VAR", "RUN_JS", "RUN_CPP", "DISPLAY"];
+const allowed_raider_rash_commands = [
+  "CALL", "RUN", "LOG", "WAIT", "SET", "STOP", "", "\n", 
+  "COMMENT", "VAR", "CHANGE_VAR", "RUN_JS", "RUN_CPP", 
+  "DISPLAY", "ACCEPT", "INPUT", "INPUT_VAR"
+];
 let raise_raider_rash_error = 0;
 let universal_delay_time = 0; // in ms. bad way to make delays but what can I do?
 
@@ -165,24 +169,41 @@ function check_if_commandParametersAreValid (command_text, command_line) {
           return 'universal_delay_time = ' + parseFloat(parseFloat(command1[1]) * 1000);
       }
     case "SET":
+      let set_parse_num = parseFloat(String(command1[2]));
+      if (isNaN(set_parse_num)) {
+        raise_raider_rash_error = 1;
+        return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" SETS TO AN INVALID NUMBER';  
+      }
+
       switch (String(command1[1])) {
         case "TEMP":
-          break;
+          if (isConnectedToBoard == false) {
+            raise_raider_rash_error = 1;
+            return 'CONNECTION IS IMPURE: DEVICE IS NOT CONNECTED TO BOARD';
+          }
+          return 'send_msg_to_board("o' + String(set_parse_num) + '")'; 
         case "PSI":
-          break;
+          if (isConnectedToBoard == false) {
+            raise_raider_rash_error = 1;
+            return 'CONNECTION IS IMPURE: DEVICE IS NOT CONNECTED TO BOARD';
+          }
+          return 'send_msg_to_board("k' + String(set_parse_num) + '")';
         case "MAX_TEMP_RATE":
-          break;
+          return 'temp_max_rate = ' + set_parse_num;
         case "MIN_TEMP_RATE":
-          break;
+          return 'temp_min_rate = ' + set_parse_num;
         case "MAX_PSI_RATE":
-          break;
+          return 'psi_max_rate = ' + set_parse_num;
         case "MIN_PSI_RATE":
-          break;
+          return 'psi_min_rate = ' + set_parse_num;
+        case "TEMP_MAX":
+          return 'temp_ceiling = ' + set_parse_num;
+        case "PSI_MAX":
+          return 'psi_ceiling = ' + set_parse_num;
         default:
           raise_raider_rash_error = 1;
           return 'COMMAND IS IMPURE: COMMAND ' +  String(command_line + 1) + ' "' + String(command_text) + '" SETS AN INVALID VARIABLE';
       }
-      break;
     case "VAR":
       let var_string = String(command1[1]);
 
@@ -202,6 +223,38 @@ function check_if_commandParametersAreValid (command_text, command_line) {
       }
       changeStarForgeVariable(cvar_string, command1[2]);
       return '// this is dummy code';
+    case "RUN_JS":
+      let run_js_general = command1;
+      run_js_general.shift();
+      let run_js_splitter = run_js_general;
+      let run_js_joined = run_js_splitter.join(" ");
+      let run_js_check = run_js_joined.split("|js|");
+
+      switch (true) {
+        case (run_js_check.length > 3):
+          raise_raider_rash_error = 1;
+          return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" ATTEMPTS TO RUN MORE THAN ONE PIECE OF JAVASCRIPT';
+        case (run_js_check.length < 3):
+          raise_raider_rash_error = 1;
+          return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" HAS AN INCOMPLETE INDICATION STRUCTURE';
+      }
+      return 'eval("' + String(run_js_check[1]) + '")';
+    case "RUN_CPP":
+      raise_raider_rash_error = 1;
+      return 'USAGE IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" ATTEMPTS TO USE C++ IN A JAVASCRIPT CONTEXT';
+    case "INPUT":
+    case "ACCEPT":
+      command1.shift();
+
+      let accept_argument = command1.join(" ");
+      return 'prompt("' + String(accept_argument) + '")'; // lazy way to do things but I want to get this done ASAP
+    case "INPUT_VAR":
+      command1.shift();
+      let input_var = command1[0];
+      command1.shift();
+
+      let accept_argument2 = command1.join(" ");
+      return 'let prompt_var = prompt("' + accept_argument2 + '"); createStarForgeVariable("' + String(input_var) + '", String(prompt_var))';
   }
 }
 

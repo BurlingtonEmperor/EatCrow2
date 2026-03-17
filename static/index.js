@@ -1080,7 +1080,6 @@ reboot_learning_systems.onclick = function () {
 }
 
 // manual command console
-
 const manualCommandConsole = document.getElementById("manual-command-console");
 
 const manualCommandConsoleBtn = document.getElementById("manual-command-console-btn");

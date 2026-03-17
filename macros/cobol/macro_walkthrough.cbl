@@ -1,1 +1,2 @@
-DISPLAY WELCOME TO THE STARFORGE/RAS-COBOL MACRO WALKTHROUGH
+DISPLAY "Welcome to the Starforge and RAS-COBOL macro walkthrough."**)
+DISPLAY ""**)
