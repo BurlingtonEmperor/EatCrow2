@@ -1,11 +1,13 @@
 /*
-Raider Aerospace Society Hash File 
+Raider Aerospace Society Macro Scripting Language/RAS COBOL
 Original name was Raider Rash, but it's going to have be called StarForge instead. I can't take the old name seriously.
 This is a transpiler/interpreter that converts StarForge scripts into JavaScript. It's not super necessary but it 
 is best for people who don't know how to navigate JavaScript or just want to make a curing process fast (or both)
+
+The syntax is very similar to COBOL to the point where it can be considered a subset of COBOL. Thus, it can also be called RAS COBOL.
 */
 
-const allowed_raider_rash_commands = ["CALL", "RUN", "LOG", "WAIT", "SET", "STOP", "", "\n", "COMMENT", "VAR", "CHANGE_VAR"];
+const allowed_raider_rash_commands = ["CALL", "RUN", "LOG", "WAIT", "SET", "STOP", "", "\n", "COMMENT", "VAR", "CHANGE_VAR", "RUN_JS", "RUN_CPP", "DISPLAY"];
 let raise_raider_rash_error = 0;
 let universal_delay_time = 0; // in ms. bad way to make delays but what can I do?
 
@@ -122,6 +124,7 @@ function check_if_commandParametersAreValid (command_text, command_line) {
   
   switch (first_word_of_command) {
     case "LOG":
+    case "DISPLAY":
       switch (is_null_var) {
         case 0:
           break;

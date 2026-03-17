@@ -6,7 +6,8 @@ Section 1: Download and Setup
 Click "<> Code", and then select "Download ZIP".
 Extract the files from the zip file into a seperate folder.
 Click RUNME.bat and allow all permissions.
-To run and/or reboot the program, simply click RUNME.bat.
+To run and/or reboot the program, click RUNME.bat.
+You may need to click RUNME.bat a second time after it installs Python (if Python is not already installed).
 
 Section 2: Modes
 There are 3 modes of the autoclave. MANUAL, SEMI-MANUAL, and AUTOMATIC.
@@ -14,7 +15,7 @@ MANUAL mode: Manually set temperature and pressure change amounts, and then appl
 SEMI-MANUAL mode: Set a specific temperature and pressure amount to level off at.
 AUTOMATIC mode: Use preprogrammed macros for different curing processes.
 
-The default mode is the MANUAL mode. To change modes, simply select the drop-down menu on the left-hand corner of the screen.
+The default mode is the MANUAL mode. To change modes, select the drop-down menu on the left-hand corner of the screen.
 
 Section 3: Usage Modes 
 Usage Modes can be found on the left-hand corner of the screen.
@@ -33,9 +34,6 @@ rectangle represents autoclave integrity with respect to pressure (ie. when the 
 will turn red, and when the "P-CLIMB" warning displays, the "PSI" indicator will turn red).
 
 * see warnings in the SAFETY section below.
-
-Autoclave Readings
-
 
 -- SAFETY --
 Section 1: Warnings
@@ -66,13 +64,4 @@ PATTERN - Broken parts have been detected.
 BOARD - Board connection not found
 PORT - Board port not found
 ACCESS - Port access denied to interface program
-DISPARITY - Board readings and interface readings are different
 COMMS - Communication with the board has been lost. 
-
--- COMMANDS --
-On the main command pannel with the autoclave graphs and status diagram, there wil be a button 
-on top of the status diagram listed as "COMMAND". Once entered, you can access a variety of custom controls 
-from that panel.
-
-MANUAL COMMAND CONSOLE - Opens a command console in which you can enter commands.
-LOG AUTOCLAVE - Logs current autoclave data.
