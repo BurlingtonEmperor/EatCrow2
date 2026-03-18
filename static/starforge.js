@@ -11,7 +11,7 @@ const allowed_raider_rash_commands = [
   "CALL", "RUN", "LOG", "WAIT", "SET", "STOP", "", "\n", 
   "COMMENT", "VAR", "CHANGE_VAR", "REPEAT", "RUN_JS",
   "DISPLAY", "ACCEPT", "INPUT", "INPUT_VAR", "RUN_CPP",
-  "IF", "ELSE"
+  "IF", "ELSE", "PROGRAM-ID"
 ];
 let raise_raider_rash_error = 0;
 let universal_delay_time = 0; // in ms. bad way to make delays but what can I do?
@@ -267,6 +267,15 @@ function check_if_commandParametersAreValid (command_text, command_line) {
       let if_statement_splitter = if_statement
       let join_if_statement = if_statement_splitter.join(" ");
       let if_statement_check = join_if_statement.split("|cond|");
+
+      switch (true) {
+        case (if_statement_check.length > 3):
+          raise_raider_rash_error = 1;
+          return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" ATTEMPTS TO CHECK FOR MORE THAN ONE CONDITIONAL';
+        case (if_statement_check.length < 3):
+          raise_raider_rash_error = 1;
+          return 'SYNTAX IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" HAS AN INCOMPLETE INDICATION STRUCTURE';
+      }
       break;
   }
 }

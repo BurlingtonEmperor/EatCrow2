@@ -1,3 +1,4 @@
+PROGRAM-ID: Walkthrough_Main**)
 DISPLAY "Welcome to the Starforge and RAS-COBOL macro scripting language tutorial and documentation program."**)
 
 COMMENT DISPLAY "First, let's begin with logging things to the console."**)
@@ -17,4 +18,12 @@ DISPLAY "6: Go over setting maximum and minimum rates"**)
 DISPLAY "7: Go over calling other macros"**)
 
 INPUT_VAR USER_NUM_INPUT "Please choose a number: "**)
+IF |cond|_vUSER_NUM_INPUT EQUALS 1|cond| THEN CALL RAS_COBOL display_and_logging**)
+IF |cond|_vUSER_NUM_INPUT EQUALS 2|cond| THEN CALL RAS_COBOL variables**)
+IF |cond|_vUSER_NUM_INPUT EQUALS 3|cond| THEN CALL RAS_COBOL inputs_and_input_var**)
+IF |cond|_vUSER_NUM_INPUT EQUALS 4|cond| THEN CALL RAS_COBOL comments**)
+IF |cond|_vUSER_NUM_INPUT EQUALS 5|cond| THEN CALL RAS_COBOL temperature_and_pressure**)
+IF |cond|_vUSER_NUM_INPUT EQUALS 6|cond| THEN CALL RAS_COBOL min_max_rates**)
+IF |cond|_vUSER_NUM_INPUT EQUALS 7|cond| THEN CALL RAS_COBOL calling_macros**)
+ELSE CALL walthrough_err_return**)
 REPEAT**)
