@@ -1,2 +1,20 @@
-DISPLAY "Welcome to the Starforge and RAS-COBOL macro walkthrough."**)
-DISPLAY ""**)
+DISPLAY "Welcome to the Starforge and RAS-COBOL macro scripting language tutorial and documentation program."**)
+
+COMMENT DISPLAY "First, let's begin with logging things to the console."**)
+COMMENT WAIT 2**)
+COMMENT DISPLAY "Let's log 'Hello, World!' to the console!"**)
+COMMENT DISPLAY "We will use the following syntax:"**)
+COMMENT DISPLAY "DISPLAY Hello, World!**-)"**)
+COMMENT WAIT 2**)
+COMMENT DISPLAY ""**)
+
+DISPLAY "1: Go over displaying and logging"**)
+DISPLAY "2: Go over variables"**)
+DISPLAY "3: Go over inputs and input variables"**)
+DISPLAY "4: Go over comments"**)
+DISPLAY "5: Go over setting temperature and pressure"**)
+DISPLAY "6: Go over setting maximum and minimum rates"**)
+DISPLAY "7: Go over calling other macros"**)
+
+INPUT_VAR USER_NUM_INPUT "Please choose a number: "**)
+REPEAT**)

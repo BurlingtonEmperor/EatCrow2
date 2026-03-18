@@ -9,8 +9,9 @@ The syntax is very similar to COBOL to the point where it can be considered a su
 
 const allowed_raider_rash_commands = [
   "CALL", "RUN", "LOG", "WAIT", "SET", "STOP", "", "\n", 
-  "COMMENT", "VAR", "CHANGE_VAR", "RUN_JS", "RUN_CPP", 
-  "DISPLAY", "ACCEPT", "INPUT", "INPUT_VAR"
+  "COMMENT", "VAR", "CHANGE_VAR", "REPEAT", "RUN_JS",
+  "DISPLAY", "ACCEPT", "INPUT", "INPUT_VAR", "RUN_CPP",
+  "IF", "ELSE"
 ];
 let raise_raider_rash_error = 0;
 let universal_delay_time = 0; // in ms. bad way to make delays but what can I do?
@@ -97,6 +98,7 @@ function check_if_commandIsValid (command_text) {
 }
 
 function check_if_commandParametersAreValid (command_text, command_line) {
+  command_text = command_text.replace("**-)", "**)"); // make sure documentation command splitters aren't left out
   let command1 = command_text.split(" ");
   let first_word_of_command = String(command1[0]).toUpperCase();
 
@@ -161,12 +163,12 @@ function check_if_commandParametersAreValid (command_text, command_line) {
       break;
     case "WAIT":
       switch (true) {
-        case (parseFloat(command1[1]) == NaN):
-        case (isNaN(parseFloat(command1[1]))):
+        case (parseFloat(logging_string) == NaN):
+        case (isNaN(parseFloat(logging_string))):
           raise_raider_rash_error = 1;
           return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '"; ' + '"' + String(command1[1]) + '" IS NOT A VALID NUMBER';
         default:
-          return 'universal_delay_time = ' + parseFloat(parseFloat(command1[1]) * 1000);
+          return 'universal_delay_time = ' + parseFloat(parseFloat(logging_string) * 1000);
       }
     case "SET":
       let set_parse_num = parseFloat(String(command1[2]));
@@ -236,9 +238,9 @@ function check_if_commandParametersAreValid (command_text, command_line) {
           return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" ATTEMPTS TO RUN MORE THAN ONE PIECE OF JAVASCRIPT';
         case (run_js_check.length < 3):
           raise_raider_rash_error = 1;
-          return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" HAS AN INCOMPLETE INDICATION STRUCTURE';
+          return 'SYNTAX IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" HAS AN INCOMPLETE INDICATION STRUCTURE';
       }
-      return 'eval("' + String(run_js_check[1]) + '")';
+      return 'eval(`' + String(run_js_check[1]) + '`)';
     case "RUN_CPP":
       raise_raider_rash_error = 1;
       return 'USAGE IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" ATTEMPTS TO USE C++ IN A JAVASCRIPT CONTEXT';
@@ -255,11 +257,26 @@ function check_if_commandParametersAreValid (command_text, command_line) {
 
       let accept_argument2 = command1.join(" ");
       return 'let prompt_var = prompt("' + accept_argument2 + '"); createStarForgeVariable("' + String(input_var) + '", String(prompt_var))';
+    case "REPEAT":
+      return 'is_repeating_macro = 1';
+    case "STOP":
+      return 'is_repeating_macro = 0; hard_stop_flag = 1';
+    case "IF":
+      let if_statement = command1;
+      if_statement.shift();
+      let if_statement_splitter = if_statement
+      let join_if_statement = if_statement_splitter.join(" ");
+      let if_statement_check = join_if_statement.split("|cond|");
+      break;
   }
 }
 
+let is_repeating_macro = 0; // if 1, it repeats
+let hard_stop_flag = 0; // if 1 STOP!!!
 function parse_RAIDER_RASH (unparsed_text) {
   let starforge_run_eval = [];
+  is_repeating_macro = 0;
+  hard_stop_flag = 0;
   // let split_semicolon_text = String(unparsed_text).split("**)");
   let split_semicolon_text = unparsed_text.split("**)")
     .map(cmd => cmd.trim())
@@ -291,7 +308,19 @@ function parse_RAIDER_RASH (unparsed_text) {
   function starforge_evaluationLoop () {
     universal_delay_time = 0; // reset timer
     if (starforge_run_eval_pos == (starforge_run_eval.length)) {
-      console.log("FINISHED RUNTIME");
+      switch (is_repeating_macro) {
+        case 0:
+          console.log("FINISHED RUNTIME");
+          break;
+        case 1:
+          switch (hard_stop_flag) {
+            case 1:
+              return false;
+          }
+          starforge_run_eval_pos = 0;
+          starforge_evaluationLoop();
+          break;
+      }
     } else {
       eval(starforge_run_eval[starforge_run_eval_pos]);
       starforge_run_eval_pos++;
