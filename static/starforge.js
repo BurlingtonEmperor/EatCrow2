@@ -11,7 +11,7 @@ const allowed_raider_rash_commands = [
   "CALL", "RUN", "LOG", "WAIT", "SET", "STOP", "", "\n", 
   "COMMENT", "VAR", "CHANGE_VAR", "REPEAT", "RUN_JS",
   "DISPLAY", "ACCEPT", "INPUT", "INPUT_VAR", "RUN_CPP",
-  "IF", "ELSE", "PROGRAM-ID"
+  "IF", "ELSE", "PROGRAM-ID:", "MATH_DIVISION", "DIVIDE"
 ];
 let raise_raider_rash_error = 0;
 let universal_delay_time = 0; // in ms. bad way to make delays but what can I do?
@@ -280,6 +280,11 @@ function check_if_commandParametersAreValid (command_text, command_line) {
       let input_var = command1[0];
       command1.shift();
 
+      if (checkIfStarForgeVariableExists(input_var)) {
+        raise_raider_rash_error = 1;
+        return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '"; VARIABLE CANNOT BE REDECLARED AS INPUT_VAR';
+      }
+
       let accept_argument2 = command1.join(" ");
       return 'let prompt_var = prompt("' + accept_argument2 + '"); createStarForgeVariable("' + String(input_var) + '", String(prompt_var))';
     case "REPEAT":
@@ -326,6 +331,13 @@ function check_if_commandParametersAreValid (command_text, command_line) {
         // }
 
         // let my_if_stat = JSON.stringify(stat_result);
+
+        switch (math_division) {
+          case 1:
+            if_statement_one = parseFloat(if_statement_one);
+            if_statement_two = parseFloat(if_statement_two);
+            break;
+        }
         
         let my_if_stat;
         switch (String(split_condition_text[1])) {
@@ -378,17 +390,21 @@ function check_if_commandParametersAreValid (command_text, command_line) {
           return '// dummy code';
       }
 
-      return 'duh';
       break;
+    case "MATH_DIVISION":
+      math_division = 1;
+      return '// why did I have to write it this way...'; // actually, what was the point of this again?!!
   }
 }
 
 let is_repeating_macro = 0; // if 1, it repeats
 let hard_stop_flag = 0; // if 1 STOP!!!
 let if_statement_fufilled = 0; // lets the program know if an if statement has been fufilled!
+let math_division = 0; // lets the program know to start using numbers...
 
 function parse_RAIDER_RASH (unparsed_text) {
   let starforge_run_eval = [];
+  raise_raider_rash_error = 0;
 
   is_repeating_macro = 0;
   hard_stop_flag = 0;
@@ -406,6 +422,8 @@ function parse_RAIDER_RASH (unparsed_text) {
     if (!split_semicolon_text[i].toUpperCase().startsWith("ELSE")) {
       if_statement_fufilled = 0; 
     }
+
+    math_division = 0;
 
     switch (false) {
       case (check_if_commandIsValid(split_semicolon_text[i])):

@@ -18,6 +18,8 @@ DISPLAY "6:%20Go%20over%20setting%20maximum%20and%20minimum%20rates"**)
 DISPLAY "7:%20Go%20over%20calling%20other%20macros"**)
 
 INPUT_VAR USER_NUM_INPUT "Please choose a number: "**)
+
+MATH_DIVISION**)
 IF |cond|_vUSER_NUM_INPUT EQUALS 1|cond| THEN CALL RAS_COBOL display_and_logging**)
 IF |cond|_vUSER_NUM_INPUT EQUALS 2|cond| THEN CALL RAS_COBOL variables**)
 IF |cond|_vUSER_NUM_INPUT EQUALS 3|cond| THEN CALL RAS_COBOL inputs_and_input_var**)

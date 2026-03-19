@@ -207,6 +207,9 @@ select_edit_macro.onclick = function () {
       if (parsed_item_array[2] == 1) {
         set_mode_to_javascript.click();
         js_textbox_input.value = parsed_item_array[1];
+      } else {
+        set_mode_to_default.click();
+        default_textbox_input.value = parsed_item_array[1];
       }
       macro_name_to_create.value = parsed_item_array[0];
     }
@@ -592,6 +595,14 @@ function runSoftMacro (macro_name) {
         // return current_macro_array[i].split("||{}||")[1];
         switch (parseInt(read_array_macro[2])) {
           case 0:
+            console.log("STARFORGE SET");
+            let temp_run_cycle = parse_RAIDER_RASH(read_array_macro[1]);
+            console.log(temp_run_cycle);
+            switch (raise_raider_rash_error) {
+              case 1:
+                console.error(temp_run_cycle);
+                break;
+            }
             break;
           case 1:
             try {
@@ -856,6 +867,11 @@ save_macro_btn.onclick = function () {
 
   switch (macro_mode) {
     case 0:
+      if (default_textbox_input.value.includes("||{}||")) {
+        macro_status_msgs.innerText = "DO NOT INCLUDE '||{}||' IN MACRO CONTENT";
+        return false;
+      }
+      macro_real_content = default_textbox_input.value;
       break;
     case 1:
       if (js_textbox_input.value.includes("||{}||")) {
