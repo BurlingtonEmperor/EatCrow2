@@ -1,0 +1,1 @@
+IF |cond|5 EQUALS 5|cond| THEN DISPLAY GOOD**)

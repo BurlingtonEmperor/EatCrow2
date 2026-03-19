@@ -4,7 +4,7 @@ Original name was Raider Rash, but it's going to have be called StarForge instea
 This is a transpiler/interpreter that converts StarForge scripts into JavaScript. It's not super necessary but it 
 is best for people who don't know how to navigate JavaScript or just want to make a curing process fast (or both)
 
-The syntax is very similar to COBOL to the point where it can be considered a subset of COBOL. Thus, it can also be called RAS COBOL.
+The syntax is very similar to COBOL to the point where it can be considered a spiritual subset of COBOL. Thus, it can also be called RAS COBOL.
 */
 
 const allowed_raider_rash_commands = [
@@ -84,6 +84,21 @@ function checkIfStarForgeVariableExists (possible_variable) {
   return false;
 }
 
+function genericStarForgeVariableCheck (possible_variable) {
+  let firstTwoChars = String(possible_variable).slice(0, 2);
+  if (firstTwoChars == "_v") {
+    let starforge_possible_var_name = String(possible_variable).slice(2);
+    if (checkIfStarForgeVariableExists(starforge_possible_var_name)) {
+      let this_possible_variable = possible_variable;
+      return checkVariables(this_possible_variable);
+    } else {
+      return possible_variable;
+    }
+  } else {
+    return possible_variable;
+  }
+}
+
 function check_if_commandIsValid (command_text) {
   let first_word_of_command1 = command_text.split(" ");
   let first_word_of_command2 = first_word_of_command1[0];
@@ -97,8 +112,17 @@ function check_if_commandIsValid (command_text) {
   return false;
 }
 
+function check_Conditional_Statement (given_condition) {
+  switch (true) {
+    case (given_condition):
+      return true;
+    default:
+      return false;
+  }
+}
+
 function check_if_commandParametersAreValid (command_text, command_line) {
-  command_text = command_text.replace("**-)", "**)"); // make sure documentation command splitters aren't left out
+  command_text = command_text.replaceAll("**-)", "**)"); // make sure documentation command splitters aren't left out
   let command1 = command_text.split(" ");
   let first_word_of_command = String(command1[0]).toUpperCase();
 
@@ -138,7 +162,7 @@ function check_if_commandParametersAreValid (command_text, command_line) {
           raise_raider_rash_error = 1;
           return is_null_var;
       }
-      return 'console.log("' + logging_string + '")';
+      return 'console.log("' + logging_string.replaceAll("%20", " ").replaceAll("%-20", "%20") + '")'; // did I turn my brain off when writing this piece of sh**?
     case "CALL":
       switch (String(command1[1].toUpperCase())) {
         case "SOFT_MACRO":
@@ -171,7 +195,8 @@ function check_if_commandParametersAreValid (command_text, command_line) {
           return 'universal_delay_time = ' + parseFloat(parseFloat(logging_string) * 1000);
       }
     case "SET":
-      let set_parse_num = parseFloat(String(command1[2]));
+      let set_parse_preamble = genericStarForgeVariableCheck(String(command1[2]));
+      let set_parse_num = parseFloat(set_parse_preamble);
       if (isNaN(set_parse_num)) {
         raise_raider_rash_error = 1;
         return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" SETS TO AN INVALID NUMBER';  
@@ -223,7 +248,7 @@ function check_if_commandParametersAreValid (command_text, command_line) {
           raise_raider_rash_error = 1;
           return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '"; A NON-EXISTENT VARIABLE CANNOT BE CHANGED';
       }
-      changeStarForgeVariable(cvar_string, command1[2]);
+      changeStarForgeVariable(cvar_string, genericStarForgeVariableCheck(command1[2]));
       return '// this is dummy code';
     case "RUN_JS":
       let run_js_general = command1;
@@ -276,14 +301,95 @@ function check_if_commandParametersAreValid (command_text, command_line) {
           raise_raider_rash_error = 1;
           return 'SYNTAX IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" HAS AN INCOMPLETE INDICATION STRUCTURE';
       }
+      
+      let split_condition_text = if_statement_check[1].split(" ")
+        .map(cmd => cmd.trim())
+        .filter(cmd => cmd.length > 0); // ex: [_vVar1, EQUALS, _vVar2]
+      
+      function check_IfStatementKeywords (given_keyword) {
+        let allowed_if_statement_keywords = ["EQUALS", "MORE_THAN", "LESS_THAN", "IS_NOT", "INCLUDES"];
+        for (let i = 0; i < allowed_if_statement_keywords.length; i++) {
+          if (String(given_keyword) == allowed_if_statement_keywords[i]) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      if (check_IfStatementKeywords(split_condition_text[1])) {
+        let if_statement_one = String(genericStarForgeVariableCheck(split_condition_text[0]));
+        let if_statement_two = String(genericStarForgeVariableCheck(split_condition_text[2]));
+        // let stat_result = "`" + if_statement_one + "` " + my_actual_statement + " `" + if_statement_two + "`";
+
+        // if (my_actual_statement == "including") {
+        //   stat_result = if_statement_one + ".includes(`" + if_statement_two + "`)"
+        // }
+
+        // let my_if_stat = JSON.stringify(stat_result);
+        
+        let my_if_stat;
+        switch (String(split_condition_text[1])) {
+          case "EQUALS":
+            my_if_stat = check_Conditional_Statement(if_statement_one == if_statement_two);
+            break;
+          case "MORE_THAN":
+            my_if_stat = check_Conditional_Statement(if_statement_one > if_statement_two);
+            break;
+          case "LESS_THAN":
+            my_if_stat = check_Conditional_Statement(if_statement_one < if_statement_two);
+            break;
+          case "IS_NOT":
+            my_if_stat = check_Conditional_Statement(if_statement_one != if_statement_two);
+            break;
+          case "INCLUDES":
+            my_if_stat = check_Conditional_Statement(if_statement_one.includes(if_statement_two));
+            break;
+        }
+        
+        if (my_if_stat) {
+          let thing_to_parse = if_statement_check[2];
+          let my_parser = thing_to_parse.split(" ")[1];
+          if (my_parser == "THEN" || my_parser == " THEN" || my_parser == "THEN ") {} else {
+            raise_raider_rash_error = 1;
+            return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" USES AN INVALID IF-THEN KEYWORD';
+          }
+          
+          let call_statement = thing_to_parse.split("THEN")[1].trim();
+          if_statement_fufilled = 1;
+          return check_if_commandParametersAreValid(call_statement, 0);
+        } else {
+          return '// dummy code';
+        }
+      } else {
+        raise_raider_rash_error = 1;
+        return 'COMMAND IS IMPURE: COMMAND ' + String(command_line + 1) + ' "' + String(command_text) + '" HAS AN INVALID OPERATOR';
+      }
+    case "ELSE":
+      let else_if_statement_flag = if_statement_fufilled;
+      if_statement_fufilled = 0;
+       
+      switch (else_if_statement_flag) {
+        case 0:
+          let else_call_statement = command_text.split("ELSE");
+          let final_call_statement = else_call_statement[1].trim();
+          
+          return check_if_commandParametersAreValid(final_call_statement, 0);
+        default:
+          return '// dummy code';
+      }
+
+      return 'duh';
       break;
   }
 }
 
 let is_repeating_macro = 0; // if 1, it repeats
 let hard_stop_flag = 0; // if 1 STOP!!!
+let if_statement_fufilled = 0; // lets the program know if an if statement has been fufilled!
+
 function parse_RAIDER_RASH (unparsed_text) {
   let starforge_run_eval = [];
+
   is_repeating_macro = 0;
   hard_stop_flag = 0;
   // let split_semicolon_text = String(unparsed_text).split("**)");
@@ -297,6 +403,10 @@ function parse_RAIDER_RASH (unparsed_text) {
   }
   
   for (let i = 0; i < split_semicolon_text.length; i++) {
+    if (!split_semicolon_text[i].toUpperCase().startsWith("ELSE")) {
+      if_statement_fufilled = 0; 
+    }
+
     switch (false) {
       case (check_if_commandIsValid(split_semicolon_text[i])):
         return 'SYNTAX IS IMPURE: COMMAND ' + String(i + 1) + ' "' + split_semicolon_text[i] + '" IS NOT A VALID COMMAND';

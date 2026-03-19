@@ -1,3 +1,4 @@
 PROGRAM-ID: Walthrough_Err_Return**)
-DISPLAY "NOT A VALID NUMBER"**)
+DISPLAY "NOT%20A%20VALID%20NUMBER"**)
+WAIT 1**)
 CALL macro_walkthrough_main**)
