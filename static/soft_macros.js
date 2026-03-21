@@ -833,7 +833,7 @@ set_mode_to_default.onclick = function () {
   js_textbox.style.display = "none";
 
   macro_mode = 0;
-  macro_status_msgs.innerText = "MODE SET TO DEFAULT (RAIDER_RASH)";
+  macro_status_msgs.innerText = "MODE SET TO DEFAULT (StarForge)";
   default_textbox.style.display = "block";
 
   macro_designer_window.style.display = "block";

@@ -151,6 +151,9 @@ function createNewHardMacro (macro_name, macro_content) {
 async function updateHardMacros () { // this will happen every 1 minute and will create macros from the cache IF the cache isn't empty
   switch (is_hard_macro_cache_empty) {
     case 0:
+    //   if (localStorage.getItem("hard_macro_cache") == null || localStorage.getItem("hard_macro_cache") == "[]") {
+    //     return false;
+    //   }
       fetch ("/create_macro", {
         method : "POST",
         headers : {

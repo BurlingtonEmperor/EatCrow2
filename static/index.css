@@ -130,7 +130,7 @@ textarea {
   display: none;
 }
 
-#manual-reroute {
+#manual-reroute, #macro-placer-window {
   display: none;
 }
 
@@ -278,6 +278,12 @@ textarea {
   width: 30%;
   display: none;
   height: 40%;
+  overflow-y: auto;
+}
+
+#macro-placer-window {
+  position: fixed;
+  width: 30%;
   overflow-y: auto;
 }
 
