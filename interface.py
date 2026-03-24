@@ -25,6 +25,8 @@ import pandas as pd;
 import asyncio;
 import json;
 
+import send_file_to_arduino;
+
 current_autoclave_temp = 0
 current_autoclave_pressure = 0
 autoclave_time = 0
