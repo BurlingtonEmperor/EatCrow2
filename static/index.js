@@ -1582,6 +1582,7 @@ raiseTempManually.onclick = function () {
 
   is_actively_curing = true;
   notifyActiveCureStatus();
+  is_using_targets_t = true;
 
   set_temp_amount_interface = parseInt(tempRaiseAmount.value) + temp_values[temp_values.length - 1];
   if (set_temp_amount_interface == NaN || temp_values.length < 1) {
@@ -1615,6 +1616,7 @@ decreaseTempManually.onclick = function () {
 
   is_actively_curing = false;
   ceaseCuringStatus();
+  is_using_targets_t = true;
 
   set_temp_amount_interface = temp_values[temp_values.length - 1] - parseInt(tempRaiseAmount.value);
   if (set_temp_amount_interface == NaN || temp_values.length < 1) {
@@ -1648,6 +1650,7 @@ raisePSIManually.onclick = function () {
 
   is_actively_curing = true;
   notifyActiveCureStatus();
+  is_using_targets_p = true;
 
   set_psi_amount_interface = parseInt(psiRaiseAmount.value) + pressure_values[pressure_values.length - 1];
   if (set_psi_amount_interface == NaN || pressure_values.length < 1) {
@@ -1685,6 +1688,7 @@ decreasePSIManually.onclick = function () {
 
   is_actively_curing = false;
   ceaseCuringStatus();
+  is_using_targets_p = true;
 
   set_psi_amount_interface =  pressure_values[pressure_values.length - 1] - parseInt(psiRaiseAmount.value);
   if (set_psi_amount_interface == NaN || pressure_values.length < 1) {
@@ -1725,7 +1729,7 @@ bringToLevels.onclick = function () {
   }
 
   checkForSafety();
-  
+
   is_using_targets_t = true;
   is_using_targets_p = true;
 
