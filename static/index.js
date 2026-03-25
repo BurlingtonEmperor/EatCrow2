@@ -1523,6 +1523,9 @@ let has_sent_signal = 0; // check to see if the board is actually recieving sign
 let has_passed_time_limit = 0;
 let has_recieved_confirmation =  0;
 
+let is_using_targets_t = false;
+let is_using_targets_p = false;
+
 const rate_limit_status = document.getElementById("rate-limit-status");
 const write_method_status = document.getElementById("write-method-status");
 const board_comm_status = document.getElementById("board-comm-status");
@@ -1531,6 +1534,14 @@ function checkForSafety () {
   has_sent_signal = 1;
   rate_limit_status.innerText = "WAIT";
   rate_limit_status.style.color = "yellow";
+
+  if (set_temp_amount_interface > 0) {
+    is_using_targets_t = true;
+  }
+
+  if (set_psi_amount_interface > 0) {
+    is_using_targets_p = true;
+  }
 
   write_method_status.innerText = "RATE LIMIT: WAIT";
 
@@ -1714,6 +1725,9 @@ bringToLevels.onclick = function () {
   }
 
   checkForSafety();
+  
+  is_using_targets_t = true;
+  is_using_targets_p = true;
 
   console.log("Bringing to levels...");
 
@@ -2166,14 +2180,14 @@ setInterval(function () {
                 backgroundColor : "rgba(110, 114, 221, 0.8)",
                 borderColor : "rgba(110, 114, 221, 0.8)",
                 data : pressure_values
-              },
-              {
-                fill : false,
-                lineTension : 0,
-                backgroundColor : "rgba(136,238,136,1.000)",
-                borderColor : "rgba(136,238,136,1.000)",
-                data : set_temp_amount_interface
               }
+              // {
+              //   fill : false,
+              //   lineTension : 0,
+              //   backgroundColor : "rgba(136,238,136,1.000)",
+              //   borderColor : "rgba(136,238,136,1.000)",
+              //   data : set_temp_amount_interface
+              // }
             ]
           },
           options : {
@@ -2187,6 +2201,44 @@ setInterval(function () {
                 color : "rgba(136,238,136,1.000)",
                 font : {
                   family : "Hornet"
+                }
+              },
+              annotation: {
+                annotations: {
+                  line1: { // line for set temp.
+                    type: 'line',
+                    yScaleID: 'y',
+                    yMin: set_temp_amount_interface, 
+                    yMax: set_temp_amount_interface,
+                    borderColor: 'red',
+                    borderWidth: 2,
+                    label: {
+                      display: is_using_targets_t,
+                      content: 'Target Temp.',
+                      backgroundColor: 'rgba(255, 0, 0, 0.8)',
+                      color: 'white',
+                      font: {
+                        family: "Hornet"
+                      }
+                    }
+                  },
+                  line2: {
+                    type: 'line',
+                    yScaleID: 'y',
+                    yMin: set_psi_amount_interface,
+                    yMax: set_psi_amount_interface,
+                    borderColor: 'indigo',
+                    borderWidth: 2,
+                    label: {
+                      display: is_using_targets_p,
+                      content : 'Target PSI',
+                      backgroundColor: 'rgba(26, 3, 172, 0.8)',
+                      color: 'white',
+                      font: {
+                        family: "Hornet"
+                      }
+                    }
+                  }
                 }
               }
             },
