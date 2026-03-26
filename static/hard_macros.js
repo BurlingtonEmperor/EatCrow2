@@ -76,6 +76,7 @@ async function checkHardMacroCache () {
       } else {
         localStorage.setItem("hard_macro_cache", check_two);
         is_hard_macro_cache_empty = 1;
+        location = ""; // refresh for good measure
         return "Updated hard macro cache, " + String(data) + ", " + String(localStorage.getItem("hard_macro_cache"));
       }
     }
