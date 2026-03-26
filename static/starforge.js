@@ -208,12 +208,14 @@ function check_if_commandParametersAreValid (command_text, command_line) {
             raise_raider_rash_error = 1;
             return 'CONNECTION IS IMPURE: DEVICE IS NOT CONNECTED TO BOARD';
           }
+          set_temp_amount_interface = set_parse_num;
           return 'send_msg_to_board("o' + String(set_parse_num) + '")'; 
         case "PSI":
           if (isConnectedToBoard == false) {
             raise_raider_rash_error = 1;
             return 'CONNECTION IS IMPURE: DEVICE IS NOT CONNECTED TO BOARD';
           }
+          set_psi_amount_interface = set_parse_num;
           return 'send_msg_to_board("k' + String(set_parse_num) + '")';
         case "MAX_TEMP_RATE":
           return 'temp_max_rate = ' + set_parse_num;
