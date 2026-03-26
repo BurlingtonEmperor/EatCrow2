@@ -761,6 +761,7 @@ const reboot_system_btn = document.getElementById("reboot-system-btn");
 const hard_reboot_btn = document.getElementById("hard-reboot-btn");
 const reboot_learning_systems = document.getElementById("reboot-learning-system");
 const reboot_port_btn = document.getElementById("reboot-port-btn");
+const toggle_threshold_text = document.getElementById("toggle-threshold-text");
 
 autoclaveRepairBtn.onclick = function () {
   subcontainer_1.style.display = "none";
@@ -1077,6 +1078,20 @@ reboot_learning_systems.onclick = function () {
   localStorage.setItem("warnings_catalogue", "temperature:0;pressure:0;p-climb:0;t-climb:0;p-stall:0;t-stall:0;vacuum:0");
   localStorage.setItem("fully_func", "0");
   console.log("Learning algorithms have been reset.");
+}
+
+toggle_threshold_text.onclick = function () {
+  if (is_using_targets_p == false) {
+    is_using_targets_p = true;
+  } else {
+    is_using_targets_p = false;
+  }
+
+  if (is_using_targets_t == false) {
+    is_using_targets_t = true;
+  } else {
+    is_using_targets_t = false;
+  }
 }
 
 // manual command console
