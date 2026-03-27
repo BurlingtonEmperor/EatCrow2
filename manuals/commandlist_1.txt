@@ -1,0 +1,15 @@
+COMMAND LIST 1 OPTIONS 
+Manual Command Console -- Opens the manual command console (see manual_cmd_console.txt)
+Disconnect Interface -- Disconnects the interface from the board and shuts down the server
+Scripting Console -- Opens the scripting console
+Hide Console Errors -- Hides manual command console errors 
+Show Console Errors -- Shows manual command console errors 
+Refresh Interface -- Resets the interface (Reloads localhost webpage)
+Use Modelclave -- Starts listening for modelclave signals
+Disconnect Modelclave -- Stops listening for modelclave signals
+Log Autoclave -- Creates a log file 
+Github -- Opens Github Source Page 
+Call Off Emergency -- Calls off emergency stop
+Clear Console -- Clears the manual command console
+Clear Periodically -- Clears the manual command console every 30s
+End Clearing Interval -- Stops the "Clear Periodically" command 

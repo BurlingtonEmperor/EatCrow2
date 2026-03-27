@@ -1,0 +1,13 @@
+COMMAND LIST 2 OPTIONS 
+Enable Voice Commands -- Enables voice commands
+Disable Voice Commands -- Disables voice commands (this command is unreliable--to stop using voice commands, you must say "Computer, Goodbye")
+Switch Displays -- Switches main display 
+Expand Graph -- Expands main graph
+Shrink Graph -- Shrinks main graph
+Fullscreen -- Puts tab into fullscreen mode
+Open Macros/Curing Processes -- Opens the macro/curing process editor
+Hide Gridlines -- Hides gridlines on main graph 
+Show Gridlines -- Shows gridlines on main graph
+Delete All Soft Macros -- Deletes all soft macros stored in cache
+Hide Small Graphs -- Hides small graphs on main display
+Show Small Graphs -- Shows small graphs on main display

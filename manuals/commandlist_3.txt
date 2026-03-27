@@ -1,0 +1,9 @@
+COMMAND LIST 3 OPTIONS 
+Reset Graph Zoom -- Sets main graph zoom to default (1x)
+Set Graph Zoom to 2x -- Sets main graph zoom to 2x
+Set Graph Zoom to 4x -- Sets main graph zoom to 4x
+Soft Reboot -- Attempts to restart server without shutting down (very slow)
+Hard Reboot -- Attempts to restart server after shutting down 
+Reboot Port -- Attempts to reboot port connection with the board
+Reset Learning Algorithms -- Resets learning algorithm data.
+Toggle Threshold Text -- Toggles threshold text on the main graph 

@@ -1,5 +1,6 @@
 EatCrow2 -- Autoclave Interface
 (NOT TO BE USED FOR INDUSTRY LEVEL MANUFACTURING OPERATIONS!)
+More manuals can be found in the manuals folder.
 
 -- USAGE --
 Section 1: Download and Setup

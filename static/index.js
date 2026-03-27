@@ -1094,6 +1094,10 @@ toggle_threshold_text.onclick = function () {
   }
 }
 
+document.getElementById("soft-reboot-btn").onclick = function () {
+  window.open("https://github.com/BurlingtonEmperor/EatCrow2");
+}
+
 // manual command console
 const manualCommandConsole = document.getElementById("manual-command-console");
 
