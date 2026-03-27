@@ -555,6 +555,12 @@ async function generateWarnings () { // this probably causes a memory leak from 
         is_actively_curing = false;
         break;
     }
+
+    switch (true) {
+      case (board_comm_status.innerText == "OK"):
+        board_communication_functional = true;
+        break;
+    }
     resolve();
   });
 
