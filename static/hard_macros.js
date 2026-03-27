@@ -189,6 +189,7 @@ function runHardMacro (macro_name) {
         switch (parseInt(read_array_macro[2])) {
           case 0:
             console.log("STARFORGE SET");
+            starforge_global_variables = [];
             let temp_run_cycle = parse_RAIDER_RASH(read_array_macro[1]);
             console.log(temp_run_cycle);
             switch (raise_raider_rash_error) {
