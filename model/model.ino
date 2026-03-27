@@ -10,7 +10,7 @@ float setTemp = 70;
 extern int __heap_start, *__brkval;
 
 unsigned long previousMillis = 0; 
-const long interval = 18000; // interval is set to 18s because otherwise the Serial buffer clogs up (the ACTUAL interval is half of this one, so realistically it's only about 9s)
+const long interval = 27000; // interval is set to 27s because otherwise the Serial buffer clogs up (the ACTUAL interval is less than half of this one, so realistically it's only about 9s)
 
 int read_mode = 1;
 int has_gotten_sram = 0;

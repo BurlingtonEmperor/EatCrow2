@@ -595,6 +595,10 @@ function runSoftMacro (macro_name) {
         // return current_macro_array[i].split("||{}||")[1];
         switch (parseInt(read_array_macro[2])) {
           case 0:
+            if (safetyTimeProtocol) {
+              return false;
+            }
+            checkForSafety();
             console.log("STARFORGE SET");
             starforge_global_variables = [];
             let temp_run_cycle = parse_RAIDER_RASH(read_array_macro[1]);
