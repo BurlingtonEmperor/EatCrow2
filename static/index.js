@@ -1281,7 +1281,8 @@ reroute_board_conn_button.onclick = function () {
 }
 
 if (localStorage.getItem("board_conn_route") == null || localStorage.getItem("board_conn_route") == "0") {
-  reroute_board_conn_text.innerText = "BOARD CONNECTION CHECK [BC_CHECK1]";
+  reroute_board_conn_text.innerText = "BOARD CONNECTION CHECK [BC_CHECK2]";
+  localStorage.setItem("board_conn_route", "1");
 }
 
 else {
@@ -2244,6 +2245,7 @@ setInterval(function () {
                     label: {
                       display: is_using_targets_t,
                       content: 'Target Temp.',
+                      position: 'start',
                       backgroundColor: 'rgba(255, 0, 0, 0.8)',
                       color: 'white',
                       font: {
@@ -2261,6 +2263,7 @@ setInterval(function () {
                     label: {
                       display: is_using_targets_p,
                       content : 'Target PSI',
+                      position: 'end',
                       backgroundColor: 'rgba(26, 3, 172, 0.8)',
                       color: 'white',
                       font: {
