@@ -4,6 +4,10 @@
 
 #include "make_cpp_easier.h"
 
+// this function is basically the JavaScript .replaceAll function
+/*
+Usage: replaceAll(myString, substringToReplace, newSubstring);
+*/
 void replaceAll(std::string& str, const std::string& from, const std::string& to) {
   size_t start_pos = 0;
   while((start_pos = str.find(from, start_pos)) != std::string::npos) {
@@ -12,11 +16,11 @@ void replaceAll(std::string& str, const std::string& from, const std::string& to
   }
 }
 
-bool checkIncludes(std::string& text, const std::string& substring) {
+bool checkIncludes(std::string& text, const std::string& substring) { // this function checks to see if a string contains a substring.
   return text.find(substring) != std::string::npos;
 }
 
-int convertBoolToInt(bool& bool_value) {
+int convertBoolToInt(bool& bool_value) { // this function converts a boolean to an integer (for switch statements); 1 = true and 0 = false
   if (bool_value) {
     return 1;
   } else {
@@ -24,7 +28,7 @@ int convertBoolToInt(bool& bool_value) {
   }
 }
 
-std::vector<std::string> splitByString(const std::string& str, const std::string& delimiter) {
+std::vector<std::string> splitByString(const std::string& str, const std::string& delimiter) { // this function splits a string using a delimiter and returns a vector
   std::vector<std::string> tokens;
   size_t start = 0;
   size_t end = str.find(delimiter);
