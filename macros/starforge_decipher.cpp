@@ -10,6 +10,12 @@
 
 std::string string_to_decipher;
 
+int convertCommandToInt(std::string& cmd_string) {
+  std::string uppercase_cmd_string = toUpperCase(cmd_string);
+  if (uppercase_cmd_string == "DISPLAY") return 0;
+  if (uppercase_cmd_string == "") return 1;
+}
+
 int main() {
   std::ifstream file("decipher.txt");
   std::string line;
@@ -40,6 +46,9 @@ int main() {
       replaceAll(individual_line, "**-)", "");
       replaceAll(individual_line, "%20", "");
       replaceAll(individual_line, "%-20", "");
+
+      std::vector<std::string> space_limiter = splitBySpaces(individual_line);
+      
     }
   } else {
     std::cerr << "Unable to open file" << std::endl;

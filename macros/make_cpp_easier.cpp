@@ -42,3 +42,22 @@ std::vector<std::string> splitByString(const std::string& str, const std::string
   tokens.push_back(str.substr(start));
   return tokens;
 }
+
+std::vector<std::string> splitBySpaces(const std::string& str) { // this function splits a string using spaces, but ignores extra whitespace!
+  std::stringstream ss(str);
+  std::string word;
+  std::vector<std::string> words;
+
+  while (ss >> word) {
+    words.push_back(word);
+  }
+
+  return words;
+}
+
+std::string toUpperCase(std::string& str) { // this function converts a string to all uppercase and returns it.
+  for (char &c : str) {
+    c = std::toupper(static_cast<unsigned char>(c));
+  }
+  return str;
+}

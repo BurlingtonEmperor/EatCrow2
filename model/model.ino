@@ -130,7 +130,7 @@ void loop () {
         break;
 
       case 1:
-        if (incomingByte == '+' || incomingByte == 'p') {
+        if (incomingByte == '+' || incomingByte == 'p' || incomingByte == 'o' || incomingByte == 'k') {
           delay(10);
           float controls_value = Serial.parseFloat(); 
       

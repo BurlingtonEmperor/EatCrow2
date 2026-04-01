@@ -2009,26 +2009,31 @@ start_autoclave_btn.onclick = function () {
 
   switch (macro_curings_type) {
     case 0:
+      console.log("Running soft macro...");
+
       switch (true) {
         case (checkIfMacroExists(macro_curings_name)):
-          checkForSafety();
           runSoftMacro(macro_curings_name);
+          checkForSafety();
           break;
         default:
           return false;
       }
       break;
     case 1:
+      console.log("Running hard macro...");
+
       switch (true) {
         case (checkIfHardMacroExists(macro_curings_name)):
-          checkForSafety();
           runHardMacro(macro_curings_name);
+          checkForSafety();
           break;
         default:
           return false;
       }
       break;
     default:
+      console.error("Invalid macro.");
       return false;
   }
 }
