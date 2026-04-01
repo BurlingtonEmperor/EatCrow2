@@ -12,8 +12,14 @@ std::string string_to_decipher;
 
 int convertCommandToInt(std::string& cmd_string) {
   std::string uppercase_cmd_string = toUpperCase(cmd_string);
-  if (uppercase_cmd_string == "DISPLAY") return 0;
-  if (uppercase_cmd_string == "") return 1;
+  if (uppercase_cmd_string == "CALL") return 1;
+  if (uppercase_cmd_string == "RUN") return 1;
+  if (uppercase_cmd_string == "LOG") return 2;
+  if (uppercase_cmd_string == "DISPLAY") return 2;
+  if (uppercase_cmd_string == "WAIT") return 3;
+  if (uppercase_cmd_string == "SET") return 4;
+  if (uppercase_cmd_string == "COMMENT") return 5;
+  return 0;
 }
 
 int main() {
@@ -48,7 +54,12 @@ int main() {
       replaceAll(individual_line, "%-20", "");
 
       std::vector<std::string> space_limiter = splitBySpaces(individual_line);
-      
+      int converted_command_to_int = convertCommandToInt(space_limiter[0]);
+
+      switch (converted_command_to_int) {
+        case 0:
+          break;
+      } 
     }
   } else {
     std::cerr << "Unable to open file" << std::endl;

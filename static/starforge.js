@@ -164,6 +164,7 @@ function check_if_commandParametersAreValid (command_text, command_line) {
       }
       return 'console.log("' + logging_string.replaceAll("%20", " ").replaceAll("%-20", "%20") + '")'; // did I turn my brain off when writing this piece of sh**?
     case "CALL":
+    case "RUN":
       switch (String(command1[1].toUpperCase())) {
         case "SOFT_MACRO":
           if (!checkIfMacroExists(String(command1[2]))) {
