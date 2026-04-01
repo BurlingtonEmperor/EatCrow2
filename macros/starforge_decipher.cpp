@@ -19,6 +19,18 @@ int convertCommandToInt(std::string& cmd_string) {
   if (uppercase_cmd_string == "WAIT") return 3;
   if (uppercase_cmd_string == "SET") return 4;
   if (uppercase_cmd_string == "COMMENT") return 5;
+  if (uppercase_cmd_string == "STOP") return 6;
+  if (uppercase_cmd_string == "VAR") return 7;
+  if (uppercase_cmd_string == "CHANGE_VAR") return 8;
+  if (uppercase_cmd_string == "REPEAT") return 9;
+  if (uppercase_cmd_string == "RUN_JS") return 10;
+  if (uppercase_cmd_string == "ACCEPT") return 11;
+  if (uppercase_cmd_string == "INPUT") return 11;
+  if (uppercase_cmd_string == "INPUT_VAR") return 12;
+  // if (uppercase_cmd_string == "RUN_CPP") return 13;
+  if (uppercase_cmd_string == "IF") return 13;
+  if (uppercase_cmd_string == "ELSE") return 14;
+  if (uppercase_cmd_string == "PROGRAM-ID") return 15;
   return 0;
 }
 
@@ -45,6 +57,7 @@ int main() {
     // }
 
     std::vector<std::string> seglist = splitByString(string_to_decipher, "**)");
+    std::vector<std::string> vector_to_return;
 
     for (int i = 0; i < seglist.size(); i++) {
       std::string individual_line = seglist[i];
@@ -58,6 +71,7 @@ int main() {
 
       switch (converted_command_to_int) {
         case 0:
+          vector_to_return.push_back("An invalid command was given here.");
           break;
       } 
     }

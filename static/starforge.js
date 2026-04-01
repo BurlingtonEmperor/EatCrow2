@@ -4,6 +4,9 @@ Original name was Raider Rash, but it's going to have be called StarForge instea
 This is a transpiler/interpreter that converts StarForge scripts into JavaScript. It's not super necessary but it 
 is best for people who don't know how to navigate JavaScript or just want to make a curing process fast (or both)
 
+I got the name 'StarForge' from an old .stl file in the cloud storage of the Autoclave team. The StarForge was a Rakatan Empire superweapon that 
+used the dark side of the Force to create practically anything.
+
 The syntax is very similar to COBOL to the point where it can be considered a spiritual subset of COBOL. Thus, it can also be called RAS COBOL.
 */
 
