@@ -2932,8 +2932,12 @@ function getTemp_fromModel (data_log) {
             heater_status.innerText = "OFF";
             
             let temp_cure_percent = Math.abs(parseInt(temp_values[temp_values.length - 1]) / set_temp_amount_interface);
-            if (temp_cure_percent < 1.5) {
+            let psi_cure_percent = Math.abs(parseInt(pressure_values[pressure_values.length - 1]) / set_psi_amount_interface);
+
+            if (temp_cure_percent < 1.5 && psi_cure_percent < 1.5) {
               is_actively_curing = false;
+              is_using_targets_p = false;
+              is_using_targets_t = false;
               ceaseCuringStatus();
             }
             break;
