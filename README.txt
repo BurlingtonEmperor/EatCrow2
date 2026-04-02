@@ -6,9 +6,9 @@ More manuals can be found in the manuals folder.
 Section 1: Download and Setup
 Click "<> Code", and then select "Download ZIP".
 Extract the files from the zip file into a seperate folder.
-Click RUNME.bat and allow all permissions.
-To run and/or reboot the program, click RUNME.bat.
-You may need to click RUNME.bat a second time after it installs Python (if Python is not already installed).
+Click EatCrow2.exe and allow all permissions. Make sure to run this in Administrator Mode!
+To run and/or reboot the program, click EatCrow2.exe or RUNME.bat.
+You may need to click EatCrow2.exe a second time after it installs Python (if Python is not already installed).
 
 Section 2: Modes
 There are 3 modes of the autoclave. MANUAL, SEMI-MANUAL, and AUTOMATIC.
