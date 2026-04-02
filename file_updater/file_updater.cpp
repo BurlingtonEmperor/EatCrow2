@@ -11,6 +11,7 @@ int convertCommandToInt (std::string& str) {
   if (str == "QUIT") return 2;
   if (str == "UPDATE_FILE") return 3;
   if (str == "FILES") return 4;
+  if (str == "INTERFACE") return 5;
   return 0;
 }
 
@@ -44,6 +45,8 @@ int main(int argc, char* argv[]) {
             break;
           case 4:
             std::cout << "INTERFACE - updates the main Python interface file (interface.py)\n";
+            break;
+          case 5:
             break;
         }
         continue; 
