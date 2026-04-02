@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 #include "make_cpp_easier.h"
 
@@ -65,4 +66,13 @@ std::string toUpperCase(std::string& str) { // this function converts a string t
     c = std::toupper(static_cast<unsigned char>(c));
   }
   return str;
+}
+
+std::string get_file_contents(const std::string& filename) { // gets file contents and puts it all into one string, then returns it.
+  std::ifstream file(filename);
+  if (!file.is_open()) return ""; 
+
+  std::stringstream buffer;
+  buffer << file.rdbuf();
+  return buffer.str();
 }

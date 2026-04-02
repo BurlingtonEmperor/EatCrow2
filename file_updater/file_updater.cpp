@@ -2,9 +2,21 @@
 #include <sstream>
 #include <vector>
 #include <iostream>
+#include <cstdlib>
+#include <filesystem>
 
 #include "make_cpp_easier.h"
 #include "file_updater.h"
+
+std::filesystem::path cwd = std::filesystem::current_path();
+std::string pathString = cwd.string();
+
+std::string webscrapePathString = pathString + "/webscraper/webscrape.exe";
+std::string webscrapeOutputPath = pathString + "/webscraper/webscrape_output.txt";
+
+bool checkForError () {
+  std::string output_file_contents = get_file_contents(webscrapeOutputPath);
+}
 
 int convertCommandToInt (std::string& str) {
   if (str == "HELP") return 1;
@@ -18,6 +30,8 @@ int convertCommandToInt (std::string& str) {
 int main(int argc, char* argv[]) {
   int is_loop_finished = 0;
   int is_in_file_update_mode = 0;
+
+  std::string currentSysCommand;
 
   while (is_loop_finished == 0) {
     switch (is_in_file_update_mode) {
@@ -47,6 +61,8 @@ int main(int argc, char* argv[]) {
             std::cout << "INTERFACE - updates the main Python interface file (interface.py)\n";
             break;
           case 5:
+            currentSysCommand = "& " + webscrapePathString + " https://github.com/BurlingtonEmperor/EatCrow2/raw/refs/heads/main/interface.py";
+            system(currentSysCommand.c_str());
             break;
         }
         continue; 
