@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <filesystem>
+#include <chrono>
+#include <thread>
 
 #include "make_cpp_easier.h"
 #include "file_updater.h"
@@ -15,8 +17,12 @@ std::string webscrapePathString = pathString + "/webscraper/webscrape.exe";
 std::string webscrapeOutputPath = pathString + "/webscraper/webscrape_output.txt";
 
 bool checkForError () {
-  std::string output_file_contents = get_file_contents(webscrapeOutputPath);
-  return true;
+  std::string output_file_contents = get_file_contents("/webscraper/webscrape_output.txt");
+  if (checkIncludes(output_file_contents, "There was an error when trying to fetch the remote file:")) {
+    return false; // error detected
+  } else {
+    return true; // error not detected!
+  }
 }
 
 int convertCommandToInt (std::string& str) {
@@ -25,6 +31,7 @@ int convertCommandToInt (std::string& str) {
   if (str == "UPDATE_FILE") return 3;
   if (str == "FILES") return 4;
   if (str == "INTERFACE") return 5;
+  if (str == "CHECK_ERR") return 6;
   return 0;
 }
 
@@ -62,8 +69,21 @@ int main(int argc, char* argv[]) {
             std::cout << "INTERFACE - updates the main Python interface file (interface.py)\n";
             break;
           case 5:
-            currentSysCommand = "& " + webscrapePathString + " https://github.com/BurlingtonEmperor/EatCrow2/raw/refs/heads/main/interface.py";
+            currentSysCommand = "powershell -Command \"& '" + webscrapePathString + "' https://github.com/BurlingtonEmperor/EatCrow2/raw/refs/heads/main/interface.py";
             system(currentSysCommand.c_str());
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+            if (checkForError() == true) {
+              std::cout << "Updated interface.py.\n";
+            } else {
+              std::cout << "Encountered an error. Please check webscrape_output.txt \n";
+            }
+            break;
+          case 6:
+            if (checkForError() == true) {
+              std::cout << "No errors found.\n";
+            } else {
+              std::cout << "Found an error. Please check webscrape_output.txt \n";
+            }
             break;
         }
         continue; 

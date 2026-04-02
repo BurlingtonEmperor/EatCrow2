@@ -73,6 +73,21 @@ int main() {
         case 0:
           vector_to_return.push_back("An invalid command was given here.");
           break;
+        case 1:
+          vector_to_return.push_back("This program is calling another program: " + space_limiter[1]);
+          break;
+        case 2:
+          vector_to_return.push_back("Displaying to console: " + space_limiter[1]);
+          break;
+        case 3:
+          vector_to_return.push_back("Waiting for " + space_limiter[1] + " seconds.");
+          break;
+        case 6:
+          vector_to_return.push_back("Stopping the program here.");
+          break;
+        case 7:
+          vector_to_return.push_back("Declared a variable with the name " + space_limiter[1]);
+          break;
       } 
     }
   } else {

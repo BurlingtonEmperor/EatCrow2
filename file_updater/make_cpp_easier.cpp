@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <chrono>
 
 #include "make_cpp_easier.h"
 
