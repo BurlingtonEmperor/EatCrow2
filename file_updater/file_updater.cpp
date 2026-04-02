@@ -16,6 +16,7 @@ std::string webscrapeOutputPath = pathString + "/webscraper/webscrape_output.txt
 
 bool checkForError () {
   std::string output_file_contents = get_file_contents(webscrapeOutputPath);
+  return true;
 }
 
 int convertCommandToInt (std::string& str) {
