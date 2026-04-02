@@ -15,7 +15,13 @@ import signal;
 import serial.tools.list_ports;
 import serial;
 
-from meteostat import Point, Daily;
+meteostat_status = 0
+try:
+  from meteostat import Point, Daily;
+except ImportError as err:
+  print("FAILED TO IMPORT METEOSTAT!")
+  meteostat_status = 1
+
 from datetime import datetime;
 from geo_city_locator import get_nearest_city;
 from subprocess import Popen, CREATE_NEW_CONSOLE;
@@ -35,67 +41,69 @@ current_baud_rate = 9600
 current_board_port = "COM3"
 arduino_board = ""
 
-URL = "http://127.0.0.1:5000";
-app = Flask(__name__);
+URL = "http://127.0.0.1:5000"
+app = Flask(__name__)
 # board = "";
 
 sound_dir = os.path.dirname(os.path.abspath(__file__) + "\\alarms")
 
-temp_file_path = os.path.join(tempfile.gettempdir(), 'os_output.txt');
+temp_file_path = os.path.join(tempfile.gettempdir(), 'os_output.txt')
 def clean_exit_file():
   try:
-    os.remove(temp_file_path);
+    os.remove(temp_file_path)
   except OSError:
-    pass;
+    pass
 
 def alternate_board_find(vendor_id):
-  arduino_port = None;
-  ports = serial.tools.list_ports.comports();
+  arduino_port = None
+  ports = serial.tools.list_ports.comports()
 
   for port in ports:
     if port.vid == vendor_id:
-      arduino_port = port.device;
-      break;
+      arduino_port = port.device
+      break
     elif 'Arduino' in port.description:
-      arduino_port = port.device;
-      break;
+      arduino_port = port.device
+      break
     
   if not arduino_port:
-    return None;
+    return None
     
-  return arduino_port;
+  return arduino_port
 
 def get_coord_from_ip():
   try:
-    response_coord_ip = requests.get("https://ipinfo.io");
-    coord_data = response_coord_ip.json();
-    coord_loc = coord_data.get("loc").split(",");
-    coord_lat = float(coord_loc[0]);
-    coord_long = float(coord_loc[1]);
+    response_coord_ip = requests.get("https://ipinfo.io")
+    coord_data = response_coord_ip.json()
+    coord_loc = coord_data.get("loc").split(",")
+    coord_lat = float(coord_loc[0])
+    coord_long = float(coord_loc[1])
 
-    return coord_lat, coord_long;
+    return coord_lat, coord_long
   except Exception as e:
-    print("Error: " + str(e));
-    return e;
+    print("Error: " + str(e))
+    return e
 
 def get_temp():
-  current_temp_time = datetime.now();
-  current_offset_temp_time = current_temp_time - pd.DateOffset(days = 1);
+  if (meteostat_status == 1):
+    return "endpoint_error"
+  current_temp_time = datetime.now()
+  current_offset_temp_time = current_temp_time - pd.DateOffset(days = 1)
 
-  get_lat_long = get_coord_from_ip();
+  get_lat_long = get_coord_from_ip()
   if ("Error" in str(get_lat_long) or "error" in str(get_lat_long)):
-    return "endpoint_error";
+    return "endpoint_error"
 
-  current_location = Point(get_lat_long[0], get_lat_long[1]);
+  current_location = Point(get_lat_long[0], get_lat_long[1])
 
-  loc_temp_data = Daily(current_location, current_offset_temp_time, current_temp_time);
-  loc_temp_data = loc_temp_data.fetch();
+  loc_temp_data = Daily(current_location, current_offset_temp_time, current_temp_time)
+  loc_temp_data = loc_temp_data.fetch()
 
   if (not loc_temp_data.empty):
-    get_avg_temp = loc_temp_data["tavg"].iloc[-1];
-    return str(get_avg_temp);
+    get_avg_temp = loc_temp_data["tavg"].iloc[-1]
+    return str(get_avg_temp)
   else:
-    return "loc_error";
+    return "loc_error"
 
 def get_city():
   get_lat_long = get_coord_from_ip()
@@ -131,7 +139,7 @@ def connect_to_board_precheck(my_port, my_rate):
 
 @app.route('/')
 def index():
-  return render_template("index.html");
+  return render_template("index.html")
 
 @app.route('/boards')
 def boards():
@@ -140,51 +148,51 @@ def boards():
   result = subprocess.check_output(command, shell=True, text=True);
   """; # for some reason permissions with this command are wonky
 
-  command = f"arduino-cli board list > {temp_file_path} 2>&1";
-  exit_status = os.system(command);
+  command = f"arduino-cli board list > {temp_file_path} 2>&1"
+  exit_status = os.system(command)
 
   if exit_status == 1:
     try:
       with open(temp_file_path, 'r') as f:
-        output = f.read();
-        clean_exit_file();
-        return output;
+        output = f.read()
+        clean_exit_file()
+        return output
     except FileNotFoundError:
-      clean_exit_file();
-      return "file_not_found";
+      clean_exit_file()
+      return "file_not_found"
   else:
-    clean_exit_file();
-    return str(exit_status);
+    clean_exit_file()
+    return str(exit_status)
 
 @app.route('/find_board')
 def find_board():
-  global board;
+  global board
 
   # checkWhichPlatform();
   
   try:
-    board = Arduino("115200", port=COM_PORT);
+    board = Arduino("115200", port=COM_PORT)
   except ValueError as e:
     # print(e);
     if ("Could not find port" in str(e)):
-      return "port_not_found";
+      return "port_not_found"
     else:
-      return "not_found";
+      return "not_found"
 
 @app.route('/afind_board', methods=['POST'])
 def afind_board():
-  afind_board_data = request.get_json();
-  custom_vendor_id = afind_board_data.get("vendor_id");
+  afind_board_data = request.get_json()
+  custom_vendor_id = afind_board_data.get("vendor_id")
   
-  return str(alternate_board_find(custom_vendor_id));
+  return str(alternate_board_find(custom_vendor_id))
 
 @app.route('/get_tempat')
 def get_tempat():
-  return get_temp();
+  return get_temp()
 
 @app.route('/get_coord')
 def get_coord():
-  return str(get_coord_from_ip());
+  return str(get_coord_from_ip())
 
 @app.route('/open_eatcrow')
 def open_eatcrow():
@@ -334,10 +342,10 @@ def reboot_port():
     return "error"
 
 def open_browser():
-  checkWhichPlatform();
-  webbrowser.open_new(URL);
+  checkWhichPlatform()
+  webbrowser.open_new(URL)
 
 if __name__ == '__main__':
-  Timer(1, open_browser).start();
+  Timer(1, open_browser).start()
     
-  app.run(port=5000, debug=True, use_reloader=False);
+  app.run(port=5000, debug=True, use_reloader=False)

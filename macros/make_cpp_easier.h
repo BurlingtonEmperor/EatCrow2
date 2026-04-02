@@ -4,8 +4,11 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <iostream>
 
 void replaceAll(std::string& str, const std::string& from, const std::string& to);
+void console_log(std::string& str);
+
 bool checkIncludes(std::string& text, const std::string& substring);
 int convertBoolToInt(bool& bool_value);
 

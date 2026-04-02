@@ -1,8 +1,13 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <iostream>
 
 #include "make_cpp_easier.h"
+
+void console_log(std::string& str) { // this function mimics the JavaScript console.log() function
+  std::cout << str;
+}
 
 // this function is basically the JavaScript .replaceAll function
 /*
