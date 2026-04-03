@@ -35,6 +35,16 @@ int convertCommandToInt (std::string& str) {
   return 0;
 }
 
+void writeToFile (std::string& file_dir, std::string& file_content) {
+  std::ofstream mFile(file_dir);
+  if (mFile.is_open()) {
+    mFile << file_content + "\n";
+    mFile.close();
+  } else {
+    std::cerr << "Unable to open file. \n";
+  }
+}
+
 int main(int argc, char* argv[]) {
   int is_loop_finished = 0;
   int is_in_file_update_mode = 0;
@@ -74,6 +84,10 @@ int main(int argc, char* argv[]) {
             std::this_thread::sleep_for(std::chrono::seconds(3));
             if (checkForError() == true) {
               std::cout << "Updated interface.py.\n";
+
+              std::string output_file_contents = get_file_contents("webscrape_output.txt");
+              std::string needed_file_dir = "../interface.py";
+              writeToFile(needed_file_dir, output_file_contents);
             } else {
               std::cout << "Encountered an error. Please check webscrape_output.txt \n";
             }

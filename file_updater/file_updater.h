@@ -17,5 +17,6 @@ extern std::string pathString;
 
 int convertCommandToInt (std::string& str);
 bool checkForError ();
+void writeToFile (std::string& file_dir, std::string& file_content);
 
 #endif
