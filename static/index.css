@@ -260,7 +260,7 @@ textarea {
   outline: none;
 }
 
-#more-macro-options, #edit-macrosoft, #delete-macrosoft, #run-macrosoft {
+#more-macro-options, #edit-macrosoft, #delete-macrosoft, #run-macrosoft, #fancy-predictor-graph {
   display: none;
 }
 
@@ -281,7 +281,7 @@ textarea {
   overflow-y: auto;
 }
 
-#macro-placer-window {
+#macro-placer-window, #fancy-predictor-graph {
   position: fixed;
   width: 30%;
   overflow-y: auto;

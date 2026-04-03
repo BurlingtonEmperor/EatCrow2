@@ -177,9 +177,11 @@ document.getElementById("add-starforge-cmd").onclick = function () {
       break;
     case 7:
       default_textbox_input.value += (newline + "SET TEMP " + String(starforgeUserValue.value) + "**)");
+      generateAnalysisWindow(parseFloat(starforgeUserValue.value), 0);
       break;
     case 8:
       default_textbox_input.value += (newline + "SET PSI " + String(starforgeUserValue.value) + "**)");
+      generateAnalysisWindow(0, parseFloat(starforgeUserValue.value));
       break;
     case 9:
       default_textbox_input.value += (newline + "SET MAX_TEMP_RATE " + String(starforgeUserValue.value) + "**)");
@@ -203,4 +205,8 @@ document.getElementById("add-starforge-cmd").onclick = function () {
       default_textbox_input.value += (newline + "COMMENT " + String(starforgeUserValue.value) + "**)");
       break;
   }
+}
+
+document.getElementById("close-predictor-graph").onclick = function () {
+  document.getElementById("fancy-predictor-graph").style.display = "none";
 }

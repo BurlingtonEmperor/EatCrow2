@@ -32,6 +32,8 @@ int convertCommandToInt (std::string& str) {
   if (str == "FILES") return 4;
   if (str == "INTERFACE") return 5;
   if (str == "CHECK_ERR") return 6;
+  if (str == "HTML") return 7;
+  if (str == "DISPLAY_CALCULATIONS") return 8;
   return 0;
 }
 
@@ -56,6 +58,7 @@ int main(int argc, char* argv[]) {
       case 1:
         std::cout << "You are now in file update mode.\n";
         std::cout << "Type FILES for a list of files to update.\n";
+        std::cout << "Type CHECK_ERR to check for errors.\n";
         std::cout << "Type QUIT to exit file update mode.\n";
 
         std::string command_given; // yes, repeating this whole input section is bad.
@@ -76,7 +79,7 @@ int main(int argc, char* argv[]) {
             is_in_file_update_mode = 0;
             break;
           case 4:
-            std::cout << "INTERFACE - updates the main Python interface file (interface.py)\n";
+            std::cout << "INTERFACE - updates the main Python interface file (interface.py)\nHTML - updates the HTML file where everything is displayed.";
             break;
           case 5:
             currentSysCommand = "powershell -Command \"& '" + webscrapePathString + "' https://github.com/BurlingtonEmperor/EatCrow2/raw/refs/heads/main/interface.py";
@@ -97,6 +100,34 @@ int main(int argc, char* argv[]) {
               std::cout << "No errors found.\n";
             } else {
               std::cout << "Found an error. Please check webscrape_output.txt \n";
+            }
+            break;
+          case 7:
+            currentSysCommand = "powershell -Command \"& '" + webscrapePathString + "' https://github.com/BurlingtonEmperor/EatCrow2/raw/refs/heads/main/templates/index.html";
+            system(currentSysCommand.c_str());
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+            if (checkForError() == true) {
+              std::cout << "Updated index.html.\n";
+
+              std::string output_file_contents = get_file_contents("webscrape_output.txt");
+              std::string needed_file_dir = "../templates/index.html";
+              writeToFile(needed_file_dir, output_file_contents);
+            } else {
+              std::cout << "Encountered an error. Please check webscrape_output.txt \n";
+            }
+            break;
+          case 8:
+            currentSysCommand = "powershell -Command \"& '" + webscrapePathString + "' https://github.com/BurlingtonEmperor/EatCrow2/raw/refs/heads/main/static/index.js";
+            system(currentSysCommand.c_str());
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+            if (checkForError() == true) {
+              std::cout << "Updated index.js.\n";
+
+              std::string output_file_contents = get_file_contents("webscrape_output.txt");
+              std::string needed_file_dir = "../static/index.js";
+              writeToFile(needed_file_dir, output_file_contents);
+            } else {
+              std::cout << "Encountered an error. Please check webscrape_output.txt \n";
             }
             break;
         }
