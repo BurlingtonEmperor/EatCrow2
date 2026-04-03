@@ -366,3 +366,7 @@ textarea {
 .notification-window {
   width: 35%;
 }
+
+.close-notification-window {
+  width: 50%;
+}

@@ -12,7 +12,7 @@ window_elements.forEach(window_element => {
 });
 
 let createdWindows = 0;
-function createNotificationWindow (notificationText) { // unfinished, DO NOT USE
+function createNotificationWindow (notificationText) { 
   createdWindows++;
   const notificationWindow = document.createElement("div");
 
@@ -20,12 +20,11 @@ function createNotificationWindow (notificationText) { // unfinished, DO NOT USE
   notificationWindow.classList.add("notification-window");
   notificationWindow.classList.add("draggable");
 
-  notificationWindow.innerHTML = "<div class='twenty button btn-class close-notification-window'>CLOSE WINDOW</div><br/><div class='text-center'>" + notificationText + "</div>";
+  notificationWindow.innerHTML = `<div class='twenty button btn-class close-notification-window' onclick='document.getElementById("container").removeChild(document.getElementById("notification-window` + String(createdWindows) + `"));'>CLOSE WINDOW</div><br/><div class='text-center'>` + notificationText + `</div>`;
   notificationWindow.id = "notification-window" + createdWindows;
 
-  notificationWindow.style.left = "50%";
-  notificationWindow.style.top = "50%";
   notificationWindow.style.position = "fixed";
   
-  document.body.appendChild(notificationWindow);
+  document.getElementById("container").appendChild(notificationWindow);
+  $(notificationWindow).draggable();
 }
