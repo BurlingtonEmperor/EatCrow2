@@ -34,6 +34,8 @@ int convertCommandToInt (std::string& str) {
   if (str == "CHECK_ERR") return 6;
   if (str == "HTML") return 7;
   if (str == "DISPLAY_CALCULATIONS") return 8;
+  if (str == "STARFORGE_COMPILER") return 9;
+  if (str == "README") return 10;
   return 0;
 }
 
@@ -79,7 +81,9 @@ int main(int argc, char* argv[]) {
             is_in_file_update_mode = 0;
             break;
           case 4:
-            std::cout << "INTERFACE - updates the main Python interface file (interface.py)\nHTML - updates the HTML file where everything is displayed.";
+            std::cout << "INTERFACE - updates the main Python interface file (interface.py)\nHTML - updates the HTML file where everything is displayed.\n";
+            std::cout << "DISPLAY_CALCULATIONS - updates the main display calculations file (index.js)\nSTARFORGE_COMPILER - updates the StarForge compiler (starforge.js)\n";
+            std::cout << "README - updates the README file (README.txt)\n";
             break;
           case 5:
             currentSysCommand = "powershell -Command \"& '" + webscrapePathString + "' https://github.com/BurlingtonEmperor/EatCrow2/raw/refs/heads/main/interface.py";
@@ -125,6 +129,34 @@ int main(int argc, char* argv[]) {
 
               std::string output_file_contents = get_file_contents("webscrape_output.txt");
               std::string needed_file_dir = "../static/index.js";
+              writeToFile(needed_file_dir, output_file_contents);
+            } else {
+              std::cout << "Encountered an error. Please check webscrape_output.txt \n";
+            }
+            break;
+          case 9:
+            currentSysCommand = "powershell -Command \"& '" + webscrapePathString + "' https://github.com/BurlingtonEmperor/EatCrow2/raw/refs/heads/main/static/starforge.js";
+            system(currentSysCommand.c_str());
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+            if (checkForError() == true) {
+              std::cout << "Updated starforge.js.\n";
+
+              std::string output_file_contents = get_file_contents("webscrape_output.txt");
+              std::string needed_file_dir = "../static/starforge.js";
+              writeToFile(needed_file_dir, output_file_contents);
+            } else {
+              std::cout << "Encountered an error. Please check webscrape_output.txt \n";
+            }
+            break;
+          case 10:
+            currentSysCommand = "powershell -Command \"& '" + webscrapePathString + "' https://github.com/BurlingtonEmperor/EatCrow2/raw/refs/heads/main/README.txt";
+            system(currentSysCommand.c_str());
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+            if (checkForError() == true) {
+              std::cout << "Updated README.txt.\n";
+
+              std::string output_file_contents = get_file_contents("webscrape_output.txt");
+              std::string needed_file_dir = "../README.txt";
               writeToFile(needed_file_dir, output_file_contents);
             } else {
               std::cout << "Encountered an error. Please check webscrape_output.txt \n";

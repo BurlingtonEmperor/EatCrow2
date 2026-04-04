@@ -1,9 +1,12 @@
 function generateAnalysisWindow (desired_temp, desired_psi) {
   let time_to_cure_text = "TIME TO CURE: ";
+  let time_to_cure_divider = 2;
   if (desired_temp == 0) {
     time_to_cure_text = "TIME UNTIL DESIRED PSI: ";
+    time_to_cure_divider = 1;
   } else if (desired_psi == 0) {
     time_to_cure_text = "TIME UNTIL DESIRED TEMP: ";
+    time_to_cure_divider = 1;
   }
 
   let ideal_temp_change_rate = Math.abs((temp_max_rate + temp_min_rate) / 2);
@@ -16,6 +19,9 @@ function generateAnalysisWindow (desired_temp, desired_psi) {
     case (temp_values.length < 1):
       current_temp = 0;
       break;
+    default:
+      current_temp = temp_values[temp_values.length - 1];
+      break;
   }
   let temp_needed = Math.abs(desired_temp - current_temp);
 
@@ -26,12 +32,15 @@ function generateAnalysisWindow (desired_temp, desired_psi) {
     case (pressure_values.length < 1):
       current_psi = 0;
       break;
+    default:
+      current_psi = parseFloat(pressure_values[pressure_values.length - 1]);
+      break;
   }
   let psi_needed = Math.abs(desired_psi - current_psi);
 
   let time_to_cure_temp = temp_needed / ideal_temp_change_rate;
   let time_to_cure_psi = psi_needed / ideal_psi_change_rate;
-  let total_cure_time = (time_to_cure_temp + time_to_cure_psi) / 2;
+  let total_cure_time = (time_to_cure_temp + time_to_cure_psi) / time_to_cure_divider;
 
   document.getElementById("fancy-predictor-content").innerHTML = "<div class='text-center'>" + time_to_cure_text + String(total_cure_time) + " MINUTES</div>";
   document.getElementById("fancy-predictor-graph").style.display = "block";
