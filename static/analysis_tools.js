@@ -1,16 +1,19 @@
 function generateAnalysisWindow (desired_temp, desired_psi) {
+  let ideal_temp_change_rate = Math.abs((temp_max_rate + temp_min_rate) / 2);
+  let ideal_psi_change_rate = Math.abs((psi_max_rate + psi_min_rate) / 2);
+  let final_ideal_rate;
+
   let time_to_cure_text = "TIME TO CURE: ";
   let time_to_cure_divider = 2;
   if (desired_temp == 0) {
     time_to_cure_text = "TIME UNTIL DESIRED PSI: ";
     time_to_cure_divider = 1;
+    final_ideal_rate = ideal_psi_change_rate;
   } else if (desired_psi == 0) {
     time_to_cure_text = "TIME UNTIL DESIRED TEMP: ";
     time_to_cure_divider = 1;
+    final_ideal_rate = ideal_temp_change_rate;
   }
-
-  let ideal_temp_change_rate = Math.abs((temp_max_rate + temp_min_rate) / 2);
-  let ideal_psi_change_rate = Math.abs((psi_max_rate + psi_min_rate) / 2);
   
   let current_temp;
   switch (true) {
@@ -41,6 +44,33 @@ function generateAnalysisWindow (desired_temp, desired_psi) {
   let time_to_cure_temp = temp_needed / ideal_temp_change_rate;
   let time_to_cure_psi = psi_needed / ideal_psi_change_rate;
   let total_cure_time = (time_to_cure_temp + time_to_cure_psi) / time_to_cure_divider;
+
+  const graph_ctx = document.createElement("canvas");
+  document.getElementById("fancy-predictor-content").appendChild(graph_ctx);
+  let graph_time_val = [];
+  let temp_or_psi_val = [];
+
+  for (let i = 0; i < total_cure_time.length; i++) {
+    graph_time_val.push(i);
+    temp_or_psi_val.push(final_ideal_rate * i);
+  }
+
+  if (document.getElementById("fancy-graph-realsies")) {
+    document.getElementById("fancy-graph-realsies").remove();
+  }
+  graph_ctx.id = "fancy-graph-realsies";
+
+  new Chart(graph_ctx, {
+    type : "line",
+    data : {
+      labels : graph_time_val,
+      datasets : [{
+         fill : false,
+         lineTension : 0,
+         data : temp_or_psi_val
+      }]
+    }
+  });
 
   document.getElementById("fancy-predictor-content").innerHTML = "<div class='text-center'>" + time_to_cure_text + String(total_cure_time) + " MINUTES</div>";
   document.getElementById("fancy-predictor-graph").style.display = "block";
