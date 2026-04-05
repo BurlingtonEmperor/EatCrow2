@@ -42,6 +42,12 @@ bool checkIfVariable(std::string& potential_variable) {
   } else {
     return false;
   }
+  return false;
+}
+
+std::string returnCommandPrompt(std::string& command_string, const std::string& command_itself) {
+  std::vector<std::string> splitter_vector = splitByString(command_string, command_itself);
+  return splitter_vector[1];
 }
 
 int main() {
@@ -81,7 +87,7 @@ int main() {
 
       std::string secondary_argument = space_limiter[1];
       std::string third_condition;
-      if (space_limiter.length > 2) {
+      if (space_limiter.size() > 2) {
         third_condition = space_limiter[2];
 
         if (checkIfVariable(third_condition)) {
@@ -124,6 +130,23 @@ int main() {
           break;
         case 9:
           vector_to_return.push_back("Repeating the program here.");
+          break;
+        case 10:
+          vector_to_return.push_back("Running JavaScript here: ");
+          break;
+        case 11:
+          std::string input_command;
+          if (space_limiter[0] == "ACCEPT") {
+            input_command = "ACCEPT";
+          } else{
+            input_command = "INPUT";
+          }
+
+          std::string input_ask = returnCommandPrompt(individual_line, input_command);
+          vector_to_return.push_back("Accepting input, " + input_ask);
+          break;
+        case 12:
+          vector_to_return.push_back("Assigning value to the variable " + secondary_argument + " by accepting input, ");
           break;
       } 
     }

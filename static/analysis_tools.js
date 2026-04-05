@@ -3,11 +3,14 @@ function generateAnalysisWindow (desired_temp, desired_psi) {
   let ideal_psi_change_rate = Math.abs((psi_max_rate + psi_min_rate) / 2);
   let final_ideal_rate;
 
+  let display_text_option = "TEMP (*F)";
+
   let time_to_cure_text = "TIME TO CURE: ";
   let time_to_cure_divider = 2;
   if (desired_temp == 0) {
     time_to_cure_text = "TIME UNTIL DESIRED PSI: ";
     time_to_cure_divider = 1;
+    display_text_option = "PSI";
     final_ideal_rate = ideal_psi_change_rate;
   } else if (desired_psi == 0) {
     time_to_cure_text = "TIME UNTIL DESIRED TEMP: ";
@@ -49,7 +52,7 @@ function generateAnalysisWindow (desired_temp, desired_psi) {
 
   const graph_ctx = document.createElement("canvas");
   document.getElementById("fancy-predictor-content").appendChild(graph_ctx);
-  
+
   let graph_time_val = [];
   let temp_or_psi_val = [];
 
@@ -65,13 +68,77 @@ function generateAnalysisWindow (desired_temp, desired_psi) {
 
   new Chart(graph_ctx, {
     type : "line",
+    options : {
+      animation : false
+    },
     data : {
       labels : graph_time_val,
       datasets : [{
          fill : false,
          lineTension : 0,
+         backgroundColor: "rgba(136,238,136,1.000)",
+         borderColor: "rgba(136,238,136,1.000)",
          data : temp_or_psi_val
       }]
+    },
+    options: {
+    plugins: {
+      legend: {display:false},
+      title: {
+        display: true,
+          text: "PREDICTION",
+          font : {
+              family : "Hornet"
+          },
+          color : "rgba(136,238,136,1.000)"
+        }
+      },
+      scales : {
+        y : {
+          grid: {
+            color : "rgba(136,238,136,1.000)"
+          },
+          border : {
+            color : "rgba(136,238,136,1.000)"
+          },
+          ticks : {
+            color : "rgba(136,238,136,1.000)",
+            font : {
+              family : "Hornet"
+            },
+          },
+          title : {
+            display: true,
+            text : display_text_option,
+            font : {
+              family : "Hornet"
+            },
+            color: "rgba(136,238,136,1.000)"
+          }
+        },
+        x : {
+          grid : {
+            color : "rgba(136,238,136,1.000)"
+          },
+          border : {
+            color : "rgba(136,238,136,1.000)"
+          },
+          ticks : {
+           color : "rgba(136,238,136,1.000)",
+            font : {
+              family : "Hornet"
+            }
+          },
+          title : {
+            display: true,
+            text : "TIME (MIN)",
+            font : {
+              family : "Hornet"
+            },
+            color: "rgba(136,238,136,1.000)"
+          }
+        }
+      }
     }
   });
 
