@@ -45,12 +45,15 @@ function generateAnalysisWindow (desired_temp, desired_psi) {
   let time_to_cure_psi = psi_needed / ideal_psi_change_rate;
   let total_cure_time = (time_to_cure_temp + time_to_cure_psi) / time_to_cure_divider;
 
+  document.getElementById("fancy-predictor-content").innerHTML = "<div class='text-center'>" + time_to_cure_text + String(total_cure_time) + " MINUTES</div>";
+
   const graph_ctx = document.createElement("canvas");
   document.getElementById("fancy-predictor-content").appendChild(graph_ctx);
+  
   let graph_time_val = [];
   let temp_or_psi_val = [];
 
-  for (let i = 0; i < total_cure_time.length; i++) {
+  for (let i = 0; i < total_cure_time; i++) {
     graph_time_val.push(i);
     temp_or_psi_val.push(final_ideal_rate * i);
   }
@@ -72,7 +75,6 @@ function generateAnalysisWindow (desired_temp, desired_psi) {
     }
   });
 
-  document.getElementById("fancy-predictor-content").innerHTML = "<div class='text-center'>" + time_to_cure_text + String(total_cure_time) + " MINUTES</div>";
   document.getElementById("fancy-predictor-graph").style.display = "block";
   setTimeout(function () {
     document.getElementById("fancy-predictor-graph").click();

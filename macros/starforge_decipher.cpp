@@ -34,6 +34,16 @@ int convertCommandToInt(std::string& cmd_string) {
   return 0;
 }
 
+bool checkIfVariable(std::string& potential_variable) {
+  if (potential_variable.length() > 2) {
+    if (potential_variable[0] == '_' && potential_variable[1] == 'v') {
+      return true;
+    }
+  } else {
+    return false;
+  }
+}
+
 int main() {
   std::ifstream file("decipher.txt");
   std::string line;
@@ -69,24 +79,51 @@ int main() {
       std::vector<std::string> space_limiter = splitBySpaces(individual_line);
       int converted_command_to_int = convertCommandToInt(space_limiter[0]);
 
+      std::string secondary_argument = space_limiter[1];
+      std::string third_condition;
+      if (space_limiter.length > 2) {
+        third_condition = space_limiter[2];
+
+        if (checkIfVariable(third_condition)) {
+          std::string variable_name = third_condition;
+          variable_name.erase(0, 2);
+          third_condition = "(A value assigned to the variable " + variable_name + ").";
+        }
+      } else {
+        third_condition = "(This value is undefined.)";
+      }
+
+      if (checkIfVariable(secondary_argument)) {
+        std::string variable_name = space_limiter[1];
+
+        variable_name.erase(0, 2);
+        secondary_argument = "(A value assigned to the variable " + variable_name + ").";
+      }
+
       switch (converted_command_to_int) {
         case 0:
           vector_to_return.push_back("An invalid command was given here.");
           break;
         case 1:
-          vector_to_return.push_back("This program is calling another program: " + space_limiter[1]);
+          vector_to_return.push_back("This program is calling another program: " + secondary_argument);
           break;
         case 2:
-          vector_to_return.push_back("Displaying to console: " + space_limiter[1]);
+          vector_to_return.push_back("Displaying to console: " + secondary_argument);
           break;
         case 3:
-          vector_to_return.push_back("Waiting for " + space_limiter[1] + " seconds.");
+          vector_to_return.push_back("Waiting for " + secondary_argument + " seconds.");
           break;
         case 6:
           vector_to_return.push_back("Stopping the program here.");
           break;
         case 7:
-          vector_to_return.push_back("Declared a variable with the name " + space_limiter[1]);
+          vector_to_return.push_back("Declared a variable with the name " + secondary_argument);
+          break;
+        case 8:
+          vector_to_return.push_back("Changing variable " + secondary_argument + " to " + third_condition);
+          break;
+        case 9:
+          vector_to_return.push_back("Repeating the program here.");
           break;
       } 
     }
