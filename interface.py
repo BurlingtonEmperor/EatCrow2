@@ -341,6 +341,10 @@ def reboot_port():
   except serial.SerialException as e:
     return "error"
 
+@app.route('/update_files')
+def update_files():
+  subprocess.run([os.getcwd() + "\\file_updater\\file_updater.exe"], creationflags=subprocess.CREATE_NEW_CONSOLE)
+
 def open_browser():
   checkWhichPlatform()
   webbrowser.open_new(URL)

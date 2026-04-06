@@ -132,7 +132,8 @@ int main() {
           vector_to_return.push_back("Repeating the program here.");
           break;
         case 10:
-          vector_to_return.push_back("Running JavaScript here: ");
+          std::vector<std::string> javascript_delimit = splitByString(individual_line, "|js|");
+          vector_to_return.push_back("Running JavaScript here: " + javascript_delimit[1]);
           break;
         case 11:
           std::string input_command;
@@ -146,7 +147,14 @@ int main() {
           vector_to_return.push_back("Accepting input, " + input_ask);
           break;
         case 12:
-          vector_to_return.push_back("Assigning value to the variable " + secondary_argument + " by accepting input, ");
+          std::vector<std::string> input_var_splitter = splitByString(individual_line, secondary_argument);
+          std::string rest_of_input_var = input_var_splitter[1];
+          vector_to_return.push_back("Assigning value to the variable " + secondary_argument + " by accepting input, " + rest_of_input_var);
+          break;
+        case 13:
+          std::vector<std::string> condition_delimit = splitByString(individual_line, "|cond|");
+          break;
+        case 14:
           break;
       } 
     }

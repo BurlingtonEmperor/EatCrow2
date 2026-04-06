@@ -1104,6 +1104,10 @@ document.getElementById("soft-reboot-btn").onclick = function () {
   window.open("https://github.com/BurlingtonEmperor/EatCrow2");
 }
 
+document.getElementById("open-file-updater").onclick = function () {
+  fetch ("/update_files");
+}
+
 // manual command console
 const manualCommandConsole = document.getElementById("manual-command-console");
 
