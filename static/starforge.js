@@ -8,6 +8,8 @@ I got the name 'StarForge' from an old .stl file in the cloud storage of the Aut
 used the dark side of the Force to create practically anything.
 
 The syntax is very similar to COBOL to the point where it can be considered a spiritual subset of COBOL. Thus, it can also be called RAS COBOL.
+
+STARFORGE v1.0.0
 */
 
 const allowed_raider_rash_commands = [

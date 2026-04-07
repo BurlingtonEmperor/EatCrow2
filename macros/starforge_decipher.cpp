@@ -8,6 +8,10 @@
 #include "starforge_decipher.h"
 #include "make_cpp_easier.h"
 
+/*
+A "Translator" for StarForge scripts. Turns StarForge into VERY readable human instructions. 
+*/
+
 std::string string_to_decipher;
 
 int convertCommandToInt(std::string& cmd_string) {
@@ -31,6 +35,16 @@ int convertCommandToInt(std::string& cmd_string) {
   if (uppercase_cmd_string == "IF") return 13;
   if (uppercase_cmd_string == "ELSE") return 14;
   if (uppercase_cmd_string == "PROGRAM-ID") return 15;
+  return 0;
+}
+
+int convertOperatorToInt(std::string& operator_string) {
+  std::string uppercase_operator_string = toUpperCase(operator_string);
+  if (uppercase_operator_string == "EQUALS") return 1;
+  if (uppercase_operator_string == "MORE_THAN") return 2;
+  if (uppercase_operator_string == "LESS_THAN") return 3;
+  if (uppercase_operator_string == "IS_NOT") return 4;
+  if (uppercase_operator_string == "INCLUDES") return 5; 
   return 0;
 }
 
@@ -155,10 +169,14 @@ int main() {
           vector_to_return.push_back("Assigning value to the variable " + secondary_argument + " by accepting input, " + rest_of_input_var);
           break;
         }
-        case 13:
+        case 13: {
           delimit_storage = splitByString(individual_line, "|cond|");
           break;
+        }
         case 14:
+          break;
+        case 15:
+          vector_to_return.push_back("This program's ID is '" + secondary_argument + "'");
           break;
       } 
     }
