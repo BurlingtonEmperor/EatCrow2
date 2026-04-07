@@ -85,7 +85,7 @@ int main() {
       std::vector<std::string> space_limiter = splitBySpaces(individual_line);
       int converted_command_to_int = convertCommandToInt(space_limiter[0]);
 
-      std::string secondary_argument = space_limiter[1];
+      std::string secondary_argument = (space_limiter.size() > 1) ? space_limiter[1] : "";
       std::string third_condition;
       if (space_limiter.size() > 2) {
         third_condition = space_limiter[2];
@@ -105,6 +105,8 @@ int main() {
         variable_name.erase(0, 2);
         secondary_argument = "(A value assigned to the variable " + variable_name + ").";
       }
+
+      std::vector<std::string> delimit_storage;
 
       switch (converted_command_to_int) {
         case 0:
@@ -132,10 +134,10 @@ int main() {
           vector_to_return.push_back("Repeating the program here.");
           break;
         case 10:
-          std::vector<std::string> javascript_delimit = splitByString(individual_line, "|js|");
-          vector_to_return.push_back("Running JavaScript here: " + javascript_delimit[1]);
+          delimit_storage = splitByString(individual_line, "|js|");
+          vector_to_return.push_back("Running JavaScript here: " + delimit_storage[1]);
           break;
-        case 11:
+        case 11: {
           std::string input_command;
           if (space_limiter[0] == "ACCEPT") {
             input_command = "ACCEPT";
@@ -146,13 +148,15 @@ int main() {
           std::string input_ask = returnCommandPrompt(individual_line, input_command);
           vector_to_return.push_back("Accepting input, " + input_ask);
           break;
-        case 12:
-          std::vector<std::string> input_var_splitter = splitByString(individual_line, secondary_argument);
-          std::string rest_of_input_var = input_var_splitter[1];
+        }
+        case 12: {
+          delimit_storage = splitByString(individual_line, secondary_argument);
+          std::string rest_of_input_var = delimit_storage[1];
           vector_to_return.push_back("Assigning value to the variable " + secondary_argument + " by accepting input, " + rest_of_input_var);
           break;
+        }
         case 13:
-          std::vector<std::string> condition_delimit = splitByString(individual_line, "|cond|");
+          delimit_storage = splitByString(individual_line, "|cond|");
           break;
         case 14:
           break;
