@@ -171,6 +171,35 @@ int main() {
         }
         case 13: {
           delimit_storage = splitByString(individual_line, "|cond|");
+
+          std::vector<std::string> conditional_splitter = splitBySpaces(delimit_storage[1]);
+          std::string selected_operator = conditional_splitter[1];
+
+          int operator_to_int = convertOperatorToInt(selected_operator);
+          if (delimit_storage.size() < 3 || delimit_storage.size() > 3) {
+            vector_to_return.push_back("An if statement was attempted here, but too many conditional delimiters were given.");
+          } else {
+            switch (operator_to_int) {
+              case 0:
+                vector_to_return.push_back("An if statement was attempted here, but an invalid operator was used.");
+                break;
+              case 1:
+                vector_to_return.push_back("Checking if (" + conditional_splitter[0] + ") is equal to (" + conditional_splitter[2] + ").");
+                break;
+              case 2:
+                vector_to_return.push_back("Checking if (" + conditional_splitter[0] + ") is greater than (" + conditional_splitter[2] + ").");
+                break;
+              case 3:
+                vector_to_return.push_back("Checking if (" + conditional_splitter[0] + ") is less than (" + conditional_splitter[2] + ").");
+                break;
+              case 4:
+                vector_to_return.push_back("Checking if (" + conditional_splitter[0] + ") is not (" + conditional_splitter[2] + ").");
+                break;
+              case 5:
+                vector_to_return.push_back("Checking if (" + conditional_splitter[0] + ") includes (" + conditional_splitter[2] + ").");
+                break;
+            }
+          }
           break;
         }
         case 14:
