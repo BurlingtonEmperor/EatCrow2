@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
+#include <ranges>
 
 #include "make_cpp_easier.h"
 
@@ -60,6 +61,11 @@ std::vector<std::string> splitBySpaces(const std::string& str) { // this functio
   }
 
   return words;
+}
+
+std::string joinVectorItems_string(std::vector<std::string>& str_vector) {
+  std::string joined = str_vector | std::views::join_with(' ') | std::ranges::to<std::string>();
+  return joined;
 }
 
 std::string toUpperCase(std::string& str) { // this function converts a string to all uppercase and returns it.

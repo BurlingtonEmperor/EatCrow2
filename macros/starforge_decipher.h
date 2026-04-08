@@ -1,7 +1,13 @@
 #ifndef STARFORGE_DECIPHER_H
 #define STARFORGE_DECIPHER_H
 
+#include <iostream>
 #include <string>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <algorithm>
+#include <ranges>
 
 extern std::string string_to_decipher;
 

@@ -4,6 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <ranges>
 
 #include "starforge_decipher.h"
 #include "make_cpp_easier.h"
@@ -202,8 +203,15 @@ int main() {
           }
           break;
         }
-        case 14:
-          break;
+        case 14: {
+          std::vector<std::string> else_argument;
+          for (int i = 1; i < space_limiter.size(); i++) {
+            else_argument.push_back(space_limiter[i]);
+          }
+
+          std::string joined_else_argument = joinVectorItems_string(else_argument);
+          vector_to_return.push_back("Else, then ");
+        }
         case 15:
           vector_to_return.push_back("This program's ID is '" + secondary_argument + "'");
           break;

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
+#include <ranges>
 
 void replaceAll(std::string& str, const std::string& from, const std::string& to);
 void console_log(std::string& str);
@@ -17,6 +18,7 @@ int convertBoolToInt(bool& bool_value);
 std::vector<std::string> splitByString(const std::string& str, const std::string& delimiter);
 std::vector<std::string> splitBySpaces(const std::string& str);
 
+std::string joinVectorItems_string(std::vector<std::string>& str_vector);
 std::string toUpperCase(std::string& str);
 std::string get_file_contents(const std::string& filename);
 
