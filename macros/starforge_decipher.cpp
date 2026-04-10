@@ -92,6 +92,7 @@ int main() {
 
     for (int i = 0; i < seglist.size(); i++) {
       std::string individual_line = seglist[i];
+      if (individual_line.empty()) continue;
 
       replaceAll(individual_line, "**-)", "");
       replaceAll(individual_line, "%20", "");
@@ -100,8 +101,10 @@ int main() {
       std::vector<std::string> space_limiter = splitBySpaces(individual_line);
       int converted_command_to_int = convertCommandToInt(space_limiter[0]);
 
+      if (space_limiter.empty()) continue;
+
       std::string secondary_argument = (space_limiter.size() > 1) ? space_limiter[1] : "";
-      std::string third_condition;
+      std::string third_condition = (space_limiter.size() > 2) ? space_limiter[2] : "(This value is undefined.)";
       if (space_limiter.size() > 2) {
         third_condition = space_limiter[2];
 
@@ -180,26 +183,44 @@ int main() {
           if (delimit_storage.size() < 3 || delimit_storage.size() > 3) {
             vector_to_return.push_back("An if statement was attempted here, but too many conditional delimiters were given.");
           } else {
+            std::string cond_split_zero = conditional_splitter[0];
+            std::string cond_split_two = conditional_splitter[2];
+            
+            if (checkIfVariable(cond_split_zero)) {
+              std::string variable_name = cond_split_zero;
+
+              variable_name.erase(0, 2);
+              cond_split_zero = "(A value assigned to the variable " + variable_name + ").";
+            }
+
+            if (checkIfVariable(cond_split_two)) {
+              std::string variable_name = cond_split_two;
+
+              variable_name.erase(0, 2);
+              cond_split_two = "(A value assigned to the variable " + variable_name + ").";
+            }
+
             switch (operator_to_int) {
               case 0:
                 vector_to_return.push_back("An if statement was attempted here, but an invalid operator was used.");
                 break;
               case 1:
-                vector_to_return.push_back("Checking if (" + conditional_splitter[0] + ") is equal to (" + conditional_splitter[2] + ").");
+                vector_to_return.push_back("Checking if (" + cond_split_zero + ") is equal to (" + cond_split_two + ").");
                 break;
               case 2:
-                vector_to_return.push_back("Checking if (" + conditional_splitter[0] + ") is greater than (" + conditional_splitter[2] + ").");
+                vector_to_return.push_back("Checking if (" + cond_split_zero + ") is greater than (" + cond_split_two + ").");
                 break;
               case 3:
-                vector_to_return.push_back("Checking if (" + conditional_splitter[0] + ") is less than (" + conditional_splitter[2] + ").");
+                vector_to_return.push_back("Checking if (" + cond_split_zero + ") is less than (" + cond_split_two + ").");
                 break;
               case 4:
-                vector_to_return.push_back("Checking if (" + conditional_splitter[0] + ") is not (" + conditional_splitter[2] + ").");
+                vector_to_return.push_back("Checking if (" + cond_split_zero + ") is not (" + cond_split_two + ").");
                 break;
               case 5:
-                vector_to_return.push_back("Checking if (" + conditional_splitter[0] + ") includes (" + conditional_splitter[2] + ").");
+                vector_to_return.push_back("Checking if (" + cond_split_zero + ") includes (" + cond_split_two + ").");
                 break;
             }
+            vector_to_return.push_back("Then..." + delimit_storage[2]);
           }
           break;
         }
@@ -210,12 +231,23 @@ int main() {
           }
 
           std::string joined_else_argument = joinVectorItems_string(else_argument);
-          vector_to_return.push_back("Else, then ");
+          vector_to_return.push_back("Else, then " + joined_else_argument);
         }
         case 15:
           vector_to_return.push_back("This program's ID is '" + secondary_argument + "'");
           break;
       } 
+    }
+
+    std::ofstream outFile("../static/translated.txt");
+
+    if (outFile.is_open()) {
+      for (int i = 1; i < vector_to_return.size(); i++) {
+        outFile << vector_to_return[i] << std::endl;
+      }
+      outFile.close();
+    } else {
+      std::cerr << "Unable to open file" << std::endl;
     }
   } else {
     std::cerr << "Unable to open file" << std::endl;

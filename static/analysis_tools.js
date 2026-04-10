@@ -1,9 +1,10 @@
-function generateAnalysisWindow (desired_temp, desired_psi) {
+function generateAnalysisWindow (desired_temp, desired_psi, real_flag = false) {
   let ideal_temp_change_rate = Math.abs((temp_max_rate + temp_min_rate) / 2);
   let ideal_psi_change_rate = Math.abs((psi_max_rate + psi_min_rate) / 2);
   let final_ideal_rate;
 
   let display_text_option = "TEMP (*F)";
+  let total_cure_flag = false;
 
   let time_to_cure_text = "TIME TO CURE: ";
   let time_to_cure_divider = 2;
@@ -16,6 +17,8 @@ function generateAnalysisWindow (desired_temp, desired_psi) {
     time_to_cure_text = "TIME UNTIL DESIRED TEMP: ";
     time_to_cure_divider = 1;
     final_ideal_rate = ideal_temp_change_rate;
+  } else {
+    total_cure_flag = true;
   }
   
   let current_temp;
@@ -141,6 +144,10 @@ function generateAnalysisWindow (desired_temp, desired_psi) {
       }
     }
   });
+
+  if (total_cure_flag) {
+    document.getElementById("fancy-graph-realsies").remove();
+  }
 
   document.getElementById("fancy-predictor-graph").style.display = "block";
   setTimeout(function () {

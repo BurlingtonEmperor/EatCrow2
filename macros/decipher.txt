@@ -1,0 +1,3 @@
+LOG TEST**)
+VAR ttu test**)
+IF |cond|_vttu EQUALS 5|cond| CALL SOFT_MACRO NEXT**)

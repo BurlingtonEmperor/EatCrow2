@@ -8,6 +8,7 @@
 #include <fstream>
 #include <chrono>
 #include <ranges>
+#include <numeric>
 
 void replaceAll(std::string& str, const std::string& from, const std::string& to);
 void console_log(std::string& str);

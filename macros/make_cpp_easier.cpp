@@ -5,6 +5,7 @@
 #include <fstream>
 #include <chrono>
 #include <ranges>
+#include <numeric>
 
 #include "make_cpp_easier.h"
 
@@ -64,7 +65,13 @@ std::vector<std::string> splitBySpaces(const std::string& str) { // this functio
 }
 
 std::string joinVectorItems_string(std::vector<std::string>& str_vector) {
-  std::string joined = str_vector | std::views::join_with(' ') | std::ranges::to<std::string>();
+  std::string joined = "";
+  for (size_t i = 0; i < str_vector.size(); ++i) {
+    joined += str_vector[i];
+    if (i < str_vector.size() - 1) {
+        joined += " "; 
+    }
+  }
   return joined;
 }
 

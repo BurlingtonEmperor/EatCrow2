@@ -1,0 +1,3 @@
+Declared a variable with the name ttu
+Checking if ((A value assigned to the variable ttu).) is equal to (5).
+Then... CALL SOFT_MACRO NEXT
