@@ -145,6 +145,11 @@ function generateAnalysisWindow (desired_temp, desired_psi, real_flag = false) {
     }
   });
 
+  // if (desired_temp == 0 && desired_psi == 0) {
+  //   total_cure_flag = true;
+  //   document.getElementById("fancy-predictor-content").innerHTML = "<div class='text-center'>NO DESIRED TEMP OR PSI HAS BEEN SET</div>";
+  // }
+
   if (total_cure_flag) {
     document.getElementById("fancy-graph-realsies").remove();
   }

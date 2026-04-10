@@ -137,6 +137,8 @@ def connect_to_board_precheck(my_port, my_rate):
 # async def get_weather() -> None:
 #   async with python_weather.Client(unit=python_weather.IMPERIAL) as client
 
+check_for_decoded = False
+
 @app.route('/')
 def index():
   return render_template("index.html")
@@ -344,6 +346,40 @@ def reboot_port():
 @app.route('/update_files')
 def update_files():
   subprocess.run([os.getcwd() + "\\file_updater\\file_updater.exe"], creationflags=subprocess.CREATE_NEW_CONSOLE)
+  return "Running file_updater.exe"
+
+@app.route('/run_decoder')
+def run_decoder():
+  subprocess.run([os.getcwd() + "\\macros\\starforge_decipher.exe"], cwd=(str(os.getcwd()) + "\\macros"), creationflags=subprocess.CREATE_NEW_CONSOLE)
+  return "Running starforge_decipher.exe"
+
+@app.route('/get_decoded')
+def get_decoded():
+  # last_mtime = os.path.getmtime("translated.txt")
+  # while True:
+  #   current_mtime = os.path.getmtime("translated.txt")
+  #   if current_mtime != last_mtime:
+  #     last_mtime = current_mtime
+  #     return "OK!"
+  #   time.sleep(1)
+  try:
+    with open(str(os.path.dirname(os.path.realpath(__file__))) + "/static/translated.txt", "r") as f:
+      content = f.read()
+    return content
+  except Exception as err:
+    return "File error: " + str(err)
+
+@app.route('/input_decoder', methods=['POST'])
+def input_decoder():
+  signal_to_read = request.get_json()
+  macro_content = signal_to_read.get("macro_content")
+
+  try:
+    with open(str(os.path.dirname(os.path.realpath(__file__))) + "/macros/decipher.txt", "w") as f:
+      f.write(macro_content)
+      return "Deciphering... "
+  except Exception as err:
+    return "File error: " + str(err)
 
 def open_browser():
   checkWhichPlatform()

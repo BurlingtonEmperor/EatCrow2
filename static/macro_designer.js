@@ -210,3 +210,33 @@ document.getElementById("add-starforge-cmd").onclick = function () {
 document.getElementById("close-predictor-graph").onclick = function () {
   document.getElementById("fancy-predictor-graph").style.display = "none";
 }
+
+document.getElementById("decode-macro-btn").onclick = function () {
+  fetch("/input_decoder", {
+    method : "POST",
+    headers : {
+      "Content-Type" : "application/json"
+    },
+    body : JSON.stringify({
+      macro_content : default_textbox_input.value
+    })
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log(data);
+    fetch("/run_decoder");
+    setTimeout(function () {
+      fetch("/get_decoded")
+      .then(response => response.text())
+      .then(data => {
+        createNotificationWindow(String(data));
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    }, 1000);
+  })
+  .catch(error => {
+    throw error;
+  });
+}

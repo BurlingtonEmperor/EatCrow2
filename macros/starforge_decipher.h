@@ -13,6 +13,7 @@ extern std::string string_to_decipher;
 
 int convertCommandToInt(std::string& cmd_string);
 int convertOperatorToInt(std::string& operator_string);
+int convertSetToInt(std::string& set_string);
 
 bool checkIfVariable(std::string& potential_variable);
 

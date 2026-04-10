@@ -365,6 +365,8 @@ textarea {
 
 .notification-window {
   width: 35%;
+  max-height: 50%;
+  overflow-y: auto;
 }
 
 .close-notification-window {

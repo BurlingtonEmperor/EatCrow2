@@ -1,3 +1,18 @@
-Declared a variable with the name ttu
-Checking if ((A value assigned to the variable ttu).) is equal to (5).
-Then... CALL SOFT_MACRO NEXT
+This program's ID is 'RAS-COBOL'
+<br>
+Displaying to console: TESTING&nbsp;IF&nbsp;STARFORGE&nbsp;WORKS...
+<br>
+Waiting for 2 seconds.
+<br>
+Displaying to console: FUNCTIONALITY&nbsp;OK
+<br>
+Declared a variable with the name x
+<br>
+Displaying to console: (A value assigned to the variable x).
+<br>
+Displaying to console: Bella&nbsp;is&nbsp;mean&nbsp;to&nbsp;me.
+<br>
+Declared a variable with the name bella
+<br>
+Displaying to console: (A value assigned to the variable bella).
+<br>

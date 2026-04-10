@@ -22,7 +22,7 @@ int convertCommandToInt(std::string& cmd_string) {
   if (uppercase_cmd_string == "LOG") return 2;
   if (uppercase_cmd_string == "DISPLAY") return 2;
   if (uppercase_cmd_string == "WAIT") return 3;
-  if (uppercase_cmd_string == "SET") return 4;
+  // if (uppercase_cmd_string == "SET") return 4;
   if (uppercase_cmd_string == "COMMENT") return 5;
   if (uppercase_cmd_string == "STOP") return 6;
   if (uppercase_cmd_string == "VAR") return 7;
@@ -35,7 +35,10 @@ int convertCommandToInt(std::string& cmd_string) {
   // if (uppercase_cmd_string == "RUN_CPP") return 13;
   if (uppercase_cmd_string == "IF") return 13;
   if (uppercase_cmd_string == "ELSE") return 14;
-  if (uppercase_cmd_string == "PROGRAM-ID") return 15;
+  if (uppercase_cmd_string == "PROGRAM-ID:") return 15;
+  if (uppercase_cmd_string == "PROGRAM-ID: ") return 15;
+  if (uppercase_cmd_string == "SET") return 16;
+  if (uppercase_cmd_string == "SET ") return 16;
   return 0;
 }
 
@@ -46,6 +49,19 @@ int convertOperatorToInt(std::string& operator_string) {
   if (uppercase_operator_string == "LESS_THAN") return 3;
   if (uppercase_operator_string == "IS_NOT") return 4;
   if (uppercase_operator_string == "INCLUDES") return 5; 
+  return 0;
+}
+
+int convertSetToInt(std::string& set_string) {
+  std::string uppercase_set_string = toUpperCase(set_string);
+  if (uppercase_set_string == "TEMP") return 1;
+  if (uppercase_set_string == "PSI") return 2;
+  if (uppercase_set_string == "MAX_TEMP_RATE") return 3;
+  if (uppercase_set_string == "MAX_PSI_RATE") return 4;
+  if (uppercase_set_string == "MIN_TEMP_RATE") return 5;
+  if (uppercase_set_string == "MIN_PSI_RATE") return 6;
+  if (uppercase_set_string == "TEMP_MAX") return 7;
+  if (uppercase_set_string == "PSI_MAX") return 8;
   return 0;
 }
 
@@ -95,7 +111,7 @@ int main() {
       if (individual_line.empty()) continue;
 
       replaceAll(individual_line, "**-)", "");
-      replaceAll(individual_line, "%20", "");
+      replaceAll(individual_line, "%20", "&nbsp;");
       replaceAll(individual_line, "%-20", "");
 
       std::vector<std::string> space_limiter = splitBySpaces(individual_line);
@@ -138,6 +154,9 @@ int main() {
           break;
         case 3:
           vector_to_return.push_back("Waiting for " + secondary_argument + " seconds.");
+          break;
+        case 5:
+          vector_to_return.push_back("There is a comment on this line.");
           break;
         case 6:
           vector_to_return.push_back("Stopping the program here.");
@@ -236,13 +255,48 @@ int main() {
         case 15:
           vector_to_return.push_back("This program's ID is '" + secondary_argument + "'");
           break;
-      } 
+        case 16: {
+          int set_to_string = convertSetToInt(secondary_argument);
+
+          switch (set_to_string) {
+            case 0:
+              vector_to_return.push_back("Setting an unknown value...");
+              break;
+            case 1:
+              vector_to_return.push_back("Setting temperature to " + third_condition + " *F");
+              break;
+            case 2:
+              vector_to_return.push_back("Setting pressure to " + third_condition + " PSI");
+              break;
+            case 3:
+              vector_to_return.push_back("Setting maximum temperature rate to " + third_condition + " *F/min");
+              break;
+            case 4:
+              vector_to_return.push_back("Setting maximum pressure rate to " + third_condition + " PSI/min");
+              break;
+            case 5:
+              vector_to_return.push_back("Setting minimum temperature rate to " + third_condition + " *F/min");
+              break;
+            case 6:
+              vector_to_return.push_back("Setting minimum pressure rate to " + third_condition + " PSI/min");
+              break;
+            case 7:
+              vector_to_return.push_back("Setting maximum temperature to " + third_condition + " *F");
+              break;
+            case 8:
+              vector_to_return.push_back("Setting maximum pressure to " + third_condition + " PSI");
+              break;
+          }
+          break;
+        }
+      }
+      vector_to_return.push_back("<br>"); 
     }
 
     std::ofstream outFile("../static/translated.txt");
 
     if (outFile.is_open()) {
-      for (int i = 1; i < vector_to_return.size(); i++) {
+      for (int i = 0; i < vector_to_return.size(); i++) {
         outFile << vector_to_return[i] << std::endl;
       }
       outFile.close();
