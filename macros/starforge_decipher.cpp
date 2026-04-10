@@ -226,7 +226,7 @@ int main() {
         }
         case 14: {
           std::vector<std::string> else_argument;
-          for (int i = 1; i < space_limiter.size(); i++) {
+          for (int i = 0; i < space_limiter.size(); i++) {
             else_argument.push_back(space_limiter[i]);
           }
 
