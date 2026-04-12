@@ -22,6 +22,8 @@ int psi_change_data[20] = {};
 float change_temp_by = 1; // 1%
 float change_psi_by = 1; // 1%
 
+int is_emergency_stopped = 0;
+
 for (int i = 0; i < 20; i++) {
   temp_change_data[i] = 100;
   psi_change_data[i] = 100;
@@ -56,6 +58,15 @@ void loop () {
       Serial.print("FREE SRAM: ");
       Serial.println(getFreeRam());
       break;
+  }
+
+  if (Serial.available() > 0) {
+    switch (is_emergency_stopped) {
+      case 1:
+        break;
+      case 0:
+        break;
+    }
   }
 
   if ((currentMillis - previousMillis) >= interval) {
