@@ -1108,6 +1108,10 @@ document.getElementById("open-file-updater").onclick = function () {
   fetch ("/update_files");
 }
 
+document.getElementById("estimate-time").onclick = function () {
+  generateAnalysisWindow(set_temp_amount_interface, set_psi_amount_interface);
+}
+
 // manual command console
 const manualCommandConsole = document.getElementById("manual-command-console");
 
