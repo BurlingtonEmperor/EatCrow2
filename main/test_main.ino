@@ -1,10 +1,12 @@
+#include <EEPROM.h>
+
 int tempPin = A0; // these pin numbers are mere placeholders for now.
 int pressurePin = A1;
 int heaterPin = 11;
 int inletPin = 10;
 int outletPin = 9;
 
-int read_mode = 1;
+// int read_mode = 1;
 
 extern int __heap_start, *__brkval;
 
@@ -16,7 +18,7 @@ float psi_to_set = 0.0;
 
 int has_gotten_sram = 0;
 
-int temp_change_data[20] = {};
+int temp_change_data[20] = {}; // EEPROM storage
 int psi_change_data[20] = {};
 
 float change_temp_by = 1; // 1%
@@ -32,6 +34,19 @@ for (int i = 0; i < 20; i++) {
 int getFreeRam () {
   int v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
+
+int convertCharToInt (char& char_to_convert) {
+  if (char_to_convert == 's') return 1; // emergency stop.
+  if (char_to_convert == '*') return 2; // switch read mode
+  if (char_to_convert == 'c') return 3; // comm check
+  if (char_to_convert == '!') return 4; // heater on
+  if (char_to_convert == '~') return 5; // heater off
+  if (char_to_convert == '@') return 6; // inlet solenoid on
+  if (char_to_convert == '#') return 7; // inlet solenoid off
+  if (char_to_convert == '$') return 8; // outlet solenoid on
+  if (char_to_convert == '%') return 9; // outlet solenoid off
+  if (char_to_convert == 'z') return 10; // requesting another sram check
 }
 
 void setup () {
@@ -61,10 +76,55 @@ void loop () {
   }
 
   if (Serial.available() > 0) {
+    char incomingByte = Serial.read(); 
+    Serial.println("Incoming Signal: ");
     switch (is_emergency_stopped) {
       case 1:
+        if (incomingByte == 's') {
+          is_emergency_stopped = 0;
+          Serial.println("Calling off emergency stop.");
+        }
         break;
       case 0:
+        int convertToInt = convertByteToInt(incomingByte);
+        switch (convertToInt) {
+          case 1:
+            Serial.println("Called an emergency stop.");
+
+            digitalWrite(heaterPin, LOW);
+            digitalWrite(inletPin, LOW);
+            digitalWrite(outletPin, LOW);
+
+            is_emergency_stopped = 1;
+            break;
+          case 2:
+            Serial.println("Read mode switches are not supported on the real autoclave...");
+            break;
+          case 3:
+            Serial.println("comm");
+            break;
+          case 4:
+            digitalWrite(heaterPin, HIGH);
+            break;
+          case 5:
+            digitalWrite(heaterPin, LOW);
+            break;
+          case 6:
+            digitalWrite(inletPin, HIGH);
+            break
+          case 7:
+            digitalWrite(inletPin, LOW);
+            break;
+          case 8:
+            digitalWrite(outletPin, HIGH);
+            break;
+          case 9:
+            digitalWrite(outletPin, LOW);
+            break;
+          case 10:
+            has_gotten_sram = 0;
+            break;
+        }
         break;
     }
   }
