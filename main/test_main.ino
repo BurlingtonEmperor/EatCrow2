@@ -173,7 +173,7 @@ void loop () {
         }
         break;
       case 0:
-        int convertToInt = convertByteToInt(incomingByte);
+        int convertToInt = convertCharToInt(incomingByte);
         switch (convertToInt) {
           case 1:
             Serial.println("Called an emergency stop.");
@@ -251,6 +251,8 @@ void loop () {
     float pressure = (((voltageP - 0.43f) / 4.0f) * 100.0f) + 14.7f;
 
     float current_psi_error = (absoluteValue(pressure - psi_to_set) / psi_to_set) * 100.0f;
+
+    int use_outlet_or_inlet = 0; // using inlet
     
     if ((current_temp_error > prev_temp_error) && (temperatureF < temp_to_set)) { // temp
       if (change_temp_by == 0.0) {
@@ -273,6 +275,8 @@ void loop () {
     }
 
     if ((current_psi_error > prev_psi_error) && (pressure < psi_to_set)) { // pressure
+      use_outlet_or_inlet = 0;
+
       if (change_psi_by == 0.0) {
         change_psi_by += usable_psi_tune;
       } 
@@ -281,15 +285,19 @@ void loop () {
       // }
     } 
     else if ((current_psi_error < prev_psi_error) && (pressure < psi_to_set)) {
+      use_outlet_or_inlet = 0;
+
       usable_psi_tune = usable_psi_tune / 2;
       change_psi_by += usable_psi_tune;
     } 
     else if ((current_psi_error > prev_psi_error) && (pressure > psi_to_set)) {
       change_psi_by -= usable_psi_tune;
+      use_outlet_or_inlet = 1;
     } 
     else if ((current_psi_error < prev_psi_error) && (pressure > psi_to_set)) {
       usable_psi_tune = usable_psi_tune / 2;
       change_psi_by -= usable_psi_tune;
+      use_outlet_or_inlet = 1;
     }
 
     if (change_temp_by > 100.0f) {
@@ -308,6 +316,13 @@ void loop () {
     }
 
     analogWrite(heaterPin, change_temp_by * 2.55);
-    analogWrite(inletPin, change_psi_by * 2.55);
+    switch (use_outlet_or_inlet) {
+      case 0:
+        analogWrite(inletPin, change_psi_by * 2.55);
+        break;
+      case 1:
+        analogWrite(outletPin, change_psi_by * 2.55);
+        break;
+    }
   }
 }
