@@ -1112,6 +1112,15 @@ document.getElementById("estimate-time").onclick = function () {
   generateAnalysisWindow(set_temp_amount_interface, set_psi_amount_interface);
 }
 
+document.getElementById("check-sram").onclick = function () {
+  if (safetyTimeProtocol) {
+    return false;
+  }
+  checkForSafety();
+
+  send_signal_to_board("z");
+}
+
 // manual command console
 const manualCommandConsole = document.getElementById("manual-command-console");
 

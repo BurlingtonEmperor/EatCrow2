@@ -18,8 +18,9 @@ float psi_to_set = 0.0;
 
 int has_gotten_sram = 0;
 
-int temp_change_data[20] = {}; // EEPROM storage
-int psi_change_data[20] = {};
+// EEPROM storage
+int temp_change_data[20] = {}; // address 0
+int psi_change_data[20] = {}; // address 1
 
 float change_temp_by = 1; // 1%
 float change_psi_by = 1; // 1%
@@ -47,6 +48,10 @@ int convertCharToInt (char& char_to_convert) {
   if (char_to_convert == '$') return 8; // outlet solenoid on
   if (char_to_convert == '%') return 9; // outlet solenoid off
   if (char_to_convert == 'z') return 10; // requesting another sram check
+  if (char_to_convert == '+') return 11; // changing temperature
+  if (char_to_convert == 'o') return 11;
+  if (char_to_convert == 'p') return 12; // changing pressure
+  if (char_to_convert == 'k') return 12;
 }
 
 void setup () {
@@ -59,6 +64,13 @@ void setup () {
   digitalWrite(heaterPin, LOW);
   digitalWrite(inletPin, LOW);
   digitalWrite(outletPin, LOW);
+
+  if (EEPROM.read(0) != 255) {
+    EEPROM.put(0, temp_change_data);
+  }
+  if (EEPROM.read(1) != 255) {
+    EEPROM.put(1, psi_change_data);
+  }
 
   Serial.setTimeout(50);
 }
@@ -124,6 +136,22 @@ void loop () {
           case 10:
             has_gotten_sram = 0;
             break;
+          case 11:
+          case 12: {
+            delay(10);
+            float controls_value = Serial.parseFloat(); 
+
+            if (incomingByte == '+' || incomingByte == 'o') {
+              temp_to_set = controls_value;
+              Serial.println("Setting temperature...");
+            } else if (incomingByte == 'p' || incomingByte == 'k') {
+              psi_to_set = controls_value;
+              Serial.println("Setting pressure...");
+            } else {
+              // dummy code
+            }
+            break;
+          }
         }
         break;
     }
