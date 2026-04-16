@@ -13,8 +13,8 @@ extern int __heap_start, *__brkval;
 unsigned long previousMillis = 0; 
 const long interval = 5000;  
 
-float temp_to_set = 0.0;
-float psi_to_set = 0.0;
+float temp_to_set = 0.0f;
+float psi_to_set = 0.0f;
 
 int has_gotten_sram = 0;
 
@@ -22,8 +22,12 @@ int has_gotten_sram = 0;
 int temp_change_data[20] = {}; // address 0
 int psi_change_data[20] = {}; // address 1
 
-float change_temp_by = 1; // 1%
-float change_psi_by = 1; // 1%
+float change_temp_by = 0.5f; // Starts out at 0.5%.
+float change_psi_by = 0.5f;
+float tune_value = 5.0f // 5%
+
+float prev_temp_error = 0.00f;
+float prev_psi_error = 0.00f;
 
 int is_emergency_stopped = 0;
 
@@ -52,6 +56,14 @@ int convertCharToInt (char& char_to_convert) {
   if (char_to_convert == 'o') return 11;
   if (char_to_convert == 'p') return 12; // changing pressure
   if (char_to_convert == 'k') return 12;
+}
+
+float absoluteValue (float& value_to_check) {
+  if (value_to_check < 1.0) {
+    return (value_to_check * (-1.0f));
+  } else {
+    return value_to_check;
+  }
 }
 
 void setup () {
@@ -158,6 +170,16 @@ void loop () {
   }
 
   if ((currentMillis - previousMillis) >= interval) {
-    
+    int rawVt_temp = analogRead(tempPin);
+    int rawVt_psi = analogRead(pressurePin);
+
+    float voltageT = rawVT * (5.0 / 1023.0); // convert to volts.
+    float temperatureC = (voltageT - 0.5) * 100.0; // TMP36 formula
+    float temperatureF = temperatureC * 9.0 / 5.0 + 32.0;
+
+    float current_temp_error = (absoluteValue(temperatureF - temp_to_set) / temp_to_set) * 100;
+    if ((current_temp_error > prev_temp_error) && (temperatureF < temp_to_set)) {
+      
+    }
   }
 }
