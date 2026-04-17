@@ -219,9 +219,11 @@ void loop () {
 
             if (incomingByte == '+' || incomingByte == 'o') {
               temp_to_set = controls_value;
+              usable_temp_tune = tune_value;
               Serial.println("Setting temperature...");
             } else if (incomingByte == 'p' || incomingByte == 'k') {
               psi_to_set = controls_value;
+              usable_psi_tune = tune_value;
               Serial.println("Setting pressure...");
             } else if (incomingByte == '>') {
               tune_value = controls_value;
