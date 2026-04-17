@@ -2973,6 +2973,58 @@ function getTemp_fromModel (data_log) {
     temp_comp_check2 = parseInt(temp_comp_check2);
 
     temp_values.push(temp_comp_check2);
+  } else {
+    if (data_log.includes("TD:")) {
+      let data_array = data_log.split(";");
+      for (let i = 0; i < data_array.length; i++) {
+        const secondary_data_array = data_array[i].split(":");
+
+        const data_label = secondary_data_array[0];
+        const data_content = secondary_data_array[1];
+
+        switch (data_label) {
+          case "T":
+            temp_gauge2.innerText = data_content + " °F";
+            break;
+          case "P":
+            psi_gauge2.innerText = data_content + " PSI";
+            break;
+          case "TD":
+            document.getElementById("board-set-temp").innerText = data_content + " °F";
+            break;
+          case "PD":
+            document.getElementById("board-set-psi").innerText = data_content + " PSI";
+            break;
+        }
+      }
+    } else if (data_log.includes("H:")) {
+      let data_array = data_log.split(";");
+      for (let i = 0; i < data_array.length; i++) {
+        const secondary_data_array = data_array[i].split(":");
+
+        const data_label = secondary_data_array[0];
+        const data_content = parseInt(secondary_data_array[1]);
+
+        let switcher__ = "OFF";
+        switch (data_content) {
+          case 1:
+            switcher__ = "ON";
+            break;
+        }
+
+        switch (data_label) {
+          case "H":
+            heater_status.innerText = switcher__;
+            break;
+          case "I":
+            pressure_tank_status.innerText = switcher__;
+            break;
+          case "O":
+            pressure_tank_status2.innerText = switcher__;
+            break;
+        }
+      }
+    }
   } 
 }
 
