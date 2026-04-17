@@ -17,8 +17,8 @@ extern int __heap_start, *__brkval;
 unsigned long previousMillis = 0; 
 const long interval = 5000;  
 
-float temp_to_set = 0.0f;
-float psi_to_set = 0.0f;
+float temp_to_set = 70.0f;
+float psi_to_set = 14.7f;
 
 int has_gotten_sram = 0;
 
@@ -236,93 +236,134 @@ void loop () {
         break;
     }
   }
+  
+  int rawVt_temp = analogRead(tempPin);
+  int rawVt_psi = analogRead(pressurePin);
 
-  if ((currentMillis - previousMillis) >= interval) {
-    int rawVt_temp = analogRead(tempPin);
-    int rawVt_psi = analogRead(pressurePin);
+  float voltageT = rawVt_temp * (5.0f / 1023.0f); // convert to volts.
+  float temperatureC = (voltageT - 0.5f) * 100.0f; // TMP36 formula
+  float temperatureF = ((temperatureC * 9.0f) / 5.0f) + 32.0f;
 
-    float voltageT = rawVt_temp * (5.0f / 1023.0f); // convert to volts.
-    float temperatureC = (voltageT - 0.5f) * 100.0f; // TMP36 formula
-    float temperatureF = ((temperatureC * 9.0f) / 5.0f) + 32.0f;
+  float current_temp_error = (absoluteValue(temperatureF - temp_to_set) / temp_to_set) * 100.0f;
 
-    float current_temp_error = (absoluteValue(temperatureF - temp_to_set) / temp_to_set) * 100.0f;
+  float voltageP = rawVt_psi * (5.0f / 1023.0f);   // Convert to volts
+  float pressure = (((voltageP - 0.43f) / 4.0f) * 100.0f) + 14.7f;
 
-    float voltageP = rawVt_psi * (5.0f / 1023.0f);   // Convert to volts
-    float pressure = (((voltageP - 0.43f) / 4.0f) * 100.0f) + 14.7f;
+  float current_psi_error = (absoluteValue(pressure - psi_to_set) / psi_to_set) * 100.0f;
 
-    float current_psi_error = (absoluteValue(pressure - psi_to_set) / psi_to_set) * 100.0f;
-
-    int use_outlet_or_inlet = 0; // using inlet
+  int use_outlet_or_inlet = 0; // using inlet
     
-    if ((current_temp_error > prev_temp_error) && (temperatureF < temp_to_set)) { // temp
-      if (change_temp_by == 0.0) {
-        change_temp_by += usable_temp_tune;
-      } 
-      // else {
-      //  change_temp_by += usable_temp_tune;
-      // }
-    } 
-    else if ((current_temp_error < prev_temp_error) && (temperatureF < temp_to_set)) {
-      usable_temp_tune = usable_temp_tune / 2;
+  if ((current_temp_error > prev_temp_error) && (temperatureF < temp_to_set)) { // temp
+    if (change_temp_by == 0.0) {
       change_temp_by += usable_temp_tune;
     } 
-    else if ((current_temp_error > prev_temp_error) && (temperatureF > temp_to_set)) {
-      change_temp_by -= usable_temp_tune;
-    } 
-    else if ((current_temp_error < prev_temp_error) && (temperatureF > temp_to_set)) {
-      usable_temp_tune = usable_temp_tune / 2;
-      change_temp_by -= usable_temp_tune;
-    }
+    // else {
+    //  change_temp_by += usable_temp_tune;
+    // }
+  } 
+  else if ((current_temp_error < prev_temp_error) && (temperatureF < temp_to_set)) {
+    usable_temp_tune = usable_temp_tune / 2;
+    change_temp_by += usable_temp_tune;
+  } 
+  else if ((current_temp_error > prev_temp_error) && (temperatureF > temp_to_set)) {
+    change_temp_by -= usable_temp_tune;
+  } 
+  else if ((current_temp_error < prev_temp_error) && (temperatureF > temp_to_set)) {
+    usable_temp_tune = usable_temp_tune / 2;
+    change_temp_by -= usable_temp_tune;
+  }
 
-    if ((current_psi_error > prev_psi_error) && (pressure < psi_to_set)) { // pressure
-      use_outlet_or_inlet = 0;
+  if ((current_psi_error > prev_psi_error) && (pressure < psi_to_set)) { // pressure
+    use_outlet_or_inlet = 0;
 
-      if (change_psi_by == 0.0) {
-        change_psi_by += usable_psi_tune;
-      } 
-      // else {
-      //   change_psi_by += usable_psi_tune;
-      // }
-    } 
-    else if ((current_psi_error < prev_psi_error) && (pressure < psi_to_set)) {
-      use_outlet_or_inlet = 0;
-
-      usable_psi_tune = usable_psi_tune / 2;
+    if (change_psi_by == 0.0) {
       change_psi_by += usable_psi_tune;
     } 
-    else if ((current_psi_error > prev_psi_error) && (pressure > psi_to_set)) {
-      change_psi_by -= usable_psi_tune;
-      use_outlet_or_inlet = 1;
-    } 
-    else if ((current_psi_error < prev_psi_error) && (pressure > psi_to_set)) {
-      usable_psi_tune = usable_psi_tune / 2;
-      change_psi_by -= usable_psi_tune;
-      use_outlet_or_inlet = 1;
+    // else {
+    //   change_psi_by += usable_psi_tune;
+    // }
+  } 
+  else if ((current_psi_error < prev_psi_error) && (pressure < psi_to_set)) {
+    use_outlet_or_inlet = 0;
+
+    usable_psi_tune = usable_psi_tune / 2;
+    change_psi_by += usable_psi_tune;
+  } 
+  else if ((current_psi_error > prev_psi_error) && (pressure > psi_to_set)) {
+    change_psi_by -= usable_psi_tune;
+    use_outlet_or_inlet = 1;
+  } 
+  else if ((current_psi_error < prev_psi_error) && (pressure > psi_to_set)) {
+    usable_psi_tune = usable_psi_tune / 2;
+    change_psi_by -= usable_psi_tune;
+    use_outlet_or_inlet = 1;
+  }
+
+  if (change_temp_by > 100.0f) {
+    change_temp_by = 100.0f;
+  } 
+
+  if (change_psi_by > 100.0f) {
+    change_psi_by = 100.0f;
+  }
+
+  if (current_temp_error < 1.1 && current_psi_error < 1.1) {
+    shiftFloatArray(temp_change_data, current_temp_error);
+    shiftFloatArray(psi_change_data, current_psi_error);
+
+    shiftFloatArray(old_tune_values, tune_value);
+  }
+
+  analogWrite(heaterPin, change_temp_by * 2.55);
+  switch (use_outlet_or_inlet) {
+    case 0:
+      analogWrite(inletPin, change_psi_by * 2.55);
+      break;
+    case 1:
+      analogWrite(outletPin, change_psi_by * 2.55);
+      break;
+  }
+
+  if ((currentMillis - previousMillis) >= interval) {
+    previousMillis = currentMillis;
+    
+    // String tempString = String(temperatureF, 2);
+    // String psiString = String(pressure, 2);
+    
+    // String desiredTemp = String(temp_to_set, 2);
+    // String desiredPSI = String(psi_to_set, 2);
+
+    int heaterStatus = 0;
+    int inletSolenoidStatus = 0;
+    int outletSolenoidStatus = 0;
+
+    if (temperatureF < temp_to_set) {
+      heaterStatus = 1;
     }
 
-    if (change_temp_by > 100.0f) {
-      change_temp_by = 100.0f;
-    } 
-
-    if (change_psi_by > 100.0f) {
-      change_psi_by = 100.0f;
+    if (pressure < psi_to_set) {
+      inletSolenoidStatus = 1;
     }
 
-    if (current_temp_error < 1.1 && current_psi_error < 1.1) {
-      shiftFloatArray(temp_change_data, current_temp_error);
-      shiftFloatArray(psi_change_data, current_psi_error);
-
-      shiftFloatArray(old_tune_values, tune_value);
+    if (pressure > psi_to_set) {
+      outletSolenoidStatus = 1;
     }
 
-    analogWrite(heaterPin, change_temp_by * 2.55);
-    switch (use_outlet_or_inlet) {
-      case 0:
-        analogWrite(inletPin, change_psi_by * 2.55);
-        break;
-      case 1:
-        analogWrite(outletPin, change_psi_by * 2.55);
-        break;
-    }
+    Serial.print("T:");
+    Serial.print(temperatureF);
+    Serial.print(";P:");
+    Serial.print(pressure);
+    Serial.print(";TD:");
+    Serial.print(temp_to_set);
+    Serial.print(";PD:");
+    Serial.print(psi_to_set);
+    Serial.print("\n");
+
+    Serial.print("H:");
+    Serial.print(heaterStatus);
+    Serial.print("I:");
+    Serial.print(inletSolenoidStatus);
+    Serial.print("O:");
+    Serial.print(outletSolenoidStatus);
   }
 }
