@@ -180,7 +180,7 @@ void loop () {
 
             digitalWrite(heaterPin, LOW);
             digitalWrite(inletPin, LOW);
-            digitalWrite(outletPin, LOW);
+            digitalWrite(outletPin, HIGH);
 
             is_emergency_stopped = 1;
             break;
