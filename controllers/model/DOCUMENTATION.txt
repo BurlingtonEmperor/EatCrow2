@@ -1,0 +1,9 @@
+This is the modelclave's controller. 
+It is quite rudimentary and should only be used for testing purposes.
+
+Algorithm:
+If the measured temperature is lower than the desired temperature: turn heater ON
+If the measured temperature is higher than the desired temperature: turn heater OFF
+
+If the measured pressure is lower than the desired pressure: turn inlet solenoid ON and outlet solenoid OFF
+If the measured pressure is higher than the desired pressure: turn outlet solenoid ON and inlet solenoid OFF
