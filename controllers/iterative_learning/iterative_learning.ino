@@ -43,6 +43,57 @@ int convertCharToInt (char& char_to_convert) {
   return 0; // default
 }
 
+int findLowestInArray (float (&array_to_check)[20]) {
+  float lowest_value = array_to_check[0];
+  int lowest_position = 0;
+
+  for (int i = 1; i < 20; i++) {
+    if (array_to_check[i] < lowest_value) {
+      lowest_value = array_to_check[i];
+      lowest_position = i;
+    }
+  }
+  return lowest_position;
+}
+
+float absoluteValue (float value_to_check) {
+  if (value_to_check < 0.0f) {
+    return (value_to_check * (-1.0f));
+  } else {
+    return value_to_check;
+  }
+}
+
+void shiftFloatArray(float (&array_to_shift)[20], float new_value) {
+  for (int i = 19; i > 0; i--) {
+    array_to_shift[i] = array_to_shift[i - 1];
+  }
+  array_to_shift[0] = new_value;
+}
+
 void setup () {
-  
+  Serial.begin(9600); 
+
+  pinMode(heaterPin, OUTPUT);
+  pinMode(inletPin, OUTPUT);
+  pinMode(outletPin, OUTPUT);
+
+  digitalWrite(heaterPin, LOW);
+  digitalWrite(inletPin, LOW);
+  digitalWrite(outletPin, LOW);
+
+  Serial.setTimeout(50);
+}
+
+void loop () {
+  unsigned long currentMillis = millis(); 
+
+  switch (has_gotten_sram) {
+    case 0:
+      has_gotten_sram = 1;
+
+      Serial.print("FREE SRAM: ");
+      Serial.println(getFreeRam());
+      break;
+  }
 }
