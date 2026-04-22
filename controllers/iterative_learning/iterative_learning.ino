@@ -41,6 +41,10 @@ unsigned long timingInterval_psi = 0;
 
 int is_emergency_stopped = 0;
 
+#define MAX_SIZE 64
+byte buffer[MAX_SIZE];
+int byte_index = 0;
+
 int getFreeRam () {
   int v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
@@ -269,6 +273,13 @@ void loop () {
               Serial.println("Setting pressure...");
             } else {
               // dummy code
+            }
+            break;
+          }
+          case 14: {
+            if (Serial.find('<')) {
+              int expectedSize = Serial.read();
+              int bytesRead = Serial.readBytes(buffer, expectedSize);
             }
             break;
           }
