@@ -30,8 +30,16 @@ int has_read_desired = 0; // has an operator set a desired temp/psi?
 int has_calibrated = 0; // has the machine been calibrated?
 int is_calibrating = 0; // is the machine in the process of calibrating?
 
+int got_temp = 0;
+int got_psi = 0;
+
 float current_temp_error = 100.0f;
 float current_psi_error = 100.0f;
+
+unsigned long timingInterval_temp = 0;
+unsigned long timingInterval_psi = 0;
+
+int is_emergency_stopped = 0;
 
 int getFreeRam () {
   int v;
@@ -168,16 +176,104 @@ void loop () {
       }
       break;
     }
-    case 1:
-      break;
   }
 
   switch (has_calibrated) {
     case 0:
+      if ((current_temp_error < 1.51f) && (got_temp == 0)) { // around 1% error
+        timingInterval_temp = measurement_total;
+        got_temp = 1;
+
+        digitalWrite(heaterPin, LOW);
+      }
+
+      if ((current_psi_error < 1.51f) && (got_psi == 0)) {
+        timingInterval_psi = measurement_total;
+        got_psi = 1;
+
+        digitalWrite(inletPin, LOW);
+      }
+
+      if ((got_temp == 1) && (got_psi == 1)) {
+        has_calibrated = 1;
+      }
+      
       if ((currentMillis - previousMeasurement) >= measurement_interval) {
         previousMeasurement = currentMillis;
         measurement_total += measurement_interval;
       }
       break;
+  }
+
+  if (Serial.available() > 0) {
+    char incomingByte = Serial.read(); 
+
+    Serial.println("Incoming Signal: ");
+    switch (is_emergency_stopped) {
+      case 1:
+        if (incomingByte == 's') {
+          is_emergency_stopped = 0;
+          Serial.println("Calling off emergency stop.");
+        }
+        break;
+      case 0:
+        int convertToInt = convertCharToInt(incomingByte);
+        switch (convertToInt) {
+          case 1:
+            Serial.println("Called an emergency stop.");
+
+            digitalWrite(heaterPin, LOW);
+            digitalWrite(inletPin, LOW);
+            digitalWrite(outletPin, HIGH);
+
+            is_emergency_stopped = 1;
+            break;
+          case 2:
+            Serial.println("Read mode switches are not supported on the real autoclave...");
+            break;
+          case 3:
+            Serial.println("comm");
+            break;
+          case 4:
+            digitalWrite(heaterPin, HIGH);
+            break;
+          case 5:
+            digitalWrite(heaterPin, LOW);
+            break;
+          case 6:
+            digitalWrite(inletPin, HIGH);
+            break;
+          case 7:
+            digitalWrite(inletPin, LOW);
+            break;
+          case 8:
+            digitalWrite(outletPin, HIGH);
+            break;
+          case 9:
+            digitalWrite(outletPin, LOW);
+            break;
+          case 10:
+            has_gotten_sram = 0;
+            break;
+          case 11:
+          case 12:
+          case 13: {
+            delay(10);
+            float controls_value = Serial.parseFloat(); 
+
+            if (incomingByte == '+' || incomingByte == 'o') {
+              temp_to_set = controls_value;
+              Serial.println("Setting temperature...");
+            } else if (incomingByte == 'p' || incomingByte == 'k') {
+              psi_to_set = controls_value;
+              Serial.println("Setting pressure...");
+            } else {
+              // dummy code
+            }
+            break;
+          }
+        }
+        break;
+    }
   }
 }
