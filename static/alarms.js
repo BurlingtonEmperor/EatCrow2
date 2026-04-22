@@ -17,6 +17,9 @@ function playAlarm (alarmNum) {
     case 4:
       alarmPath = "/static/alarms/voiceinput4.wav";
       break;
+    case 5:
+      alarmPath = "/static/alarms/self_destruct.mp3";
+      break;
   }
 
   // setTimeout(function () {

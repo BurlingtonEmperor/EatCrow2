@@ -11,12 +11,27 @@ extern int __heap_start, *__brkval;
 unsigned long previousMillis = 0; 
 const long interval = 5000; 
 
+unsigned long previousMeasurement = 0;
+const long measurement_interval = 1000;
+unsigned long measurement_total = 0;
+
 float temp_to_set = 70.0f;
 float psi_to_set = 14.7f;
 
+float calibration_temp = 85.0f; // the temperature to raise to, in order to check...
+float calibration_psi = 5.0f; // the psi to raise to, in order to check...
+
+float increasing_temp_interval = 0.0f;
+float decreasing_temp_interval = 0.0f;
+
 int has_gotten_sram = 0;
 int has_read_desired = 0; // has an operator set a desired temp/psi?
+
 int has_calibrated = 0; // has the machine been calibrated?
+int is_calibrating = 0; // is the machine in the process of calibrating?
+
+float current_temp_error = 100.0f;
+float current_psi_error = 100.0f;
 
 int getFreeRam () {
   int v;
@@ -71,6 +86,14 @@ void shiftFloatArray(float (&array_to_shift)[20], float new_value) {
   array_to_shift[0] = new_value;
 }
 
+void recalculateTempError (float current_temperature) {
+  current_temp_error = (absoluteValue(current_temperature - temp_to_set) / temp_to_set) * 100.0f;
+}
+
+void recalculatePsiError (float current_psi) {
+  current_psi_error = (absoluteValue(current_psi - psi_to_set) / psi_to_set) * 100.0f;
+}
+
 void setup () {
   Serial.begin(9600); 
 
@@ -94,6 +117,67 @@ void loop () {
 
       Serial.print("FREE SRAM: ");
       Serial.println(getFreeRam());
+      break;
+  }
+
+  int rawVt_temp = analogRead(tempPin);
+  int rawVt_psi = analogRead(pressurePin);
+
+  float voltageT = rawVt_temp * (5.0f / 1023.0f); // convert to volts.
+  float temperatureC = (voltageT - 0.5f) * 100.0f; // TMP36 formula
+  float temperatureF = ((temperatureC * 9.0f) / 5.0f) + 32.0f;
+
+  current_temp_error = (absoluteValue(temperatureF - temp_to_set) / temp_to_set) * 100.0f;
+
+  float voltageP = rawVt_psi * (5.0f / 1023.0f);   // Convert to volts
+  float pressure = (((voltageP - 0.43f) / 4.0f) * 100.0f) + 14.7f;
+
+  current_psi_error = (absoluteValue(pressure - psi_to_set) / psi_to_set) * 100.0f;
+
+  switch (is_calibrating) {
+    case 0: {
+      int recheck_needed = 0;
+
+      temp_to_set = calibration_temp;
+      current_temp_error = recalculateTempError(temperatureF);
+      // current_temp_error = (absoluteValue(temperatureF - temp_to_set) / temp_to_set) * 100.0f;
+
+      if ((temperatureF < calibration_temp) && (current_temp_error >= 5.0f)) {
+        digitalWrite(heaterPin, HIGH);
+      } else {
+        calibration_temp += 10.0f;
+        recheck_needed = 1;
+      }
+
+      psi_to_set = calibration_psi;
+      current_psi_error = recalculatePsiError(pressure);
+
+      if ((pressure < calibration_psi) && (current_psi_error >= 5.0f)) {
+        digitalWrite(inletPin, HIGH);
+        digitalWrite(outletPin, LOW);
+      } else {
+        calibration_psi += 5.0f;
+        recheck_needed = 1;
+      }
+
+      switch (recheck_needed) {
+        case 0:
+          is_calibrating = 1;
+          Serial.println("<>Calibrating the autoclave...");
+          break;
+      }
+      break;
+    }
+    case 1:
+      break;
+  }
+
+  switch (has_calibrated) {
+    case 0:
+      if ((currentMillis - previousMeasurement) >= measurement_interval) {
+        previousMeasurement = currentMillis;
+        measurement_total += measurement_interval;
+      }
       break;
   }
 }

@@ -233,6 +233,9 @@ function parseUserSpeech () {
             case (rest_of_command.includes("estimated time")):
               generateAnalysisWindow(set_temp_amount_interface, set_psi_amount_interface);
               break;
+            case (rest_of_command.includes("self destruct")):
+              playAlarm(5);
+              break;
             default:
               console.log("Not a valid voice command.");
               convertTextToSpeech("Not a valid voice command.");
