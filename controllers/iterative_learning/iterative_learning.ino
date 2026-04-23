@@ -41,6 +41,12 @@ unsigned long timingInterval_psi = 0;
 
 int is_emergency_stopped = 0;
 
+// EEPROM storage (stores error percentages)
+float temp_error_data[20] = {}; // address 0
+float psi_error_data[20] = {}; // address 1
+
+float timing_intervals[20] = {}; // address 2
+
 #define MAX_SIZE 64
 byte buffer[MAX_SIZE];
 int byte_index = 0;
@@ -108,6 +114,20 @@ void recalculatePsiError (float current_psi) {
 
 void setup () {
   Serial.begin(9600); 
+
+  for (int i = 0; i < 20; i++) {
+    temp_error_data[i] = 100.0f; // 100% error to mark that these values are essentially empty.
+    psi_error_data[i] = 100.0f;
+
+    old_tune_values[i] = 200.0f; // placeholder value that kind of doesn't mean anything.
+  }
+
+  if (EEPROM.read(0) != 255) {
+    EEPROM.put(0, temp_error_data);
+  }
+  if (EEPROM.read(1) != 255) {
+    EEPROM.put(1, psi_error_data);
+  }
 
   pinMode(heaterPin, OUTPUT);
   pinMode(inletPin, OUTPUT);
