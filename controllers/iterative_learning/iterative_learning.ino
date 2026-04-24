@@ -45,7 +45,8 @@ int is_emergency_stopped = 0;
 float temp_error_data[20] = {}; // address 0
 float psi_error_data[20] = {}; // address 1
 
-float timing_intervals[20] = {}; // address 2
+float timing_intervals_temp[20] = {}; // address 2
+float timing_intervals_psi[20] = {}; // address 3
 
 #define MAX_SIZE 64
 byte buffer[MAX_SIZE];
@@ -122,11 +123,33 @@ void setup () {
     old_tune_values[i] = 200.0f; // placeholder value that kind of doesn't mean anything.
   }
 
-  if (EEPROM.read(0) != 255) {
+  if (EEPROM.read(0) == 255) {
     EEPROM.put(0, temp_error_data);
+  } else {
+    EEPROM.get(0, temp_error_data);
   }
-  if (EEPROM.read(1) != 255) {
+
+  if (EEPROM.read(1) == 255) {
     EEPROM.put(1, psi_error_data);
+  } else {
+    EEPROM.get(0, psi_error_data);
+  }
+
+  if (EEPROM.read(2) == 255) { // no need to check psi because if temp is there, psi is most likely there too.
+    EEPROM.put(2, timing_intervals_temp);
+    EEPROM.put(3, timing_intervals_psi);
+  } else {
+    EEPROM.get(2, timing_intervals_temp);
+    EEPROM.get(3, timing_intervals_psi);
+
+    int lowest_temp_error_pos = findLowestInArray(temp_error_data);
+    int lowest_psi_error_pos = findLowestInArray(psi_error_data);
+
+    // float lowest_temp_error = temp_error_data[lowest_temp_error_pos];
+    // float lowest_psi_error = psi_error_data[lowest_psi_error_pos];
+
+    timingInterval_temp = timing_intervals_temp[lowest_temp_error_pos];
+    timingInterval_psi = timing_intervals_psi[lowest_psi_error_pos];
   }
 
   pinMode(heaterPin, OUTPUT);
