@@ -250,6 +250,12 @@ void loop () {
         shiftFloatArray(timing_intervals_temp, measurement_total);
         shiftFloatArray(temp_error_data, current_temp_error);
 
+        EEPROM.put(0, temp_error_data);
+        EEPROM.put(2, timing_intervals_temp);
+
+        EEPROM.put(1, psi_error_data);
+        EEPROM.put(3, timing_intervals_psi);
+
         int lowest_temp_error_pos = findLowestInArray(temp_error_data);
         timingInterval_temp = timing_intervals_temp[lowest_temp_error_pos];
         got_temp = 1;
