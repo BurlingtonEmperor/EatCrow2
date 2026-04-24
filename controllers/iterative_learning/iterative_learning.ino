@@ -55,6 +55,10 @@ int is_emergency_stopped = 0;
 int has_started_cure = 0;
 int cure_active = 0; // is the machine actually going to cure?
 
+int is_heater_on = 0;
+int is_inlet_on = 0;
+int is_outlet_on = 0;
+
 // EEPROM storage (stores error percentages)
 float temp_error_data[20] = {}; // address 0
 float psi_error_data[20] = {}; // address 1
@@ -288,11 +292,15 @@ void loop () {
             case 0:
               if (temperatureF < temp_to_set) {
                 digitalWrite(heaterPin, HIGH);
+                is_heater_on = 1;
               }
 
               if (pressure < psi_to_set) {
                 digitalWrite(inletPin, HIGH);
+                is_inlet_on = 1;
+
                 digitalWrite(outletPin, LOW);
+                is_inlet_on = 0;
               }
 
               previous_temp_error = current_temp_error;
@@ -300,19 +308,58 @@ void loop () {
               has_started_cure = 1;
               break;
             case 1:
-              if (usable_timingInterval_tempOFF > 0) {
-                
-              } else {
-                
-              }
-              if ((currentMillis - previousIntervalMeasurement_temp) >= timingInterval_temp) {
-                previousIntervalMeasurement_temp = currentMillis;
-
-                if (usable_timingInterval_tempOFF > 0) {
-                  
-                } else {
-                  
+              if ((currentMillis - previousIntervalMeasurement_temp) >= usable_timingInterval_temp) {
+                switch (is_heater_on) {
+                  case 0:
+                    if (((current_temp_error < previous_temp_error) && (temperatureF < temp_to_set)) || ((current_temp_error > previous_temp_error) && (temperatureF < temp_to_set))) {
+                      usable_timingInterval_temp = timingInterval_temp;
+                      digitalWrite(heaterPin, HIGH);
+                      is_heater_on = 1;
+                    } else {
+                      usable_timingInterval_temp = (timingInterval_temp / 2);
+                      digitalWrite(heaterPin, LOW);
+                      is_heater_on = 0;
+                    }
+                    break;
+                  case 1:
+                    usable_timingInterval_temp = (timingInterval_temp / 2);
+                    digitalWrite(heaterPin, LOW);
+                    is_heater_on = 0;
+                    break;
                 }
+                previousIntervalMeasurement_temp = currentMillis;
+              }
+
+              if ((currentMillis - previousIntervalMeasurement_psi) >= usable_timingInterval_psi) {
+                switch (is_inlet_on) {
+                  case 0:
+                    if (((current_psi_error < previous_psi_error) && (pressure < psi_to_set)) || ((current_psi_error > previous_psi_error) && (pressure < psi_to_set))) {
+                      usable_timingInterval_psi = timingInterval_psi;
+
+                      digitalWrite(inletPin, HIGH);
+                      digitalWrite(outletPin, LOW);
+
+                      is_inlet_on = 1;
+                      is_outlet_on = 0;
+                    } else {
+                      usable_timingInterval_psi = (timingInterval_psi / 2);
+                      digitalWrite(inletPin, LOW);
+                      digitalWrite(outletPin, HIGH);
+
+                      is_inlet_on = 0;
+                      is_outlet_on = 1;
+                    }
+                    break;
+                  case 1:
+                    usable_timingInterval_psi = (timingInterval_psi / 2);
+                    digitalWrite(inletPin, LOW);
+                    digitalWrite(outletPin, HIGH);
+
+                    is_inlet_on = 0;
+                    is_outlet_on = 1;
+                    break;
+                }
+                previousIntervalMeasurement_psi = currentMillis;
               }
               break;
           }
@@ -404,5 +451,43 @@ void loop () {
         }
         break;
     }
+  }
+
+  if ((currentMillis - previousMillis) >= interval) {
+    previousMillis = currentMillis;
+
+    int heaterStatus = 0;
+    int inletSolenoidStatus = 0;
+    int outletSolenoidStatus = 0;
+
+    if (temperatureF < temp_to_set) {
+      heaterStatus = 1;
+    }
+
+    if (pressure < psi_to_set) {
+      inletSolenoidStatus = 1;
+    }
+
+    if (pressure > psi_to_set) {
+      outletSolenoidStatus = 1;
+    }
+
+    Serial.print("T:");
+    Serial.print(temperatureF);
+    Serial.print(";P:");
+    Serial.print(pressure);
+    Serial.print(";TD:");
+    Serial.print(temp_to_set);
+    Serial.print(";PD:");
+    Serial.print(psi_to_set);
+    Serial.print("\n");
+
+    Serial.print("H:");
+    Serial.print(heaterStatus);
+    Serial.print(";I:");
+    Serial.print(inletSolenoidStatus);
+    Serial.print(";O:");
+    Serial.print(outletSolenoidStatus);
+    Serial.print("\n");
   }
 }
