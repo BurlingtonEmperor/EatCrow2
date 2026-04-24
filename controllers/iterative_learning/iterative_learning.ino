@@ -36,17 +36,24 @@ int got_psi = 0;
 float current_temp_error = 100.0f;
 float current_psi_error = 100.0f;
 
-unsigned long timingInterval_temp = static_cast<long>(0.0f);
-unsigned long timingInterval_psi = static_cast<long>(0.0f);
+float previous_temp_error = 0.0f;
+float previous_psi_error = 0.0f;
 
-unsigned long usable_timingInterval_temp = static_cast<long>(0.0f);
-unsigned long usable_timingInterval_psi = static_cast<long>(0.0f);
+unsigned long timingInterval_temp = 0; // no floats allowed, the mosfets will act up.
+unsigned long timingInterval_psi = 0;
 
-unsigned long previousIntervalMeasurement_temp = static_cast<long>(0.0f);
-unsigned long previousIntervalMeasurement_psi = static_cast<long>(0.0f);
+unsigned long usable_timingInterval_temp = 0;
+unsigned long usable_timingInterval_psi = 0;
+
+unsigned long usable_timingInterval_tempOFF = 0;
+unsigned long usable_timingInterval_psiOFF = 0;
+
+unsigned long previousIntervalMeasurement_temp = 0;
+unsigned long previousIntervalMeasurement_psi = 0;
 
 int is_emergency_stopped = 0;
 int has_started_cure = 0;
+int cure_active = 0; // is the machine actually going to cure?
 
 // EEPROM storage (stores error percentages)
 float temp_error_data[20] = {}; // address 0
@@ -235,14 +242,24 @@ void loop () {
   switch (has_calibrated) {
     case 0:
       if ((current_temp_error < 1.51f) && (got_temp == 0)) { // around 1% error
-        timingInterval_temp = measurement_total;
+        // timingInterval_temp = measurement_total;
+        shiftFloatArray(timing_intervals_temp, measurement_total);
+        shiftFloatArray(temp_error_data, current_temp_error);
+
+        int lowest_temp_error_pos = findLowestInArray(temp_error_data);
+        timingInterval_temp = timing_intervals_temp[lowest_temp_error_pos];
         got_temp = 1;
 
         digitalWrite(heaterPin, LOW);
       }
 
       if ((current_psi_error < 1.51f) && (got_psi == 0)) {
-        timingInterval_psi = measurement_total;
+        // timingInterval_psi = measurement_total;
+        shiftFloatArray(timing_intervals_psi, measurement_total);
+        shiftFloatArray(psi_error_data, current_psi_error);
+        
+        int lowest_psi_error_pos = findLowestInArray(psi_error_data);
+        timingInterval_psi = timing_intervals_psi[lowest_psi_error_pos];
         got_psi = 1;
 
         digitalWrite(inletPin, LOW);
@@ -258,11 +275,47 @@ void loop () {
       }
       break;
     case 1:
-      switch (has_calibrated) {
-        case 0:
-          has_calibrated = 1;
-          break;
+      // switch (has_calibrated) {
+      //   case 0:
+      //     has_calibrated = 1;
+      //     break;
+      //   case 1:
+      //     break;
+      // }
+      switch (cure_active) {
         case 1:
+          switch (has_started_cure) {
+            case 0:
+              if (temperatureF < temp_to_set) {
+                digitalWrite(heaterPin, HIGH);
+              }
+
+              if (pressure < psi_to_set) {
+                digitalWrite(inletPin, HIGH);
+                digitalWrite(outletPin, LOW);
+              }
+
+              previous_temp_error = current_temp_error;
+              previous_psi_error = current_psi_error;
+              has_started_cure = 1;
+              break;
+            case 1:
+              if (usable_timingInterval_tempOFF > 0) {
+                
+              } else {
+                
+              }
+              if ((currentMillis - previousIntervalMeasurement_temp) >= timingInterval_temp) {
+                previousIntervalMeasurement_temp = currentMillis;
+
+                if (usable_timingInterval_tempOFF > 0) {
+                  
+                } else {
+                  
+                }
+              }
+              break;
+          }
           break;
       }
       break;
@@ -327,11 +380,13 @@ void loop () {
             if (incomingByte == '+' || incomingByte == 'o') {
               temp_to_set = controls_value;
               usable_timingInterval_temp = timingInterval_temp;
+              previous_temp_error = 0.0f;
               has_started_cure = 0;
               Serial.println("Setting temperature...");
             } else if (incomingByte == 'p' || incomingByte == 'k') {
               psi_to_set = controls_value;
               usable_timingInterval_psi = timingInterval_psi;
+              previous_psi_error = 0.0f;
               has_started_cure = 0;
               Serial.println("Setting pressure...");
             } else {
