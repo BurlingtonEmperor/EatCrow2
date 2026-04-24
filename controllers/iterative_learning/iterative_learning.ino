@@ -12,7 +12,7 @@ unsigned long previousMillis = 0;
 const long interval = 5000; 
 
 unsigned long previousMeasurement = 0;
-const long measurement_interval = 1000;
+const long measurement_interval = 1000; // set to 1s because otherwise the mosfets may go haywire.
 unsigned long measurement_total = 0;
 
 float temp_to_set = 70.0f;
@@ -36,10 +36,17 @@ int got_psi = 0;
 float current_temp_error = 100.0f;
 float current_psi_error = 100.0f;
 
-unsigned long timingInterval_temp = 0;
-unsigned long timingInterval_psi = 0;
+unsigned long timingInterval_temp = static_cast<long>(0.0f);
+unsigned long timingInterval_psi = static_cast<long>(0.0f);
+
+unsigned long usable_timingInterval_temp = static_cast<long>(0.0f);
+unsigned long usable_timingInterval_psi = static_cast<long>(0.0f);
+
+unsigned long previousIntervalMeasurement_temp = static_cast<long>(0.0f);
+unsigned long previousIntervalMeasurement_psi = static_cast<long>(0.0f);
 
 int is_emergency_stopped = 0;
+int has_started_cure = 0;
 
 // EEPROM storage (stores error percentages)
 float temp_error_data[20] = {}; // address 0
@@ -250,6 +257,15 @@ void loop () {
         measurement_total += measurement_interval;
       }
       break;
+    case 1:
+      switch (has_calibrated) {
+        case 0:
+          has_calibrated = 1;
+          break;
+        case 1:
+          break;
+      }
+      break;
   }
 
   if (Serial.available() > 0) {
@@ -310,9 +326,13 @@ void loop () {
 
             if (incomingByte == '+' || incomingByte == 'o') {
               temp_to_set = controls_value;
+              usable_timingInterval_temp = timingInterval_temp;
+              has_started_cure = 0;
               Serial.println("Setting temperature...");
             } else if (incomingByte == 'p' || incomingByte == 'k') {
               psi_to_set = controls_value;
+              usable_timingInterval_psi = timingInterval_psi;
+              has_started_cure = 0;
               Serial.println("Setting pressure...");
             } else {
               // dummy code
