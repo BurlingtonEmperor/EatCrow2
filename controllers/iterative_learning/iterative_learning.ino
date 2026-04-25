@@ -150,7 +150,7 @@ void setup () {
   if (EEPROM.read(1) == 255) {
     EEPROM.put(1, psi_error_data);
   } else {
-    EEPROM.get(0, psi_error_data);
+    EEPROM.get(1, psi_error_data);
   }
 
   if (EEPROM.read(2) == 255) { // no need to check psi because if temp is there, psi is most likely there too.
@@ -212,7 +212,7 @@ void loop () {
       int recheck_needed = 0;
 
       temp_to_set = calibration_temp;
-      current_temp_error = recalculateTempError(temperatureF);
+      recalculateTempError(temperatureF);
       // current_temp_error = (absoluteValue(temperatureF - temp_to_set) / temp_to_set) * 100.0f;
 
       if ((temperatureF < calibration_temp) && (current_temp_error >= 5.0f)) {
@@ -223,7 +223,7 @@ void loop () {
       }
 
       psi_to_set = calibration_psi;
-      current_psi_error = recalculatePsiError(pressure);
+      recalculatePsiError(pressure);
 
       if ((pressure < calibration_psi) && (current_psi_error >= 5.0f)) {
         digitalWrite(inletPin, HIGH);
@@ -306,7 +306,7 @@ void loop () {
                 is_inlet_on = 1;
 
                 digitalWrite(outletPin, LOW);
-                is_inlet_on = 0;
+                is_outlet_on = 0;
               }
 
               previous_temp_error = current_temp_error;
