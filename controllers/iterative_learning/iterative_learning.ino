@@ -66,6 +66,14 @@ float psi_error_data[20] = {}; // address 1
 float timing_intervals_temp[20] = {}; // address 2
 float timing_intervals_psi[20] = {}; // address 3
 
+/*
+-- BOARD MACRO MEMORY SLOTS --
+memory address 4
+memory address 5
+memory address 6
+memory address 7
+*/
+
 #define MAX_SIZE 64
 byte buffer[MAX_SIZE];
 int byte_index = 0;
@@ -108,6 +116,16 @@ int findLowestInArray (float (&array_to_check)[20]) {
   return lowest_position;
 }
 
+int findFreeMemorySlot () {
+  for (int i = 0; i < 4; i++) {
+    if (EEPROM.read(i) == 255) {
+      return (i + 4); // board macro memory slots begin at 4 and end at 7.
+    }
+  }
+  
+  return 255; // every memory slot is taken. need to get rid of one!
+}
+
 float absoluteValue (float value_to_check) {
   if (value_to_check < 0.0f) {
     return (value_to_check * (-1.0f));
@@ -137,8 +155,6 @@ void setup () {
   for (int i = 0; i < 20; i++) {
     temp_error_data[i] = 100.0f; // 100% error to mark that these values are essentially empty.
     psi_error_data[i] = 100.0f;
-
-    old_tune_values[i] = 200.0f; // placeholder value that kind of doesn't mean anything.
   }
 
   if (EEPROM.read(0) == 255) {
