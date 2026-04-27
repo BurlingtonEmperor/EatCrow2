@@ -10,7 +10,7 @@
 #include "make_cpp_easier.h"
 
 /*
-Nytecode converter for StarForge
+Bytecode converter for StarForge
 */
 
 std::string string_to_decipher;
