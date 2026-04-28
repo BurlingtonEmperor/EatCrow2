@@ -1,0 +1,3 @@
+This is just a developer template for certain functions that are used again and again. 
+Not a dedicated library (Arduino libraries suck to make!), but a collection of copy paste functions 
+that are very handy.
