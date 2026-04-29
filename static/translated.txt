@@ -1,18 +1,10 @@
-This program's ID is 'RAS-COBOL'
+Setting temperature to 256 *F
 <br>
-Displaying to console: TESTING&nbsp;IF&nbsp;STARFORGE&nbsp;WORKS...
+Setting pressure to 15 PSI
 <br>
-Waiting for 2 seconds.
+Setting maximum temperature rate to 20 *F/min
 <br>
-Displaying to console: FUNCTIONALITY&nbsp;OK
+Setting maximum pressure rate to 20 PSI/min
 <br>
-Declared a variable with the name x
-<br>
-Displaying to console: (A value assigned to the variable x).
-<br>
-Displaying to console: Bella&nbsp;is&nbsp;mean&nbsp;to&nbsp;me.
-<br>
-Declared a variable with the name bella
-<br>
-Displaying to console: (A value assigned to the variable bella).
+There is a comment on this line.
 <br>

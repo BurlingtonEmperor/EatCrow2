@@ -467,8 +467,6 @@ void loop () {
             if (Serial.find('<')) {
               int expectedSize = Serial.read();
               Serial.readBytes(buffer, expectedSize);
-
-              
             }
             break;
           }

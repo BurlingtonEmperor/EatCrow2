@@ -381,6 +381,27 @@ def input_decoder():
   except Exception as err:
     return "File error: " + str(err)
 
+@app.route('/input_bytecoder', methods=['POST'])
+def input_bytecoder():
+  signal_to_read = request.get_json()
+  macro_content = signal_to_read.get("macro_content")
+
+  try:
+    with open(str(os.path.dirname(os.path.realpath(__file__))) + "/controllers/to_convert.txt", "w") as f:
+      f.write(macro_content)
+    time.sleep(2)
+    subprocess.run([os.getcwd() + "\\controllers\\bytecode_converter.exe"], cwd=(str(os.getcwd()) + "\\controllers"), creationflags=subprocess.CREATE_NEW_CONSOLE)
+    time.sleep(3)
+    try:
+      with open(str(os.path.dirname(os.path.realpath(__file__))) + "/controllers/bytecode_output.txt", "r") as f:
+        condensed = "".join(f.read().split())
+      return condensed
+    except Exception as err:
+      return "File error: " + str(err)
+  except Exception as err:
+    return "File error: " + str(err)
+
+
 def open_browser():
   checkWhichPlatform()
   webbrowser.open_new(URL)
