@@ -9,6 +9,8 @@
 #include "starforge_bytecode.h"
 #include "make_cpp_easier.h"
 
+// #include "httplib.h"
+
 /*
 Bytecode converter for StarForge
 */
@@ -163,6 +165,9 @@ int main() {
     } else {
       std::cerr << "Unable to open file" << std::endl;
     }
+
+    // httplib::Client cli("http://localhost:5000");
+    // auto res = cli.Post("/endpoint", "{\"key\":\"value\"}", "application/json");
   } else {
     std::cerr << "Unable to open file" << std::endl;
     std::cin.get();
