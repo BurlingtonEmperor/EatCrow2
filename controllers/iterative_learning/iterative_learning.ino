@@ -100,6 +100,7 @@ int convertCharToInt (char& char_to_convert) {
   if (char_to_convert == 'k') return 12;
   if (char_to_convert == '>') return 13; // change tune value
   if (char_to_convert == '<') return 14; // read file (WIP)
+  if (char_to_convert == ']') return 15; // get all board macros
   return 0; // default
 }
 
@@ -117,13 +118,21 @@ int findLowestInArray (float (&array_to_check)[20]) {
 }
 
 int findFreeMemorySlot () {
-  for (int i = 0; i < 4; i++) {
-    if (EEPROM.read(i) == 255) {
-      return (i + 4); // board macro memory slots begin at 4 and end at 7.
+  for (int i = 0; i < 11; i++) {
+    if (EEPROM.read(i + 4) == 255) {
+      return (i + 4); // board macro memory slots begin at 4 and end at 14.
     }
   }
   
   return 255; // every memory slot is taken. need to get rid of one!
+}
+
+int checkIfMemSlotFree (int mem_address) {
+  if (EEPROM.read(mem_address) == 255) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 float absoluteValue (float value_to_check) {
@@ -467,6 +476,17 @@ void loop () {
             if (Serial.find('<')) {
               int expectedSize = Serial.read();
               Serial.readBytes(buffer, expectedSize);
+            }
+            break;
+          }
+          case 15: {
+            int boardMacroMemAdds = 0;
+            for (int i = 4; i < 15; i++) {
+              switch (checkIfMemSlotFree(i)) {
+                case 1:
+                  boardMacroMemAdds += 0;
+                  break;
+              }
             }
             break;
           }

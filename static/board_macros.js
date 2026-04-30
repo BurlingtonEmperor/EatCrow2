@@ -1,0 +1,1 @@
+const freeEEPROM = document.getElementById("free-eeprom");
