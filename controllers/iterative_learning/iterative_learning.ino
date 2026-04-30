@@ -101,6 +101,7 @@ int convertCharToInt (char& char_to_convert) {
   if (char_to_convert == '>') return 13; // change tune value
   if (char_to_convert == '<') return 14; // read file (WIP)
   if (char_to_convert == ']') return 15; // get all board macros
+  if (char_to_convert == '[') return 16; // get free EEPROM
   return 0; // default
 }
 
@@ -480,14 +481,23 @@ void loop () {
             break;
           }
           case 15: {
-            int boardMacroMemAdds = 0;
+            String string_to_send_back = "";
             for (int i = 4; i < 15; i++) {
               switch (checkIfMemSlotFree(i)) {
                 case 1:
-                  boardMacroMemAdds += 0;
+                  String i_string = String(i);
+                  string_to_send_back += i_string + ";";
                   break;
               }
             }
+            Serial.println("bm:" + string_to_send_back);
+            break;
+          }
+          case 16: {
+            unsigned int totalBytes = EEPROM.length();
+            Serial.print("eb:");
+            Serial.print(totalBytes);
+            Serial.print("\n");
             break;
           }
         }
