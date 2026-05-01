@@ -66,12 +66,14 @@ float psi_error_data[20] = {}; // address 1
 float timing_intervals_temp[20] = {}; // address 2
 float timing_intervals_psi[20] = {}; // address 3
 
+int currentWorkingAddress = 4;
+
 /*
 -- BOARD MACRO MEMORY SLOTS --
 memory address 4
 memory address 5
 memory address 6
-memory address 7
+memory address 7..... and onward
 */
 
 #define MAX_SIZE 64
@@ -99,9 +101,10 @@ int convertCharToInt (char& char_to_convert) {
   if (char_to_convert == 'p') return 12; // changing pressure
   if (char_to_convert == 'k') return 12;
   if (char_to_convert == '>') return 13; // change tune value
-  if (char_to_convert == '<') return 14; // read file (WIP)
+  if (char_to_convert == '<') return 14; // set board macro address
   if (char_to_convert == ']') return 15; // get all board macros
   if (char_to_convert == '[') return 16; // get free EEPROM
+  if (char_to_convert == '}') return 17; // set board macro
   return 0; // default
 }
 
@@ -474,22 +477,27 @@ void loop () {
             break;
           }
           case 14: {
-            if (Serial.find('<')) {
-              int expectedSize = Serial.read();
-              Serial.readBytes(buffer, expectedSize);
+            delay(10);
+            int EEPROM_address = Serial.parseInt();
+
+            if (EEPROM_address < 4) [
+              Serial.println("Invalid address...");
+            ] else {
+              currentWorkingAddress = EEPROM_address;
             }
             break;
           }
           case 15: {
             String string_to_send_back = "";
-            for (int i = 4; i < 15; i++) {
-              switch (checkIfMemSlotFree(i)) {
-                case 1:
-                  String i_string = String(i);
-                  string_to_send_back += i_string + ";";
-                  break;
-              }
-            }
+            // for (int i = 4; i < 15; i++) {
+            //   switch (checkIfMemSlotFree(i)) {
+            //     case 1:
+            //       String i_string = String(i);
+            //       string_to_send_back += i_string + ";";
+            //       break;
+            //   }
+            // }
+            EEPROM.get(currentWorkingAddress, string_to_send_back);
             Serial.println("bm:" + string_to_send_back);
             break;
           }
@@ -498,6 +506,19 @@ void loop () {
             Serial.print("eb:");
             Serial.print(totalBytes);
             Serial.print("\n");
+            break;
+          }
+          case 17: {
+            delay(10);
+            String string_to_parse = Serial.readString();
+            string_to_parse.trim();
+            string_to_parse.remove(0, 1);
+
+            int len = string_to_parse.length();
+            char charBuf[len];
+
+            string_to_parse.toCharArray(charBuf, len);
+            EEPROM.put(currentWorkingAddress, string_to_parse);
             break;
           }
         }
