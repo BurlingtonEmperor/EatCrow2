@@ -16,7 +16,7 @@ MANUAL mode: Manually set temperature and pressure change amounts, and then appl
 SEMI-MANUAL mode: Set a specific temperature and pressure amount to level off at.
 AUTOMATIC mode: Use preprogrammed macros for different curing processes.
 
-The default mode is the MANUAL mode. To change modes, select the drop-down menu on the left-hand corner of the screen.
+The default mode is the SEMI-MANUAL mode. To change modes, select the drop-down menu on the left-hand corner of the screen.
 
 Section 3: Usage Modes 
 Usage Modes can be found on the left-hand corner of the screen.
