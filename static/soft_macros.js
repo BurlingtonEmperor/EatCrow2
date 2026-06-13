@@ -848,7 +848,7 @@ set_mode_to_default.onclick = function () {
 }
 
 save_macro_btn.onclick = function () {
-  let spaceRemoverMacroName = macro_name_to_create.value.replace(" ", "%20");
+  let spaceRemoverMacroName = macro_name_to_create.value.replaceAll(" ", "%20");
   if (checkForIllegalChars(spaceRemoverMacroName)) {
     macro_status_msgs.innerText = "DO NOT INCLUDE '||{}||' IN MACRO NAME";
     return false;
