@@ -734,19 +734,19 @@ function checkForIllegalChars (content_to_check) {
 
 const actually_create_macro = document.getElementById("create-soft-macro-for-reals");
 actually_create_macro.onclick = function () {
-  if (macro_name_to_create.value == null || macro_name_to_create.value.replace(" ", "") == "") {
+  if (macro_name_to_create.value == null || macro_name_to_create.value.replaceAll(" ", "") == "") {
     return false;
   }
 
   switch (current_macro_type) {
     case 0:
-      if (checkIfMacroExists(macro_name_to_create.value.replace(" ", "%20"))) {
+      if (checkIfMacroExists(macro_name_to_create.value.replaceAll(" ", "%20"))) {
         macro_status_msgs.innerText = "A soft macro with the name '" + String(macro_name_to_create.value) + "' already exists.";
         return false;
       }
       break;
     case 1:
-      if (checkIfHardMacroExists(macro_name_to_create.value.replace(" ", "%20"))) {
+      if (checkIfHardMacroExists(macro_name_to_create.value.replaceAll(" ", "%20"))) {
         macro_status_msgs.innerText = "A hard macro with the name '" + String(macro_name_to_create.value) + "' already exists.";
       }
       break;
