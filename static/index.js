@@ -93,6 +93,12 @@ async function resolveIssue (issueCode) {
     case "ACCESS":
       issue_resolve_msg.innerHTML = "<p>REROUTE BOARD CONNECTION</p>";
       break;
+    case "COMMS":
+      issue_resolve_msg.innerText = "<p>WAIT OR REBOOT SYSTEM</p>";
+      break;
+    case "PATTERN":
+      issue_resolve_msg.innerText = "<p>BROKEN PART MAY BE DETECTED. CHECK REPAIR PANEL FOR DETAILS</p>";
+      break;
   }
 }
 
