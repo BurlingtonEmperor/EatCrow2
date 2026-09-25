@@ -127,7 +127,7 @@ async function generateWarnings () { // this probably causes a memory leak from 
 
   <Device and Interface>
   INTERNET - No internet connection
-  WEATHER - Incoming storms which may affect power supply (NOT ADDED YET)
+  WEATHER - Incoming storms which may affect power supply 
   GB-FUNC - Unknown battery status
   POWER - No power supply stream for device
   BATTERY - Low device power
@@ -570,7 +570,23 @@ async function generateWarnings () { // this probably causes a memory leak from 
     resolve();
   });
 
-  asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise, emergencyStopCheckPromise, temperatureWarningPromise, pressureWarningPromise, pressureClimbOrStall, ml_algoWarningPromise);
+  const weatherPromise = new Promise((resolve) => {
+    fetch ("/weather_warning")
+    .then(response => response.text())
+    .then(data => {
+      if (String(data).includes("🌦") || String(data).includes("⛈") || String(data).includes("🌧") || String(data).includes("🌨") || String(data).includes("🌩") || String(data).includes("🌪")) {
+        warningArray.push("WEATHER");
+        urgent_warningArray.push("STORMS DETECTED");
+      }
+      resolve();
+    })
+    .catch(error => {
+      console.error("Warning: Weather Detection non-functional [" + String(error) + "]");
+      resolve();
+    });
+  });
+
+  asyncChecks.push(batteryCheckPromise, boardCheckPromise, boardReturnErrPromise, emergencyStopCheckPromise, temperatureWarningPromise, pressureWarningPromise, pressureClimbOrStall, ml_algoWarningPromise, weatherPromise);
   await Promise.all(asyncChecks);
 
   if (urgent_warningArray.length === 0) {

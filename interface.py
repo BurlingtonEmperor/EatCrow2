@@ -111,6 +111,11 @@ def get_city():
 
   return nearest_city
 
+def get_weather(city: str):
+  url = f"https://wttr.in/{city}?format=3"
+  response = requests.get(url)
+  return response.text.strip()
+
 def connect_to_board_for_command():
   global arduino_board
   current_board_port = ""
@@ -401,6 +406,9 @@ def input_bytecoder():
   except Exception as err:
     return "File error: " + str(err)
 
+@app.route('/weather_warning')
+def weather_warning():
+  return get_weather(str(get_city()))
 
 def open_browser():
   checkWhichPlatform()
