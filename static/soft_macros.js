@@ -822,10 +822,10 @@ close_window_macro_editor.onclick = function () {
 
 set_mode_to_javascript.onclick = function () {
   default_textbox.style.display = "none";
-  if (current_macro_type == 2) {
-    macro_status_msgs.innerText = "JAVASCRIPT NOT SUPPORTED ON BOARD MACROS";
-    return false;
-  }
+  // if (current_macro_type == 2) {
+  //   macro_status_msgs.innerText = "JAVASCRIPT NOT SUPPORTED ON BOARD MACROS";
+  //   return false;
+  // }
 
   macro_mode = 1;
   macro_status_msgs.innerText = "MODE SET TO JAVASCRIPT";

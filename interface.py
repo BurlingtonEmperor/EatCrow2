@@ -15,6 +15,8 @@ import signal;
 import serial.tools.list_ports;
 import serial;
 
+import autoclave_board_macros
+
 meteostat_status = 0
 try:
   from meteostat import Point, Daily;
@@ -409,6 +411,17 @@ def input_bytecoder():
 @app.route('/weather_warning')
 def weather_warning():
   return get_weather(str(get_city()))
+
+@app.route('/board_macro_get', methods=['POST'])
+def board_macro_get():
+  signal_to_read = request.get_json()
+  board_macro_filename = signal_to_read.get("board_macro_filename")
+
+  find_flash_bm = find_flash_drives(str(board_macro_filename))
+  if (find_flash_bm == "no_file"):
+    return "No board macro file found in any flash drive."
+  else:
+    return find_flash_bm
 
 def open_browser():
   checkWhichPlatform()
