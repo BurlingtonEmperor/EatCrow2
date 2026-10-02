@@ -415,13 +415,24 @@ def weather_warning():
 @app.route('/board_macro_get', methods=['POST'])
 def board_macro_get():
   signal_to_read = request.get_json()
-  board_macro_filename = signal_to_read.get("board_macro_filename")
+  board_macro_filename = signal_to_read.get("board_macro_filename_r")
 
-  find_flash_bm = find_flash_drives(str(board_macro_filename))
+  find_flash_bm = autoclave_board_macros.find_flash_drives(str(board_macro_filename))
   if (find_flash_bm == "no_file"):
     return "No board macro file found in any flash drive."
   else:
     return find_flash_bm
+
+@app.route('/read_file_bm', methods=['POST'])
+def read_file_bm():
+  signal_to_read = request.get_json()
+  filepath_signal = signal_to_read.get("filepath")
+
+  clean_path = str(filepath_signal).replace("\\", "/")
+
+  with open(clean_path, "r", encoding="utf-8") as file:
+    content = file.read()
+    return content
 
 def open_browser():
   checkWhichPlatform()

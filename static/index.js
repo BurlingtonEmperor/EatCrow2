@@ -647,7 +647,6 @@ const warningInterval = setInterval(function () {
 
   // check_for_faulty_parts(); This causes too much memory to be used, switching to 1min interval instead
 }, 3000);
-generateWarnings();
 
 const timeDOM = document.getElementById("clock");
 
