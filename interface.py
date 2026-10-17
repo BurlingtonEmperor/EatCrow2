@@ -303,10 +303,44 @@ def create_macro():
   except Exception as err:
     return "File error: " + str(err)
 
+@app.route('/create_bmacro', methods=['POST'])
+def create_bmacro():
+  signal_to_read = request.get_json()
+
+  macro_name = signal_to_read.get("macro_name")
+  macro_content = signal_to_read.get("macro_content")
+
+  bmacro_fpath = autoclave_board_macros.find_flash_drives("eatcrow2_board_macros.txt")
+  if (str(bmacro_fpath) == "no_file"):
+    return "File error: No board macro file found"
+  clean_path = str(bmacro_fpath).replace("\\", "/")
+
+  try:
+    with open(clean_path, "w") as f:
+      f.write(macro_content)
+      # for line in macro_content:
+      #   f.write(line + "\n")
+      return "Created board macro as " + str(macro_name)
+  except Exception as err:
+    return "File error: " + str(err)
+
 @app.route('/get_macro')
 def get_macro():
   try:
     with open(str(os.path.dirname(os.path.realpath(__file__))) + "/macros/macros.txt", "r") as f:
+      content = f.read()
+    return content
+  except Exception as err:
+    return "File error: " + str(err)
+
+@app.route('/get_bmacro')
+def get_bmacro():
+  bmacro_fpath = autoclave_board_macros.find_flash_drives("eatcrow2_board_macros.txt")
+  if (str(bmacro_fpath) == "no_file"):
+    return "File error: No board macro file found"
+  clean_path = str(bmacro_fpath).replace("\\", "/")
+  try:
+    with open(str(clean_path, "r")) as f:
       content = f.read()
     return content
   except Exception as err:

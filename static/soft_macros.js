@@ -111,6 +111,9 @@ function populateEditOptions_macro () {
     case 1:
       current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
       break;
+    case 2:
+      current_macro_array = JSON.parse(localStorage.getItem("board-macro-cache"));
+      break;
   }
 
   for (let i = 0; i < current_macro_array.length; i++) {
@@ -161,6 +164,9 @@ edit_macro_select.onclick = function () {
       case 1:
         current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
         break;
+      case 2:
+        current_macro_array = JSON.parse(localStorage.getItem("board-macro-cache"));
+        break;
     }
 
     for (let i = 0; i < current_macro_array.length; i++) {
@@ -199,6 +205,9 @@ select_edit_macro.onclick = function () {
     case 1:
       current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
       break;
+    case 2:
+      current_macro_array = JSON.parse(localStorage.getItem("board-macro-cache"));
+      break;
   }
 
   for (let i = 0; i < current_macro_array.length; i++) {
@@ -234,6 +243,9 @@ function populateDeleteOptions_macro () {
       break;
     case 1:
       current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
+      break;
+    case 2:
+      current_macro_array = JSON.parse(localStorage.getItem("board-macro-cache"));
       break;
   }
 
@@ -280,6 +292,9 @@ select_delete_macro.onclick = function () {
     case 1:
       deleteHardMacro(delete_macro_select.value);
       break;
+    case 2:
+      deleteBoardMacro(delete_macro_select.value);
+      break;
   }
   macro_status_msgs.innerText = "DELETED '" + delete_macro_select.value + "'.";
   clearDeleteOptions_macro();
@@ -299,6 +314,9 @@ function populateRunOptions_macro () {
       break;
     case 1:
       current_macro_array = JSON.parse(localStorage.getItem("hard_macro_cache"));
+      break;
+    case 2:
+      current_macro_array = JSON.parse(localStorage.getItem("board-macro-cache"));
       break;
   }
 
@@ -343,6 +361,9 @@ select_run_macro.onclick = function () {
       break;
     case 1:
       runHardMacro(run_macro_select.value);
+      break;
+    case 2:
+      runBoardMacro(run_macro_select.value);
       break;
   }
   macro_status_msgs.innerText = "RUNNING '" + run_macro_select.value + "'.";
@@ -750,6 +771,11 @@ actually_create_macro.onclick = function () {
         macro_status_msgs.innerText = "A hard macro with the name '" + String(macro_name_to_create.value) + "' already exists.";
       }
       break;
+    case 2:
+      if (checkIfBoardMacroExists(macro_name_to_create.value.replaceAll(" ", "%20"))) {
+        macro_status_msgs.innerText = "A board macro with the name '" + String(macro_name_to_create.value) + "' already exists.";
+      }
+      break;
   }
 
   macro_editor.style.display = "block";
@@ -894,6 +920,9 @@ save_macro_btn.onclick = function () {
     case 1:
       createNewHardMacro(spaceRemoverMacroName, macro_real_content);
       break;
+    case 2:
+      createNewBoardMacro(spaceRemoverMacroName, macro_real_content);
+      break;
   }
 
   const now = new Date();
@@ -902,4 +931,8 @@ save_macro_btn.onclick = function () {
   const seconds = now.getSeconds();    
 
   macro_status_msgs.innerText = "MACRO HAS BEEN SAVED AS '" + spaceRemoverMacroName + "' AT " + String(hours) + ":" + String(minutes) + ":" + String(seconds);
+}
+
+function setBMConnection (s) {
+  // do nothing. otherwise the entire Macro System breaks!
 }
