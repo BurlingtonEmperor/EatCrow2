@@ -340,7 +340,7 @@ def get_bmacro():
     return "File error: No board macro file found"
   clean_path = str(bmacro_fpath).replace("\\", "/")
   try:
-    with open(str(clean_path, "r")) as f:
+    with open(clean_path, "r") as f:
       content = f.read()
     return content
   except Exception as err:

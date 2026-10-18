@@ -1143,6 +1143,8 @@ document.getElementById("check-sram").onclick = function () {
   send_signal_to_board("z");
 }
 
+document.getElementById("open-broadcaster").onclick = function () {}
+
 // manual command console
 const manualCommandConsole = document.getElementById("manual-command-console");
 
