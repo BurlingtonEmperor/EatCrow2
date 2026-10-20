@@ -406,6 +406,14 @@
         <br/>
         <div id="fancy-predictor-content"></div>
       </div>
+      <div id="broadcaster-window" class="draggable window">
+        <div class="seventy button text-center" id="close-broadcasting-window">CLOSE WINDOW</div>
+        <div>Broadcast ID: <input type="text" id="broadcast-id" autocapitalize="off" autocomplete="off" spellcheck="false"/></div>
+        <div class="fifty button" id="start-broadcast">Enable Broadcast</div>
+        <div class="fifty button" id="stop-broadcast">Stop Broadcast</div>
+        <br/>
+        <div>BROADCAST: <a id="broadcast-status">NOT BROADCASTING</a></div>
+      </div>
     </div>
 
     <!-- Libraries -->
@@ -428,5 +436,6 @@
     <script src="{{ url_for('static', filename='macro_designer.js')}}"></script>
     <script src="{{ url_for('static', filename='analysis_tools.js')}}"></script>
     <script src="{{ url_for('static', filename='browser_safety.js')}}"></script>
+    <script src="{{ url_for('static', filename='broadcaster.js')}}"></script>
   </body>
 </html>

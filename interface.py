@@ -16,6 +16,7 @@ import serial.tools.list_ports;
 import serial;
 
 import autoclave_board_macros
+import autoclave_broadcaster
 
 meteostat_status = 0
 try:

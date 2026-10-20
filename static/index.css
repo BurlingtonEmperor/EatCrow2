@@ -191,7 +191,7 @@ textarea {
   outline: 1px solid orange;
 }
 
-#automatic-controls, #semi-manual-controls, #command-list-2, #autoclave-plot, #real-manual-controls {
+#automatic-controls, #semi-manual-controls, #command-list-2, #autoclave-plot, #real-manual-controls, #broadcaster-window {
   display: none;
 }
 
@@ -281,7 +281,7 @@ textarea {
   overflow-y: auto;
 }
 
-#macro-placer-window, #fancy-predictor-graph {
+#macro-placer-window, #fancy-predictor-graph, #broadcaster-window {
   position: fixed;
   width: 30%;
   overflow-y: auto;
@@ -320,6 +320,10 @@ textarea {
 
 .twenty {
   width: 20%;
+}
+
+.fifty {
+  width: 50%;
 }
 
 .seventy {
