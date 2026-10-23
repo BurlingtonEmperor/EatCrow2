@@ -2,16 +2,25 @@
 const int thermistorPin1 = A0;
 const int thermistorPin2 = A1;
 
-const float R1 = 10000;         // Fixed resistor value: 10k ohms
-const float RT0 = 10000;        // Thermistor nominal resistance at 25°C
-const float B = 3977;           // Beta value of thermistor
-const float T0 = 25.0 + 273.15; // 25°C in Kelvin
+float R1 = 10000; // Fixed resistor value in ohms (10k)
+
+// Steinhart-Hart coefficients
+float c1 = 1.129241e-03;
+float c2 = 2.341077e-04;
+float c3 = 8.775468e-08;
 
 float return thermistor1Value (int Vo) {
-  float RT = R1 * ((1023.0 / (float)Vo) - 1.0);
-  float ln = log(RT / RT0);
+  if (Vo == 0 || Vo == 1023) {
+    Serial.println("Error: Sensor reading out of bounds");
+    delay(1000);
+    return;
+  }
 
-  float tempK = 1.0 / ((ln / B) + (1.0 / T0));
+  float RT = R1 * ((1023.0 / (float)Vo) - 1.0);
+  float logRT = log(RT);
+  float invT = c1 + (c2 * logRT) + (c3 * logRT * logRT * logRT);
+
+  float tempK = 1.0 / invT;
   float tempC = tempK - 273.15;
   float tempF = (tempC * 9.0 / 5.0) + 32.0;
 
