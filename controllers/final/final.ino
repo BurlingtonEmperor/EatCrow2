@@ -29,12 +29,17 @@ float return thermistor1Value (int Vo) {
 
 // end thermistor code
 
-// pressure sensor (500 PSI)
+// pressure sensors
 const int sensorPin_P500 = A2;
+const int sensorPin_P100 = A3;
 
 const int adcMin = 102; 
 const int adcMax = 921; 
 const float psiMax = 500.0;
+
+const int adcMinAlt = 102; 
+const int adcMaxAlt = 921; 
+const float psiMaxAlt = 100.0;
 
 float returnP500Value (int sensorData) {
   float pressure = (float)(sensorData - adcMin) * psiMax / (adcMax - adcMin);
@@ -46,7 +51,17 @@ float returnP500Value (int sensorData) {
   return pressure; // units: PSI
 }
 
-// end pressure sensor (500 PSI) code
+float returnP100Value (int sensorData) {
+  float pressure = (float)(sensorData - adcMinAlt) * psiMaxAlt / (adcMaxAlt - adcMinAlt);
+
+  if (pressure < 0) {
+    pressure = 0.0;
+  }
+
+  return pressure; // units: PSI
+}
+
+// end pressure sensor code
 
 void loop () {
   int Vo1 = analogRead(thermistorPin1);
