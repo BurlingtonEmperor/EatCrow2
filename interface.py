@@ -15,6 +15,11 @@ import signal;
 import serial.tools.list_ports;
 import serial;
 
+from PyQt6.QtCore import QUrl, Qt
+from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtWebEngineCore import QWebEngineProfile
+from PyQt6.QtWebEngineWidgets import QWebEngineView
+
 import autoclave_board_macros
 import autoclave_broadcaster
 
@@ -49,6 +54,20 @@ app = Flask(__name__)
 # board = "";
 
 sound_dir = os.path.dirname(os.path.abspath(__file__) + "\\alarms")
+
+class MiniBrowser(QMainWindow):
+  def __init__(self, url):
+    super().__init__()
+        
+    self.setWindowTitle("EatCrow2")
+    self.resize(1280, 720)  
+        
+    self.browser = QWebEngineView()
+    self.browser.setUrl(QUrl(url))
+        
+    self.browser.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        
+    self.setCentralWidget(self.browser)
 
 temp_file_path = os.path.join(tempfile.gettempdir(), 'os_output.txt')
 def clean_exit_file():
@@ -473,7 +492,15 @@ def open_browser():
   checkWhichPlatform()
   webbrowser.open_new(URL)
 
+def begin_window():
+  l_app = QApplication(sys.argv)
+
+  window = MiniBrowser(URL)
+  window.show()
+
+  sys.exit(l_app.exec())
+
 if __name__ == '__main__':
-  Timer(1, open_browser).start()
+  Timer(1, begin_window).start()
     
   app.run(port=5000, debug=True, use_reloader=False)
