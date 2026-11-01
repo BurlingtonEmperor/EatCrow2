@@ -935,7 +935,14 @@ cmd_list_1_btn.onclick = function () {
   command_list_2.style.display = "none";
 }
 
+const isQtWebEngine = navigator.userAgent.includes("QtWebEngine");
+
 enable_voice_commands_btn.onclick = function () {
+  if (isQtWebEngine) {
+    console.log("Voice commands not available in app mode.");
+    return false;
+  }
+
   playAlarm(4);
   if (continue_parsing_speech == false) {
     continue_parsing_speech = true;
@@ -3008,18 +3015,37 @@ function getTemp_fromModel (data_log) {
         const data_label = secondary_data_array[0];
         const data_content = secondary_data_array[1];
 
+        let p500 = 0;
+        let p100 = 0;
+
+        let showTwoPSI = 0;
+
         switch (data_label) {
           case "T":
             temp_gauge2.innerText = data_content + " °F";
             break;
           case "P":
+            showTwoPSI = 0;
             psi_gauge2.innerText = data_content + " PSI";
+            break;
+          case "PF":
+            p500 = data_content;
+            showTwoPSI = 1;
+            break;
+          case "PH":
+            p100 = data_content;
             break;
           case "TD":
             document.getElementById("board-set-temp").innerText = data_content + " °F";
             break;
           case "PD":
             document.getElementById("board-set-psi").innerText = data_content + " PSI";
+            break;
+        }
+
+        switch (showTwoPSI) {
+          case 1:
+            psi_gauge2.innerText = String(p500) + " | " + String(p100) + " PSI";
             break;
         }
       }
