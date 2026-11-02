@@ -3023,14 +3023,17 @@ function getTemp_fromModel (data_log) {
         switch (data_label) {
           case "T":
             temp_gauge2.innerText = data_content + " °F";
+            temp_values.push(data_content);
             break;
           case "P":
             showTwoPSI = 0;
             psi_gauge2.innerText = data_content + " PSI";
+            pressure_values.push(data_content);
             break;
           case "PF":
             p500 = data_content;
             showTwoPSI = 1;
+            pressure_values.push(data_content);
             break;
           case "PH":
             p100 = data_content;
