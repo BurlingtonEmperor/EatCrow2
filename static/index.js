@@ -3201,6 +3201,10 @@ setInterval(function () {
     clear_console();
   }
 
+  localStorage.setItem("time_values", JSON.stringify(time_values.slice(-20)));
+  localStorage.setItem("temp_values", JSON.stringify(temp_values.slice(-20)));
+  localStorage.setItem("psi_values", JSON.stringify(pressure_values.slice(-20)));
+
   passMinutes(); 
   check_for_faulty_parts();
   updateHardMacros(); // next time I am using sockets but this time I don't care
