@@ -1412,6 +1412,7 @@ const pressure_tank_status = document.getElementById("pressure-tank-status");
 const pressure_tank_status2 = document.getElementById("pressure-tank-status2");
 
 const temp_gauge2 = document.getElementById("temp_gauge2");
+const temp_gauge3 = document.getElementById("temp_gauge3");
 const psi_gauge2 = document.getElementById("psi_gauge2");
 
 const emergency_stop_btn = document.getElementById("emergency-stop-btn");
@@ -2108,6 +2109,7 @@ const pressureRate = document.getElementById("pressure-rate");
 const autoclavePlot = document.getElementById("autoclave-plot");
 
 let temp_values = [];
+let temp2_values = [];
 let pressure_values = [];
 
 // let temp_change_r;
@@ -3025,6 +3027,10 @@ function getTemp_fromModel (data_log) {
             temp_gauge2.innerText = data_content + " °F";
             temp_values.push(data_content);
             break;
+          case "TT":
+            temp_gauge3.innerText = data_content + " °F"
+            temp2_values.push(data_content);
+            break;
           case "P":
             showTwoPSI = 0;
             psi_gauge2.innerText = data_content + " PSI";
@@ -3201,15 +3207,20 @@ setInterval(function () {
     clear_console();
   }
 
-  localStorage.setItem("time_values", JSON.stringify(time_values.slice(-20)));
-  localStorage.setItem("temp_values", JSON.stringify(temp_values.slice(-20)));
-  localStorage.setItem("psi_values", JSON.stringify(pressure_values.slice(-20)));
-
   passMinutes(); 
   check_for_faulty_parts();
   updateHardMacros(); // next time I am using sockets but this time I don't care
   updateBoardMacros();
 }, 60000);
+
+setInterval(function () {
+  if (isConnectedToBoard) {
+    localStorage.setItem("time_values", JSON.stringify(time_values.slice(-20)));
+    localStorage.setItem("temp_values", JSON.stringify(temp_values.slice(-20)));
+    localStorage.setItem("temp2_values", JSON.stringify(temp2_values.slice(-20)));
+    localStorage.setItem("psi_values", JSON.stringify(pressure_values.slice(-20)));
+  }
+}, 1320000);
 
 let int_to_clear;
 setTimeout(function () { // makes it so that the graphs don't remain blank for all eternity

@@ -118,6 +118,7 @@ void loop () {
   int Vo2 = analogRead(thermistorPin2);
 
   float tempVo1 = thermistor1Value(Vo1);
+  float tempVo2 = thermistor1Value(Vo2);
 
   int sensorValue_P500 = analogRead(sensorPin_P500);
   int sensorValue_P100 = analogRead(sensorPin_P100);
@@ -239,6 +240,8 @@ void loop () {
 
     Serial.print("T:");
     Serial.print(tempVo1);
+    Serial.print(";TT:");
+    Serial.print(tempVo2);
     Serial.print(";PF:");
     Serial.print(psiP500);
     Serial.print(";TD:");
