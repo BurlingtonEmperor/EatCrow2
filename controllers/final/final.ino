@@ -11,7 +11,9 @@ float c3 = 8.775468e-08;
 
 float thermistor1Value (int Vo) {
   if (Vo == 0 || Vo == 1023) {
-    Serial.println("Error: Sensor reading out of bounds");
+    Serial.println("Error: Sensor reading out of bounds: ");
+    Serial.println(Vo);
+
     delay(1000);
     return 0;
   }
