@@ -12,7 +12,7 @@ const issue_resolve_msg = document.getElementById("issue-resolve-msg");
 const device_battery_percent = document.getElementById("device-battery-percent");
 
 // these values can be changed to fit your own autoclave.
-let temp_ceiling = 300;
+let temp_ceiling = 350;
 let psi_ceiling = 100;
 
 let temp_max_rate = 2.49; // Anything above this rate will trigger a T-CLIMB warning. (For RAS's autoclave, the temperature should be rising by around 2deg *F for safety)
@@ -3055,6 +3055,7 @@ function getTemp_fromModel (data_log) {
         switch (showTwoPSI) {
           case 1:
             psi_gauge2.innerText = String(p500) + " | " + String(p100) + " PSI";
+            document.getElementById("vline-psi").innerText = String(p100);
             break;
         }
       }
